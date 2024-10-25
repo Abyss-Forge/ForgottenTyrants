@@ -33,6 +33,7 @@ public class RectTransformUpdate : MonoBehaviour
         RectTransform rectTransform = command.context as RectTransform;
         return rectTransform.parent != null && !PrefabUtility.IsPartOfImmutablePrefab(rectTransform);
     }
+
 }
 
 #endif
