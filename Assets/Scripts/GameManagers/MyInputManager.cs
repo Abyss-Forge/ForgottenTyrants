@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ForgottenTyrants;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +10,15 @@ public enum EInputActions
     Look,
     Jump,
     Dash,
+    WeaponBasicAttack,
+    WeaponAbility,
+    ClassAbility1,
+    ClassAbility2,
+    ClassAbility3,
+    ClassAbility4,
+    Ping,
+    Pause,
+    Menu,
 }
 
 public class MyInputManager : Singleton<MyInputManager>
@@ -62,4 +72,50 @@ public class MyInputManager : Singleton<MyInputManager>
     {
         CallSubscribedFunction(EInputActions.Dash, context);
     }
+
+    public void OnWeaponBasicAttack(InputAction.CallbackContext context)
+    {
+        CallSubscribedFunction(EInputActions.WeaponBasicAttack, context);
+    }
+
+    public void OnWeaponAbility(InputAction.CallbackContext context)
+    {
+        CallSubscribedFunction(EInputActions.WeaponAbility, context);
+    }
+
+    public void OnClassAbility1(InputAction.CallbackContext context)
+    {
+        CallSubscribedFunction(EInputActions.ClassAbility1, context);
+    }
+
+    public void OnClassAbility2(InputAction.CallbackContext context)
+    {
+        CallSubscribedFunction(EInputActions.ClassAbility2, context);
+    }
+
+    public void OnClassAbility3(InputAction.CallbackContext context)
+    {
+        CallSubscribedFunction(EInputActions.ClassAbility3, context);
+    }
+
+    public void OnClassAbility4(InputAction.CallbackContext context)
+    {
+        CallSubscribedFunction(EInputActions.ClassAbility4, context);
+    }
+
+    public void OnPing(InputAction.CallbackContext context)
+    {
+        CallSubscribedFunction(EInputActions.Ping, context);
+    }
+
+    public void OnPause(InputAction.CallbackContext context)
+    {
+        CallSubscribedFunction(EInputActions.Pause, context);
+    }
+
+    public void OnMenu(InputAction.CallbackContext context)
+    {
+        CallSubscribedFunction(EInputActions.Menu, context);
+    }
+
 }

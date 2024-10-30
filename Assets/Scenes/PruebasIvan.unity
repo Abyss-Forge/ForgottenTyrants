@@ -361,9 +361,9 @@ MonoBehaviour:
   _cameraHolder: {fileID: 71950938}
   _walkSpeed: 5
   _lookSensivity: 0.1
-  _maxForce: 1
-  _jumpForce: 2
-  _dashForce: 20
+  _maxForce: 4
+  _jumpForce: 4
+  _dashForce: 4
 --- !u!54 &199275613
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -779,12 +779,12 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 343925000}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+        m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
+        m_MethodName: OnWeaponBasicAttack
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -864,6 +864,134 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: b2351838-0afe-4d86-9d8a-d970cf27c3c8
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343925000}
+        m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
+        m_MethodName: OnWeaponAbility
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 8a1628ad-c382-4856-8113-52f24d2a20af
+    m_ActionName: Player/WeaponAbility[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343925000}
+        m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
+        m_MethodName: OnClassAbility1
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 48adada4-0ebd-4def-a53d-9064d47c854e
+    m_ActionName: Player/ClassAbility1[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343925000}
+        m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
+        m_MethodName: OnClassAbility2
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: da70e365-cd64-48b3-9fb6-e35c81cb3494
+    m_ActionName: Player/ClassAbility2[/Keyboard/r]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343925000}
+        m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
+        m_MethodName: OnClassAbility3
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e7240272-17a1-456d-9bcf-b1e3cb88a2bc
+    m_ActionName: Player/ClassAbility3[/Keyboard/f]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343925000}
+        m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
+        m_MethodName: OnClassAbility4
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 390f2e32-bf57-4e84-9c42-0b1d0acd75f0
+    m_ActionName: Player/ClassAbility4[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343925000}
+        m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
+        m_MethodName: OnPing
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 5dd4724d-1b3e-46f8-8983-f91486e2f493
+    m_ActionName: Player/Ping[/Mouse/middleButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343925000}
+        m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
+        m_MethodName: OnPause
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: a458844a-48fc-4798-a3c7-667bb7f4dcea
+    m_ActionName: Player/Pause[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 343925000}
+        m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
+        m_MethodName: OnMenu
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 1cbe944f-6fc5-4408-955b-917259eeabe2
+    m_ActionName: Player/Menu[/Keyboard/tab]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -2149,6 +2277,38 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: b2351838-0afe-4d86-9d8a-d970cf27c3c8
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8a1628ad-c382-4856-8113-52f24d2a20af
+    m_ActionName: Player/New action
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 48adada4-0ebd-4def-a53d-9064d47c854e
+    m_ActionName: Player/ClassAbility1[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: da70e365-cd64-48b3-9fb6-e35c81cb3494
+    m_ActionName: Player/ClassAbility2[/Keyboard/r]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e7240272-17a1-456d-9bcf-b1e3cb88a2bc
+    m_ActionName: Player/ClassAbility3[/Keyboard/f]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 390f2e32-bf57-4e84-9c42-0b1d0acd75f0
+    m_ActionName: Player/ClassAbility4[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5dd4724d-1b3e-46f8-8983-f91486e2f493
+    m_ActionName: Player/Ping[/Mouse/middleButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a458844a-48fc-4798-a3c7-667bb7f4dcea
+    m_ActionName: Player/Pause[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1cbe944f-6fc5-4408-955b-917259eeabe2
+    m_ActionName: Player/Menu[/Keyboard/tab]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -2171,7 +2331,6 @@ MonoBehaviour:
   _lookSpeed: 2
   _lookHeightLimit: 90
   _walkingSpeed: 7.5
-  _runningSpeed: 11.5
   _jumpForce: 8
   _gravity: 20
 --- !u!143 &4971044680991483180

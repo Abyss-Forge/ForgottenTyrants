@@ -16,7 +16,6 @@ public class FpsPlayerController : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] private float _walkingSpeed = 7.5f;
-    [SerializeField] private float _runningSpeed = 11.5f;
     [SerializeField] private float _jumpForce = 8f;
     [SerializeField] private float _gravity = 20f;
 

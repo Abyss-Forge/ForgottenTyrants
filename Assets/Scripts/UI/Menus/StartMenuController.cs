@@ -5,17 +5,14 @@ using UnityEngine.UI;
 
 public class StartMenuController : MonoBehaviour
 {
-    [Header("Buttons")]
-    [SerializeField] private Button playButton;
-    [SerializeField] private Button quitButton;
-    [SerializeField] private Button settingsButton;
+    [SerializeField] private Button _playButton, _settingsButton, _quitButton;
     [SerializeField] private GameObject settingsMenu;
 
     void Start()
     {
-        playButton.onClick.AddListener(Play);
-        quitButton.onClick.AddListener(Quit);
-        settingsButton.onClick.AddListener(OpenSettings);
+        _playButton.onClick.AddListener(Play);
+        _quitButton.onClick.AddListener(Quit);
+        _settingsButton.onClick.AddListener(OpenSettings);
     }
 
     private void Play()

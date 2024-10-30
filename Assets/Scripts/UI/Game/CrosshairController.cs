@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Unity.VisualScripting;
 using ColorUtility = UnityEngine.ColorUtility;
+using ForgottenTyrants;
 
 [RequireComponent(typeof(Image))]
 public class CrosshairController : Configurable<string, string>
@@ -15,8 +16,8 @@ public class CrosshairController : Configurable<string, string>
 
     protected override void InitializeDefaults()
     {
-        _defaultSettings.Add(STags.Enemy, Color.red.ToHexString());
-        _defaultSettings.Add(STags.Ally, Color.green.ToHexString());
+        _defaultSettings.Add(Tag.Enemy, Color.red.ToHexString());
+        _defaultSettings.Add(Tag.Ally, Color.green.ToHexString());
 
         foreach (var item in _defaultSettings)
         {

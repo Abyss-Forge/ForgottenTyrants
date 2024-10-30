@@ -25,12 +25,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnJump(InputAction.CallbackContext context)
     {
-        Jump();
+        if (context.performed) Jump();
     }
 
     private void OnDash(InputAction.CallbackContext context)
     {
-        Dash();
+        if (context.performed) Dash();
     }
 
     void Awake()
@@ -103,6 +103,8 @@ public class PlayerController : MonoBehaviour
             jumpForces = Vector3.up * _jumpForce;
         }
 
+        jumpForces = Vector3.ClampMagnitude(jumpForces, _maxForce);
+
         _rb.AddForce(jumpForces, ForceMode.VelocityChange);
     }
 
@@ -113,7 +115,7 @@ public class PlayerController : MonoBehaviour
         if (_move == Vector2.zero)
         {
             dashDirection = _cameraHolder.transform.forward;
-            dashDirection.y = 0;
+            //dashDirection.y = 0;
         }
         else
         {
@@ -122,8 +124,9 @@ public class PlayerController : MonoBehaviour
 
         dashDirection.Normalize();
         dashDirection *= _dashForce;
+        dashDirection = Vector3.ClampMagnitude(dashDirection, _maxForce);
 
-        _rb.AddForce(dashDirection, ForceMode.VelocityChange);
+        _rb.AddForce(dashDirection, ForceMode.Impulse);
     }
 
 

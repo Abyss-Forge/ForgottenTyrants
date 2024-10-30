@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.alkimeegames.taglayertypegenerator": {
+      "version": "https://github.com/AlkimeeGames/TagLayerTypeGenerator.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "a1cd7b485c3eee67abe5333500aba0e2c44a4b79"
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,

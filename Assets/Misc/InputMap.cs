@@ -46,15 +46,6 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Fire"",
-                    ""type"": ""Button"",
-                    ""id"": ""0dfd28a9-436f-41ad-a41a-492f0af0c6dd"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""3a623066-bf61-4c71-9900-5ffd9337dfbd"",
@@ -67,6 +58,87 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""name"": ""Dash"",
                     ""type"": ""Button"",
                     ""id"": ""36b45c0e-38e8-4551-bff2-7063ea10057e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""WeaponBasicAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""0dfd28a9-436f-41ad-a41a-492f0af0c6dd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""WeaponAbility"",
+                    ""type"": ""Button"",
+                    ""id"": ""8a1628ad-c382-4856-8113-52f24d2a20af"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ClassAbility1"",
+                    ""type"": ""Button"",
+                    ""id"": ""48adada4-0ebd-4def-a53d-9064d47c854e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ClassAbility2"",
+                    ""type"": ""Button"",
+                    ""id"": ""da70e365-cd64-48b3-9fb6-e35c81cb3494"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ClassAbility3"",
+                    ""type"": ""Button"",
+                    ""id"": ""e7240272-17a1-456d-9bcf-b1e3cb88a2bc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ClassAbility4"",
+                    ""type"": ""Button"",
+                    ""id"": ""390f2e32-bf57-4e84-9c42-0b1d0acd75f0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Ping"",
+                    ""type"": ""Button"",
+                    ""id"": ""5dd4724d-1b3e-46f8-8983-f91486e2f493"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""a458844a-48fc-4798-a3c7-667bb7f4dcea"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Menu"",
+                    ""type"": ""Button"",
+                    ""id"": ""1cbe944f-6fc5-4408-955b-917259eeabe2"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -246,7 +318,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""Fire"",
+                    ""action"": ""WeaponBasicAttack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -257,7 +329,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Fire"",
+                    ""action"": ""WeaponBasicAttack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -268,7 +340,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Touch"",
-                    ""action"": ""Fire"",
+                    ""action"": ""WeaponBasicAttack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -279,7 +351,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Joystick"",
-                    ""action"": ""Fire"",
+                    ""action"": ""WeaponBasicAttack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -290,7 +362,18 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""XR"",
-                    ""action"": ""Fire"",
+                    ""action"": ""WeaponBasicAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8b2ced97-7497-4262-a243-87e769f0dd6a"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""WeaponAbility"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -313,6 +396,83 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""23036c34-6e78-4226-90bd-619cd4f74f52"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ClassAbility1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7896d1c8-d81e-48e7-bdd7-eba8cb821106"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ClassAbility2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""31d84d3d-6f48-4d9b-a4ac-0e042d8b215c"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ClassAbility3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f7daf994-45f8-4776-ac7c-0e0904b3a845"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ClassAbility4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""be081fa3-4c2e-485e-a417-cd9778c12a56"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Ping"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4519c5c2-4648-44f8-8d91-8abc1ea9e9fa"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a4a9b6d5-8959-460b-9fd7-57115654e81b"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Menu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -902,9 +1062,17 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
-        m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
+        m_Player_WeaponBasicAttack = m_Player.FindAction("WeaponBasicAttack", throwIfNotFound: true);
+        m_Player_WeaponAbility = m_Player.FindAction("WeaponAbility", throwIfNotFound: true);
+        m_Player_ClassAbility1 = m_Player.FindAction("ClassAbility1", throwIfNotFound: true);
+        m_Player_ClassAbility2 = m_Player.FindAction("ClassAbility2", throwIfNotFound: true);
+        m_Player_ClassAbility3 = m_Player.FindAction("ClassAbility3", throwIfNotFound: true);
+        m_Player_ClassAbility4 = m_Player.FindAction("ClassAbility4", throwIfNotFound: true);
+        m_Player_Ping = m_Player.FindAction("Ping", throwIfNotFound: true);
+        m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
+        m_Player_Menu = m_Player.FindAction("Menu", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -980,18 +1148,34 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Look;
-    private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Dash;
+    private readonly InputAction m_Player_WeaponBasicAttack;
+    private readonly InputAction m_Player_WeaponAbility;
+    private readonly InputAction m_Player_ClassAbility1;
+    private readonly InputAction m_Player_ClassAbility2;
+    private readonly InputAction m_Player_ClassAbility3;
+    private readonly InputAction m_Player_ClassAbility4;
+    private readonly InputAction m_Player_Ping;
+    private readonly InputAction m_Player_Pause;
+    private readonly InputAction m_Player_Menu;
     public struct PlayerActions
     {
         private @InputMap m_Wrapper;
         public PlayerActions(@InputMap wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Look => m_Wrapper.m_Player_Look;
-        public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
+        public InputAction @WeaponBasicAttack => m_Wrapper.m_Player_WeaponBasicAttack;
+        public InputAction @WeaponAbility => m_Wrapper.m_Player_WeaponAbility;
+        public InputAction @ClassAbility1 => m_Wrapper.m_Player_ClassAbility1;
+        public InputAction @ClassAbility2 => m_Wrapper.m_Player_ClassAbility2;
+        public InputAction @ClassAbility3 => m_Wrapper.m_Player_ClassAbility3;
+        public InputAction @ClassAbility4 => m_Wrapper.m_Player_ClassAbility4;
+        public InputAction @Ping => m_Wrapper.m_Player_Ping;
+        public InputAction @Pause => m_Wrapper.m_Player_Pause;
+        public InputAction @Menu => m_Wrapper.m_Player_Menu;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1007,15 +1191,39 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
-            @Fire.started += instance.OnFire;
-            @Fire.performed += instance.OnFire;
-            @Fire.canceled += instance.OnFire;
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
+            @WeaponBasicAttack.started += instance.OnWeaponBasicAttack;
+            @WeaponBasicAttack.performed += instance.OnWeaponBasicAttack;
+            @WeaponBasicAttack.canceled += instance.OnWeaponBasicAttack;
+            @WeaponAbility.started += instance.OnWeaponAbility;
+            @WeaponAbility.performed += instance.OnWeaponAbility;
+            @WeaponAbility.canceled += instance.OnWeaponAbility;
+            @ClassAbility1.started += instance.OnClassAbility1;
+            @ClassAbility1.performed += instance.OnClassAbility1;
+            @ClassAbility1.canceled += instance.OnClassAbility1;
+            @ClassAbility2.started += instance.OnClassAbility2;
+            @ClassAbility2.performed += instance.OnClassAbility2;
+            @ClassAbility2.canceled += instance.OnClassAbility2;
+            @ClassAbility3.started += instance.OnClassAbility3;
+            @ClassAbility3.performed += instance.OnClassAbility3;
+            @ClassAbility3.canceled += instance.OnClassAbility3;
+            @ClassAbility4.started += instance.OnClassAbility4;
+            @ClassAbility4.performed += instance.OnClassAbility4;
+            @ClassAbility4.canceled += instance.OnClassAbility4;
+            @Ping.started += instance.OnPing;
+            @Ping.performed += instance.OnPing;
+            @Ping.canceled += instance.OnPing;
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
+            @Menu.started += instance.OnMenu;
+            @Menu.performed += instance.OnMenu;
+            @Menu.canceled += instance.OnMenu;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1026,15 +1234,39 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
-            @Fire.started -= instance.OnFire;
-            @Fire.performed -= instance.OnFire;
-            @Fire.canceled -= instance.OnFire;
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
+            @WeaponBasicAttack.started -= instance.OnWeaponBasicAttack;
+            @WeaponBasicAttack.performed -= instance.OnWeaponBasicAttack;
+            @WeaponBasicAttack.canceled -= instance.OnWeaponBasicAttack;
+            @WeaponAbility.started -= instance.OnWeaponAbility;
+            @WeaponAbility.performed -= instance.OnWeaponAbility;
+            @WeaponAbility.canceled -= instance.OnWeaponAbility;
+            @ClassAbility1.started -= instance.OnClassAbility1;
+            @ClassAbility1.performed -= instance.OnClassAbility1;
+            @ClassAbility1.canceled -= instance.OnClassAbility1;
+            @ClassAbility2.started -= instance.OnClassAbility2;
+            @ClassAbility2.performed -= instance.OnClassAbility2;
+            @ClassAbility2.canceled -= instance.OnClassAbility2;
+            @ClassAbility3.started -= instance.OnClassAbility3;
+            @ClassAbility3.performed -= instance.OnClassAbility3;
+            @ClassAbility3.canceled -= instance.OnClassAbility3;
+            @ClassAbility4.started -= instance.OnClassAbility4;
+            @ClassAbility4.performed -= instance.OnClassAbility4;
+            @ClassAbility4.canceled -= instance.OnClassAbility4;
+            @Ping.started -= instance.OnPing;
+            @Ping.performed -= instance.OnPing;
+            @Ping.canceled -= instance.OnPing;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
+            @Menu.started -= instance.OnMenu;
+            @Menu.performed -= instance.OnMenu;
+            @Menu.canceled -= instance.OnMenu;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1219,9 +1451,17 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
-        void OnFire(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
+        void OnWeaponBasicAttack(InputAction.CallbackContext context);
+        void OnWeaponAbility(InputAction.CallbackContext context);
+        void OnClassAbility1(InputAction.CallbackContext context);
+        void OnClassAbility2(InputAction.CallbackContext context);
+        void OnClassAbility3(InputAction.CallbackContext context);
+        void OnClassAbility4(InputAction.CallbackContext context);
+        void OnPing(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
+        void OnMenu(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

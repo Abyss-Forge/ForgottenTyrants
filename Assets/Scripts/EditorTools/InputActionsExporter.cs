@@ -9,7 +9,6 @@ public class InputActionsExporter : MonoBehaviour
 {
     private static string _folder = SGlobalSettings.ExportedConstantsFolder;
 
-    // Este método se ejecuta desde el menú contextual del Input Action Asset
     [MenuItem("CONTEXT/InputActionAsset/Export Input Actions", priority = 1)]
     public static void ExportInputActions(MenuCommand command)
     {

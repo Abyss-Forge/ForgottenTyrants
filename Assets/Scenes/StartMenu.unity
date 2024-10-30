@@ -468,7 +468,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f4c50a51b233ed4f8961d3ee5ce1250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: 1
+  _offset: 1
 --- !u!23 &217162569
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1448,9 +1448,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 134fdc758fa7f8e4b88b081c93cb0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playButton: {fileID: 1613291877}
-  quitButton: {fileID: 83432190}
-  settingsButton: {fileID: 1050979148}
+  _playButton: {fileID: 1613291877}
+  _settingsButton: {fileID: 1050979148}
+  _quitButton: {fileID: 83432190}
   settingsMenu: {fileID: 1168983808}
 --- !u!114 &1050979148 stripped
 MonoBehaviour:

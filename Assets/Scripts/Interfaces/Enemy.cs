@@ -5,6 +5,7 @@ using System;
 
 public class EnemyAlly : MonoBehaviour, IDamageable
 {
+    [field: SerializeField]
     public int _health { get; set; }
 
     // Declare the events from the IDamageable interface.
