@@ -1,10 +1,11 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class EnemyAlly : MonoBehaviour, IDamageable
 {
-    public int health { get; set; }
+    public int _health { get; set; }
 
     // Declare the events from the IDamageable interface.
     public event Action OnDeath;
@@ -12,12 +13,12 @@ public class EnemyAlly : MonoBehaviour, IDamageable
 
     public void Damage(int damageAmount)
     {
-        health -= damageAmount;
+        _health -= damageAmount;
 
         // Trigger the OnTakeDamage event if there are subscribers.
         OnTakeDamage?.Invoke(damageAmount);
 
-        if (health <= 0)
+        if (_health <= 0)
         {
             // Trigger the OnDeath event if there are subscribers.
             OnDeath?.Invoke();
@@ -27,6 +28,6 @@ public class EnemyAlly : MonoBehaviour, IDamageable
     // Optional: Implement the Heal method if needed.
     public void Heal(int healAmount)
     {
-        health += healAmount;
+        _health += healAmount;
     }
 }

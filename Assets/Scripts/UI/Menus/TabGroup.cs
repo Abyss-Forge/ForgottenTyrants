@@ -6,35 +6,35 @@ using UnityEngine.UI;
 [RequireComponent(typeof(GridLayoutGroup))]
 public class TabGroup : MonoBehaviour
 {
-    public List<GameObject> tabPages = new List<GameObject>();
-    public List<MyButton> tabButtons = new List<MyButton>();
-    private MyButton selectedTab;
+    [SerializeField] private List<GameObject> _tabPages = new List<GameObject>();
+    [SerializeField] private List<MyButton> _tabButtons = new List<MyButton>();
+    private MyButton _selectedTabButton;
 
     void LateUpdate()
     {
-        for (int i = 0; i < tabButtons.Count; i++)
+        for (int i = 0; i < _tabButtons.Count; i++)
         {
-            tabPages[i].SetActive(tabButtons[i].isSelected);
-            if (tabButtons[i].isSelected)
+            _tabPages[i].SetActive(_tabButtons[i].IsSelected);
+            if (_tabButtons[i].IsSelected)
             {
-                selectedTab = tabButtons[i];
+                _selectedTabButton = _tabButtons[i];
             }
         }
     }
 
     public void OnTabSelected(MyButton button)
     {
-        if (selectedTab != null)
+        if (_selectedTabButton != null)
         {
-            selectedTab.SetSelected(false);
+            _selectedTabButton.SetSelected(false);
         }
-        selectedTab = button;
-        selectedTab.SetSelected(true);
+        _selectedTabButton = button;
+        _selectedTabButton.SetSelected(true);
 
-        int index = tabButtons.IndexOf(button);
-        for (int i = 0; i < tabPages.Count; i++)
+        int index = _tabButtons.IndexOf(button);
+        for (int i = 0; i < _tabPages.Count; i++)
         {
-            tabPages[i].SetActive(i == index);
+            _tabPages[i].SetActive(i == index);
         }
     }
 }

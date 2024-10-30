@@ -1,11 +1,12 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public interface IDamageable
 {
     // Property to get and set the health of the object.
-    int health { get; set; }
+    int _health { get; set; }
 
     // Method to apply damage to the object.
     void Damage(int damageAmount);

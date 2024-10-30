@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class AutoDeactivate : MonoBehaviour
+public abstract class DisabledByDefault : MonoBehaviour
 {
 
     private void Awake()

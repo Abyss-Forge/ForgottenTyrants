@@ -20,7 +20,7 @@ public class StartMenuController : MonoBehaviour
 
     private void Play()
     {
-        MySceneManager.Instance.LoadSceneAsync(1);
+        MySceneManager.Instance.LoadSceneWithLoadingScreen(1);
     }
 
     private void Quit()

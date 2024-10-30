@@ -2,20 +2,24 @@ using UnityEngine;
 
 public class MyCursorManager : Singleton<MyCursorManager>
 {
-    [SerializeField] private GameObject crosshairPrefab;
+    [SerializeField] private GameObject _crosshairPrefab;
+
+    void Start()
+    {
+        Release();
+        Capture();
+    }
 
     public void Capture()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        //crosshairPrefab.SetActive(true);
     }
 
     public void Release()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        //crosshairPrefab.SetActive(false);
     }
 
     public bool IsCaptured()
@@ -25,12 +29,12 @@ public class MyCursorManager : Singleton<MyCursorManager>
 
     public void EnableCrosshair()
     {
-        crosshairPrefab.SetActive(true);
+        _crosshairPrefab.SetActive(true);
     }
 
     public void DisableCrosshair()
     {
-
+        _crosshairPrefab.SetActive(false);
     }
 
 }

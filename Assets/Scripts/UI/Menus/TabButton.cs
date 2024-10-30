@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class TabButton : MyButton   //composicion
 {
-    public TabGroup tabGroup;
+    public TabGroup _tabGroup;
 
     public override void OnPointerClick(PointerEventData eventData)
     {
         base.OnPointerClick(eventData);
-        tabGroup.OnTabSelected(this);
+        _tabGroup.OnTabSelected(this);
     }
 }

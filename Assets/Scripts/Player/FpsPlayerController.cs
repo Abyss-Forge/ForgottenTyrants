@@ -20,45 +20,48 @@ public class FpsPlayerController : MonoBehaviour
     [SerializeField] private float _jumpForce = 8f;
     [SerializeField] private float _gravity = 20f;
 
-    private Vector3 moveDirection = Vector3.zero;
-    private float rotationX = 0f;
-    private bool canMove = true;
+    private Vector3 _moveDirection = Vector3.zero;
+    private float _rotationX = 0f;
+    private bool _canMove = true;
 
     void Awake()
     {
         characterController = GetComponent<CharacterController>();
-
-        MyCursorManager.Instance.Capture();
         InitCameraPosition();
+    }
+
+    void Start()
+    {
+        MyCursorManager.Instance.Capture();
     }
 
     void Update()
     {
-        if (canMove)
+        if (_canMove)
         {
             // We are grounded, so recalculate move direction based on axes
             Vector3 forward = transform.TransformDirection(Vector3.forward);
             Vector3 right = transform.TransformDirection(Vector3.right);
             //MyInputManager.Instance.IsKeyActive(eBindableAction.Run);
-            bool runPressed = Input.GetKey(KeyCode.LeftShift);
+            bool dashPressed = Input.GetKey(KeyCode.LeftShift);
             bool jumpPressed = Input.GetKey(KeyCode.Space);
 
             float crouchedSpeedMultiplier = 1;
 
             //Running logic
-            float curSpeedX = (runPressed ? _runningSpeed : _walkingSpeed) * crouchedSpeedMultiplier * Input.GetAxis("Vertical");
-            float curSpeedY = (runPressed ? _runningSpeed : _walkingSpeed) * crouchedSpeedMultiplier * Input.GetAxis("Horizontal");
-            float movementDirectionY = moveDirection.y;
-            moveDirection = (forward * curSpeedX) + (right * curSpeedY);
+            float curSpeedX = _walkingSpeed * crouchedSpeedMultiplier * Input.GetAxis("Vertical");
+            float curSpeedY = _walkingSpeed * crouchedSpeedMultiplier * Input.GetAxis("Horizontal");
+            float movementDirectionY = _moveDirection.y;
+            _moveDirection = (forward * curSpeedX) + (right * curSpeedY);
 
             //Jumping logic
             if (jumpPressed && characterController.isGrounded)
             {
-                moveDirection.y = _jumpForce;
+                _moveDirection.y = _jumpForce;
             }
             else
             {
-                moveDirection.y = movementDirectionY;
+                _moveDirection.y = movementDirectionY;
             }
 
             // Apply gravity. Gravity is multiplied by deltaTime twice (once here, and once below
@@ -66,17 +69,17 @@ public class FpsPlayerController : MonoBehaviour
             // as an acceleration (ms^-2)
             if (!characterController.isGrounded)
             {
-                moveDirection.y -= _gravity * Time.deltaTime;
+                _moveDirection.y -= _gravity * Time.deltaTime;
             }
-            characterController.Move(moveDirection * Time.deltaTime);
+            characterController.Move(_moveDirection * Time.deltaTime);
         }
 
         // Player and Camera rotation
         if (MyCursorManager.Instance.IsCaptured())
         {
-            rotationX += -Input.GetAxis("Mouse Y") * _lookSpeed;
-            rotationX = Mathf.Clamp(rotationX, -_lookHeightLimit, _lookHeightLimit);
-            _playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+            _rotationX += -Input.GetAxis("Mouse Y") * _lookSpeed;
+            _rotationX = Mathf.Clamp(_rotationX, -_lookHeightLimit, _lookHeightLimit);
+            _playerCamera.transform.localRotation = Quaternion.Euler(_rotationX, 0, 0);
             transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * _lookSpeed, 0);
         }
     }

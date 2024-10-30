@@ -1,0 +1,10 @@
+<CrosshairSettings>
+  <Crosshair>
+    <Target>Enemy</Target>
+    <Color>FF0000FF</Color>
+  </Crosshair>
+  <Crosshair>
+    <Target>Ally</Target>
+    <Color>00FF00FF</Color>
+  </Crosshair>
+</CrosshairSettings>

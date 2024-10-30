@@ -7,4 +7,6 @@ public struct STags
    public const string MainCamera = "MainCamera";
    public const string Player = "Player";
    public const string GameController = "GameController";
+   public const string Ally = "Ally";
+   public const string Enemy = "Enemy";
 }

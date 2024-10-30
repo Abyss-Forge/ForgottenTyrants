@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class LayerExporter : MonoBehaviour
 {
-    private static string folder = "Scripts/Constants";
+    private static string _folder = SGlobalSettings.ExportedConstantsFolder;
 
     [MenuItem("Tools/Export/Layers", priority = 1)]
     public static void ExportLayers()
@@ -31,7 +31,7 @@ public class LayerExporter : MonoBehaviour
         }
         fileContent += "}";
 
-        string path = Path.Combine(Application.dataPath, folder, "SLayers.cs");
+        string path = Path.Combine(Application.dataPath, _folder, "SLayers.cs");
         File.WriteAllText(path, fileContent);
         Debug.Log($"Layers successfully exported to class: {path}");
     }
@@ -52,7 +52,7 @@ public class LayerExporter : MonoBehaviour
         }
         fileContent += "}";
 
-        string path = Path.Combine(Application.dataPath, folder, "STags.cs");
+        string path = Path.Combine(Application.dataPath, _folder, "STags.cs");
         File.WriteAllText(path, fileContent);
         Debug.Log($"Tags successfully exported to class: {path}");
     }
@@ -93,7 +93,7 @@ public class LayerExporter : MonoBehaviour
         }
         fileContent += "}";
 
-        string path = Path.Combine(Application.dataPath, folder, "SScenes.cs");
+        string path = Path.Combine(Application.dataPath, _folder, "SScenes.cs");
         File.WriteAllText(path, fileContent);
         Debug.Log($"Scenes successfully exported to class: {path}");
     }

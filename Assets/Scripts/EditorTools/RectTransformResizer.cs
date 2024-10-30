@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class RectTransformSizeEditor : EditorWindow
 {
-    private RectTransform selectedRectTransform;
-    private float percentage = 100f; // default percentaje
+    private RectTransform _selectedRectTransform;
+    private float _percentage = 100f; // default percentaje
 
     [MenuItem("CONTEXT/RectTransform/SizeScaler", priority = 50)]
     public static void ShowWindow()
@@ -22,21 +22,21 @@ public class RectTransformSizeEditor : EditorWindow
         // Espacio después del título
         GUILayout.Space(10);
 
-        selectedRectTransform = Selection.activeGameObject?.GetComponent<RectTransform>();
-        if (selectedRectTransform == null)
+        _selectedRectTransform = Selection.activeGameObject?.GetComponent<RectTransform>();
+        if (_selectedRectTransform == null)
         {
             GUILayout.Label("Select a RectTransform in the hierarchy.");
             return;
         }
 
-        percentage = EditorGUILayout.FloatField("Percentage (%):", percentage);
+        _percentage = EditorGUILayout.FloatField("Percentage (%):", _percentage);
 
         // Espacio entre el campo de entrada y el botón
         GUILayout.Space(10);
 
         if (GUILayout.Button("Set Size"))
         {
-            SetRectTransformSize(selectedRectTransform, percentage / 100f);
+            SetRectTransformSize(_selectedRectTransform, _percentage / 100f);
         }
 
         // Ajustar el tamaño de la ventana al contenido

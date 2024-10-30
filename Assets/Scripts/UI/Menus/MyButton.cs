@@ -6,79 +6,77 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
 public class MyButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerExitHandler
 {
+    private Image _image;
+
     [Header("Config")]
-    [SerializeField] private Sprite idleSprite;
-    [SerializeField] private Sprite hoverSprite;
-    [SerializeField] private Sprite activeSprite;
-    [SerializeField] private bool isToggleable = false;
-    [SerializeField] private bool isDependent = false;
-    [SerializeField] private bool isActiveByDefault = false;
+    [SerializeField] private Sprite _idleSprite, _hoverSprite, _activeSprite;
+    [SerializeField] private bool _isToggleable, _isDependent, _isActiveByDefault;
 
-    public bool isSelected { get; private set; }
-    private Image backgroundImage;
+    private bool _isSelected;
+    public bool IsSelected => _isSelected;
 
-    private enum PointerAction
+    private enum _PointerAction
     {
         Enter, Click, Exit
     }
 
     void Start()
     {
-        backgroundImage = GetComponent<Image>();
-        if (backgroundImage == null)
+        _image = GetComponent<Image>();
+        if (_image == null)
         {
             gameObject.AddComponent<Image>();
         }
 
-        isToggleable = isDependent || isToggleable;
-        SetSelected(isActiveByDefault);
+        _isToggleable = _isDependent || _isToggleable;
+        SetSelected(_isActiveByDefault);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (CanBeModified(PointerAction.Enter))
+        if (CanBeModified(_PointerAction.Enter))
         {
-            backgroundImage.sprite = hoverSprite;
+            _image.sprite = _hoverSprite;
         }
     }
 
     public virtual void OnPointerClick(PointerEventData eventData)
     {
-        if (CanBeModified(PointerAction.Click))
+        if (CanBeModified(_PointerAction.Click))
         {
-            SetSelected(!isSelected); //toggle
+            SetSelected(!_isSelected); //toggle
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (CanBeModified(PointerAction.Exit))
+        if (CanBeModified(_PointerAction.Exit))
         {
-            backgroundImage.sprite = idleSprite;
+            _image.sprite = _idleSprite;
         }
     }
 
     public void SetSelected(bool selected)
     {
-        isSelected = selected;
-        backgroundImage.sprite = selected ? activeSprite : idleSprite;
+        _isSelected = selected;
+        _image.sprite = selected ? _activeSprite : _idleSprite;
     }
 
-    private bool CanBeModified(PointerAction action)
+    private bool CanBeModified(_PointerAction action)
     {
-        if (!isSelected)
+        if (!_isSelected)
         {
             return true;
         }
 
-        if (isDependent)
+        if (_isDependent)
         {
             return false;
         }
 
-        if (isToggleable)
+        if (_isToggleable)
         {
-            return action == PointerAction.Click;
+            return action == _PointerAction.Click;
         }
 
         return true;
