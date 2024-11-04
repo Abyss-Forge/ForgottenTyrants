@@ -3,15 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody _rb;
-    [SerializeField] private GameObject _cameraHolder;
-    [SerializeField] private float _walkSpeed, _lookSensivity, _maxForce, _jumpForce, _dashForce;
+    private CharacterController _cc;
+    [SerializeField] private Camera _cameraHolder;
+    [SerializeField] private TrailRenderer _tr;
+    [SerializeField] private AnimationCurve _dashFovCurve;
+
+    [SerializeField] private float _lookSensitivity, _walkSpeed, _gravityMultiplier, _jumpForce, _dashForce, _dashDuration, _dashFovChange, _dashCooldown;
+
     private Vector2 _move, _look;
     private float _lookRotation;
-    private bool _isGrounded, _canMove;
+    private bool _isGrounded, _canMove, _gravityEnabled, _canJump, _canDash;
+    private Vector3 _velocity;
 
     private void OnMove(InputAction.CallbackContext context)
     {
@@ -25,17 +30,21 @@ public class PlayerController : MonoBehaviour
 
     private void OnJump(InputAction.CallbackContext context)
     {
-        if (context.performed) Jump();
+        if (context.performed && _isGrounded && _canJump) Jump();
     }
 
     private void OnDash(InputAction.CallbackContext context)
     {
-        if (context.performed) Dash();
+        if (context.performed && _canDash) StartCoroutine(Dash());
     }
 
     void Awake()
     {
-        _rb = GetComponent<Rigidbody>();
+        _cc = GetComponent<CharacterController>();
+        _canMove = true;
+        _canJump = true;
+        _canDash = true;
+        _gravityEnabled = true;
     }
 
     void Start()
@@ -49,96 +58,92 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         //physics belong inside fixed update
-        Move();
+        if (_canMove) Move();
+        if (_gravityEnabled) ApplyGravity();
     }
 
     void Update()
     {
         //animation
+        Debug.Log(_velocity.y);
     }
 
     void LateUpdate()
     {
-        //We move the camera in late update so all the movement has finished before positioning it
+        //we move the camera in late update so all the movement has finished before positioning it
         Look();
     }
 
     private void Look()
     {
         //turn
-        transform.Rotate(Vector3.up * _look.x * _lookSensivity);
+        transform.Rotate(Vector3.up * _look.x * _lookSensitivity);
 
         //look
-        _lookRotation += -_look.y * _lookSensivity;
+        _lookRotation += -_look.y * _lookSensitivity;
         _lookRotation = Mathf.Clamp(_lookRotation, -90, 90);
         _cameraHolder.transform.eulerAngles = new Vector3(_lookRotation, _cameraHolder.transform.eulerAngles.y, _cameraHolder.transform.eulerAngles.z);
     }
 
     private void Move()
     {
-        //find target speed
-        Vector3 currentVelocty = _rb.velocity;
-        Vector3 targetVelocity = new Vector3(_move.x, 0, _move.y);
-        targetVelocity *= _walkSpeed;
+        Vector3 moveDirection = transform.right * _move.x + transform.forward * _move.y;
+        moveDirection *= _walkSpeed;
 
-        //align direction
-        targetVelocity = transform.TransformDirection(targetVelocity);
+        _velocity.x = moveDirection.x;
+        _velocity.z = moveDirection.z;
 
-        //calculate forces
-        Vector3 velocityChange = targetVelocity - currentVelocty;
-        velocityChange = new Vector3(velocityChange.x, 0, velocityChange.z);
+        _cc.Move(_velocity * Time.deltaTime);
+    }
 
-        //limit force
-        Vector3.ClampMagnitude(velocityChange, _maxForce);
-
-        _rb.AddForce(velocityChange, ForceMode.VelocityChange);
+    private void ApplyGravity()
+    {
+        _isGrounded = _cc.isGrounded;
+        if (_isGrounded && _velocity.y < 0)
+        {
+            _velocity.y = -2f; //keep the character grounded
+        }
+        else
+        {
+            _velocity.y += Physics.gravity.y * _gravityMultiplier * Time.deltaTime;
+        }
     }
 
     private void Jump()
     {
-        Vector3 jumpForces = Vector3.zero;
-
-        if (IsGrounded())
-        {
-            jumpForces = Vector3.up * _jumpForce;
-        }
-
-        jumpForces = Vector3.ClampMagnitude(jumpForces, _maxForce);
-
-        _rb.AddForce(jumpForces, ForceMode.VelocityChange);
+        _velocity.y = Mathf.Sqrt(-Physics.gravity.y * _gravityMultiplier * _jumpForce);
     }
 
-    private void Dash()
-    {//TOTEST
-        Vector3 dashDirection;
-
-        if (_move == Vector2.zero)
-        {
-            dashDirection = _cameraHolder.transform.forward;
-            //dashDirection.y = 0;
-        }
-        else
-        {
-            dashDirection = transform.TransformDirection(new Vector3(_move.x, 0, _move.y));
-        }
-
-        dashDirection.Normalize();
-        dashDirection *= _dashForce;
-        dashDirection = Vector3.ClampMagnitude(dashDirection, _maxForce);
-
-        _rb.AddForce(dashDirection, ForceMode.Impulse);
-    }
-
-
-    private bool IsGrounded()
+    private IEnumerator Dash()
     {
-        float rayLength = 1.2f;
-        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, rayLength))
-        {
-            return true;
-        }
-        return false;
-    }
+        _canDash = false;
 
+        _gravityEnabled = false;
+        _tr.emitting = true;
+        float originalFov = _cameraHolder.fieldOfView;
+
+        Vector3 dashDirection = transform.right * _move.x + transform.forward * _move.y;
+
+        float elapsedTime = 0f;
+        while (elapsedTime < _dashDuration)
+        {
+            float progress = elapsedTime / _dashDuration;
+
+            float curveValue = _dashFovCurve.Evaluate(progress);
+            _cameraHolder.fieldOfView = originalFov + (curveValue * _dashFovChange);
+
+            _cc.Move(dashDirection * _dashForce * Time.deltaTime / _dashDuration);
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        _gravityEnabled = true;
+        _tr.emitting = false;
+        _cameraHolder.fieldOfView = originalFov;
+
+        yield return new WaitForSeconds(_dashCooldown);
+        _canDash = true;
+    }
 
 }

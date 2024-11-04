@@ -10,17 +10,12 @@ public class Tester : MonoBehaviour
 
     }
 
-    void Start()
-    {
-
-    }
-
     void OnEnable()
     {
 
     }
 
-    void OnDisable()
+    void Start()
     {
 
     }
@@ -36,6 +31,16 @@ public class Tester : MonoBehaviour
     }
 
     void LateUpdate()
+    {
+
+    }
+
+    void OnDisable()
+    {
+
+    }
+
+    void OnDestroy()
     {
 
     }
