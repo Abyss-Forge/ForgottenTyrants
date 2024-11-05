@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Weapon
 {
-    [SerializeField] Stats weaponStats;
+    [SerializeField] Stats _stats;
 
-    public Stats WeaponStats => weaponStats;
+    public Stats Stats => _stats;
 
 }

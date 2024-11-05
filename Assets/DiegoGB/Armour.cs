@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Armour
 {
-    [SerializeField] Stats armourStats;
-    public Stats ArmourStats => armourStats;
+    [SerializeField] Stats _stats;
+    public Stats Stats => _stats;
 
 }

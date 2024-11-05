@@ -4,8 +4,8 @@ using UnityEngine;
 
 public abstract class CharacterRace
 {
-    [SerializeField] Stats raceStats;
+    [SerializeField] Stats _stats;
 
-    public Stats RaceStats => raceStats;
+    public Stats Stats => _stats;
 
 }

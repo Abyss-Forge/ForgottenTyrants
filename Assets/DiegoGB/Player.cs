@@ -14,20 +14,40 @@ public class Player : Entity
     protected override void Start()
     {
         base.Start();
-        CalculateTotalStats();
     }
 
-    protected override void Update()
+    public void SetRace(CharacterRace race)
     {
+        _race = race;
+    }
 
+    public void SetClass(CharacterClass characterClass)
+    {
+        _class = characterClass;
+    }
+
+    public void SetWeapon(Weapon weapon)
+    {
+        _weapon = weapon;
+    }
+
+    public void SetArmour(Armour armour)
+    {
+        _armour = armour;
+    }
+
+    public void SetTrinket(Trinket trinket)
+    {
+        _trinket = trinket;
     }
 
     private void CalculateTotalStats()
     {
-        _playerStats.Add(_race.RaceStats);
-        _playerStats.Add(_class.ClassStats);
-        _playerStats.Add(_weapon.WeaponStats);
-        _playerStats.Add(_armour.ArmourStats);
+        _playerStats.Add(_race.Stats);
+        _playerStats.Add(_class.Stats);
+        _playerStats.Add(_weapon.Stats);
+        _playerStats.Add(_armour.Stats);
+        _playerStats.Add(_trinket.Stats);
 
         Debug.Log($"Total HP: {_playerStats.Hp}, Physical Damage: {_playerStats.PhysicalDamage}, " +
                  $"Magical Damage: {_playerStats.MagicalDamage}, Movement Speed: {_playerStats.MovementSpeed}, " +

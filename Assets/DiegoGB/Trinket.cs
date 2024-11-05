@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Trinket
 {
-    [SerializeField] Stats trinketStats;
-    public Stats TrinketStats => trinketStats;
+    [SerializeField] Stats _stats;
+    public Stats Stats => _stats;
 
 }

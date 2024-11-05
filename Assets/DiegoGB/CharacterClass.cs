@@ -5,7 +5,7 @@ using UnityEngine;
 
 public abstract class CharacterClass
 {
-    [SerializeField] Stats classStats;
+    [SerializeField] Stats _stats;
 
-    public Stats ClassStats => classStats;
+    public Stats Stats => _stats;
 }
