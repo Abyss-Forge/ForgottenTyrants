@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class CharacterUISelectionController : MonoBehaviour
 {
+    [SerializeField] private GameObject playerPrefab;
+
     [SerializeField] private List<CharacterRaceTemplate> _races;
     [SerializeField] private List<CharacterClassTemplate> _classes;
     [SerializeField] private List<WeaponTemplate> _weapons;
@@ -20,31 +23,19 @@ public class CharacterUISelectionController : MonoBehaviour
     private int _currentTrinketIndex = 0;
 
 
-    [SerializeField] private TMP_Text _raceNameText;
-    [SerializeField] private TMP_Text _raceStatsText;
-    [SerializeField] private TMP_Text _classNameText;
-    [SerializeField] private TMP_Text _classStatsText;
-    [SerializeField] private TMP_Text _weaponNameText;
-    [SerializeField] private TMP_Text _weaponStatsText;
-    [SerializeField] private TMP_Text _armourNameText;
-    [SerializeField] private TMP_Text _armourStatsText;
-    [SerializeField] private TMP_Text _trinketNameText;
-    [SerializeField] private TMP_Text _trinketStatsText;
+    [SerializeField] private TMP_Text _raceNameText, _raceStatsText;
+    [SerializeField] private TMP_Text _classNameText, _classStatsText;
+    [SerializeField] private TMP_Text _weaponNameText, _weaponStatsText;
+    [SerializeField] private TMP_Text _armourNameText, _armourStatsText;
+    [SerializeField] private TMP_Text _trinketNameText, _trinketStatsText;
 
 
     [SerializeField] private Button _confirmButton;
-
-
-    [SerializeField] private Button _nextRaceButton;
-    [SerializeField] private Button _prevRaceButton;
-    [SerializeField] private Button _nextClassButton;
-    [SerializeField] private Button _prevClassButton;
-    [SerializeField] private Button _nextWeaponButton;
-    [SerializeField] private Button _prevWeaponButton;
-    [SerializeField] private Button _nextArmourButton;
-    [SerializeField] private Button _prevArmourButton;
-    [SerializeField] private Button _nextTrinketButton;
-    [SerializeField] private Button _prevTrinketButton;
+    [SerializeField] private Button _nextRaceButton, _prevRaceButton;
+    [SerializeField] private Button _nextClassButton, _prevClassButton;
+    [SerializeField] private Button _nextWeaponButton, _prevWeaponButton;
+    [SerializeField] private Button _nextArmourButton, _prevArmourButton;
+    [SerializeField] private Button _nextTrinketButton, _prevTrinketButton;
 
 
     private void Start()
@@ -54,6 +45,7 @@ public class CharacterUISelectionController : MonoBehaviour
         ShowWeapon(_currentWeaponIndex);
         ShowArmour(_currentArmourIndex);
         ShowTrinket(_currentTrinketIndex);
+
         _nextRaceButton.onClick.AddListener(NextRace);
         _prevRaceButton.onClick.AddListener(PreviousRace);
         _nextClassButton.onClick.AddListener(NextClass);
@@ -192,12 +184,26 @@ public class CharacterUISelectionController : MonoBehaviour
     }
     public void ConfirmSelection()
     {
+        GameObject playerInstance = Instantiate(playerPrefab);
+
         CharacterRaceTemplate selectedRace = GetSelectedRace();
         CharacterClassTemplate selectedClass = GetSelectedClass();
         WeaponTemplate selectedWeapon = GetSelectedWeapon();
         ArmourTemplate selectedArmour = GetSelectedArmour();
         TrinketTemplate selectedTrinket = GetSelectedTrinket();
 
-        Debug.Log("Character with: " + selectedRace + selectedClass + selectedWeapon + selectedArmour + selectedTrinket);
+        Player playerScript = playerInstance.GetComponent<Player>();
+
+        if (playerScript != null)
+        {
+            playerScript.BuildPlayer(selectedRace, selectedClass, selectedWeapon, selectedArmour, selectedTrinket, "YOU YOU");
+        }
+
+        DontDestroyOnLoad(playerInstance);
+
+        SceneManager.LoadScene("Test");
+
+        //Debug.Log("Character with: " + selectedRace + selectedClass + selectedWeapon + selectedArmour + selectedTrinket);
     }
+
 }

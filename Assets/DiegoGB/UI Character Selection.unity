@@ -6109,6 +6109,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9af4aebf1b6829d45992c23ef15f4635, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 3910301060619866792, guid: 6f76b911351bd014f96de188cc6eafa4,
+    type: 3}
   _races:
   - {fileID: 11400000, guid: bf086e6db2a566d4ab0fc26f035423dd, type: 2}
   - {fileID: 11400000, guid: 4d8086587b4e2164b87f57a6ef31c07c, type: 2}

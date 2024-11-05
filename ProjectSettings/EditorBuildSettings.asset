@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/StartMenu.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/DiegoGB/UI Character Selection.unity
+    guid: 8bd0840c7a69c8846baaaacd0c269e74
+  - enabled: 1
+    path: Assets/DiegoGB/Tests/Test.unity
+    guid: 407a9079a8d27064c99112cacadaaaa6
   m_configObjects: {}
