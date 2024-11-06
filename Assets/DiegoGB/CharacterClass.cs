@@ -18,7 +18,7 @@ public class CharacterClass
     }
     public CharacterClass(CharacterClassTemplate selectedClass)
     {
-        _name = selectedClass.name;
+        _name = selectedClass.Name;
         _stats = selectedClass.Stats;
     }
 }

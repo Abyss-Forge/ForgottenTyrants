@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class CharacterUISelectionController : MonoBehaviour
 {
-    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject _playerPrefab;
+
 
     [SerializeField] private List<CharacterRaceTemplate> _races;
     [SerializeField] private List<CharacterClassTemplate> _classes;
@@ -170,7 +171,6 @@ public class CharacterUISelectionController : MonoBehaviour
     }
 
 
-
     private string FormatStats(Stats stats)
     {
         return $"HP: {stats.Hp}\n" +
@@ -184,7 +184,7 @@ public class CharacterUISelectionController : MonoBehaviour
     }
     public void ConfirmSelection()
     {
-        GameObject playerInstance = Instantiate(playerPrefab);
+        GameObject playerInstance = Instantiate(_playerPrefab);
 
         CharacterRaceTemplate selectedRace = GetSelectedRace();
         CharacterClassTemplate selectedClass = GetSelectedClass();
@@ -200,10 +200,8 @@ public class CharacterUISelectionController : MonoBehaviour
         }
 
         DontDestroyOnLoad(playerInstance);
-
         SceneManager.LoadScene("Test");
 
-        //Debug.Log("Character with: " + selectedRace + selectedClass + selectedWeapon + selectedArmour + selectedTrinket);
     }
 
 }

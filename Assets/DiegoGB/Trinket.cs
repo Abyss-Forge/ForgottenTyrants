@@ -17,7 +17,7 @@ public class Trinket
     }
     public Trinket(TrinketTemplate selectedTrinket)
     {
-        _name = selectedTrinket.name;
+        _name = selectedTrinket.Name;
         _stats = selectedTrinket.Stats;
     }
 

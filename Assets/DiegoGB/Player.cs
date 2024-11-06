@@ -10,12 +10,25 @@ public class Player : Entity
     [SerializeField] Armour _armour;
     [SerializeField] Trinket _trinket;
 
+    public CharacterRace Race => _race;
+    public CharacterClass Class => _class;
+    public Weapon Weapon => _weapon;
+    public Armour Armour => _armour;
+    public Trinket Trinket => _trinket;
+
     protected override void Start()
     {
         base.Start();
 
     }
 
+    protected override void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            Test();
+        }
+    }
     /*public Player(CharacterRaceTemplate selectedRace, CharacterClassTemplate selectedClass, WeaponTemplate selectedWeapon, ArmourTemplate selectedArmour, TrinketTemplate selectedTrinket)
     {
         _race = new CharacterRace(selectedRace);
@@ -80,4 +93,9 @@ public class Player : Entity
         CalculateTotalStats();
     }
 
+    public void Test()
+    {
+        Debug.Log(_stats.Hp);
+        Debug.Log(_stats.PhysicalDamage);
+    }
 }

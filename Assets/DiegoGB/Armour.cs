@@ -17,7 +17,7 @@ public class Armour
     }
     public Armour(ArmourTemplate selectedArmour)
     {
-        _name = selectedArmour.name;
+        _name = selectedArmour.Name;
         _stats = selectedArmour.Stats;
     }
 

@@ -6003,6 +6003,7 @@ GameObject:
   - component: {fileID: 2072955445}
   - component: {fileID: 2072955444}
   - component: {fileID: 2072955448}
+  - component: {fileID: 2072955449}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -6109,7 +6110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9af4aebf1b6829d45992c23ef15f4635, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 3910301060619866792, guid: 6f76b911351bd014f96de188cc6eafa4,
+  _playerPrefab: {fileID: 3910301060619866792, guid: 6f76b911351bd014f96de188cc6eafa4,
     type: 3}
   _races:
   - {fileID: 11400000, guid: bf086e6db2a566d4ab0fc26f035423dd, type: 2}
@@ -6168,6 +6169,26 @@ MonoBehaviour:
   _prevArmourButton: {fileID: 1151877918}
   _nextTrinketButton: {fileID: 243815857}
   _prevTrinketButton: {fileID: 2130279822}
+--- !u!114 &2072955449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2072955443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e00ac2a7adf3efa4ba88a8337571e847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cd: 0
+  _range: 0
+  _effectDuration: 0
+  _animDuration: 0
+  percentageMovementReduction: 25
+  percentageDamageReduction: 20
+  percentageMovementBoost: 25
+  percentageDamageBoost: 15
 --- !u!1 &2075512995
 GameObject:
   m_ObjectHideFlags: 0

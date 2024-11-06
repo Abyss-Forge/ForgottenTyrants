@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Human
   m_EditorClassIdentifier: Assembly-CSharp::CharacterRaceTemplate
   _stats:
-    _hp: 0
-    _physicalDamage: 0
+    _hp: 9
+    _physicalDamage: 8
     _magicalDamage: 1
     _movementSpeed: 13
     _attackSpeed: 0
