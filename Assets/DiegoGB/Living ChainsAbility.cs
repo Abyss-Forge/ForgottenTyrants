@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ForgottenTyrants;
 using UnityEngine;
 
 public class LivingChainsAbility : MonoBehaviour
@@ -40,11 +41,11 @@ public class LivingChainsAbility : MonoBehaviour
 
         foreach (Collider hitCollider in hitColliders)
         {
-            if (hitCollider.gameObject.CompareTag(STags.Ally))
+            if (hitCollider.gameObject.CompareTag(Tag.Ally))
             {
                 ApplyAllyEffect();
             }
-            else if (hitCollider.gameObject.CompareTag(STags.Enemy))
+            else if (hitCollider.gameObject.CompareTag(Tag.Enemy))
             {
                 ApplyEnemyEffect();
             }
