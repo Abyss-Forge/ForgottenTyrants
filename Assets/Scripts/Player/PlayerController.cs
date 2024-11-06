@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ForgottenTyrants;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -112,6 +113,7 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         _velocity.y = Mathf.Sqrt(-Physics.gravity.y * _gravityMultiplier * _jumpForce);
+        MySceneManager.Instance.LoadSceneWithLoadingScreen(Scene.Next);
     }
 
     private IEnumerator Dash()

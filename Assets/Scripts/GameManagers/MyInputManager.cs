@@ -23,7 +23,6 @@ public enum EInputActions
 
 public class MyInputManager : Singleton<MyInputManager>
 {
-
     public delegate void OmniDelegate(InputAction.CallbackContext context);
 
     private Dictionary<EInputActions, OmniDelegate> _actionDelegates = new Dictionary<EInputActions, OmniDelegate>();
