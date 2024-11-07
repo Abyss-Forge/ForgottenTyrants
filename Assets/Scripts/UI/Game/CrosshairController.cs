@@ -38,10 +38,9 @@ public class CrosshairController : Configurable<string, string>
     void LateUpdate()
     {
         Ray rayOrigin = Camera.main.ScreenPointToRay(_image.transform.position);
-        RaycastHit hitInfo;
         Color color = Color.white;
 
-        if (Physics.Raycast(rayOrigin, out hitInfo))
+        if (Physics.Raycast(rayOrigin, out RaycastHit hitInfo))
         {
             if (hitInfo.collider != null)
             {

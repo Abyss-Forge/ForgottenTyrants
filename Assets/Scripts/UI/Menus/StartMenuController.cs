@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class StartMenuController : MonoBehaviour
 {
     [SerializeField] private Button _playButton, _settingsButton, _quitButton;
-    [SerializeField] private GameObject settingsMenu;
+    [SerializeField] private GameObject _settingsMenu;
 
     void Start()
     {
@@ -28,7 +28,7 @@ public class StartMenuController : MonoBehaviour
 
     private void OpenSettings()
     {
-        settingsMenu.SetActive(true);
+        _settingsMenu.SetActive(true);
     }
 
 }

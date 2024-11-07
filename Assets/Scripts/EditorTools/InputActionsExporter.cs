@@ -7,7 +7,6 @@ using System.IO;
 
 public class InputActionsExporter : MonoBehaviour
 {
-    private static string _folder = SGlobalSettings.ExportedConstantsFolder;
 
     [MenuItem("CONTEXT/InputActionAsset/Export Input Actions", priority = 1)]
     public static void ExportInputActions(MenuCommand command)
@@ -36,13 +35,7 @@ public class InputActionsExporter : MonoBehaviour
         fileContent += "}\n";
 
         // Define la ruta del archivo a exportar
-        string path = Path.Combine(Application.dataPath, _folder, "InputActions.cs");
-
-        // Crea la carpeta si no existe
-        if (!Directory.Exists(Path.Combine(Application.dataPath, _folder)))
-        {
-            Directory.CreateDirectory(Path.Combine(Application.dataPath, _folder));
-        }
+        string path = Path.Combine(Application.dataPath, "InputActions.cs");
 
         File.WriteAllText(path, fileContent);
         AssetDatabase.Refresh(); // Refresca el AssetDatabase para que reconozca el nuevo archivo

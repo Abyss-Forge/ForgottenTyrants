@@ -1,0 +1,23 @@
+using UnityEngine.SceneManagement;
+
+namespace ForgottenTyrants
+{
+   public sealed class Scene
+   {
+      public const string StartMenu = "StartMenu";
+      public const string PruebasIvan = "PruebasIvan";
+
+      public static int Next => GetNext();
+      public static int Previous => GetPrevious();
+
+      private static int GetNext()
+      {
+         return SceneManager.GetActiveScene().buildIndex + 1;
+      }
+
+      private static int GetPrevious()
+      {
+         return SceneManager.GetActiveScene().buildIndex + 1;
+      }
+   }
+}

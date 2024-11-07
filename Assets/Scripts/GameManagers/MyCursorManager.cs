@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MyCursorManager : Singleton<MyCursorManager>
 {
-    [SerializeField] private GameObject _crosshairPrefab;
+    [SerializeField] private GameObject _crosshairParent;
 
     void Start()
     {
@@ -29,12 +29,12 @@ public class MyCursorManager : Singleton<MyCursorManager>
 
     public void EnableCrosshair()
     {
-        _crosshairPrefab.SetActive(true);
+        _crosshairParent.SetActive(true);
     }
 
     public void DisableCrosshair()
     {
-        _crosshairPrefab.SetActive(false);
+        _crosshairParent.SetActive(false);
     }
 
 }
