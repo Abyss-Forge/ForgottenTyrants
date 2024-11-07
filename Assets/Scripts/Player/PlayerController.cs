@@ -7,17 +7,22 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    private CharacterController _cc;
-    [SerializeField] private Camera _cameraHolder;
-    [SerializeField] private TrailRenderer _tr;
+    CharacterController _cc;
+    [SerializeField] private Camera _camera;
+
+    [Header("Aesthetic")]
+    [SerializeField] private TrailRenderer _trail;
     [SerializeField] private AnimationCurve _dashFovCurve;
 
-    [SerializeField] private float _lookSensitivity, _walkSpeed, _gravityMultiplier, _jumpForce, _dashForce, _dashDuration, _dashFovChange, _dashCooldown;
+    [Header("Config")]
+    [SerializeField] private float _lookSensitivity;    //en 2 lineas separadas para que no clone el header por cada field
+    [SerializeField] private float _walkSpeed, _gravityMultiplier, _jumpForce, _dashForce, _dashDuration, _dashFovChange, _dashCooldown;
 
     private Vector2 _move, _look;
     private float _lookRotation;
     private bool _isGrounded, _canMove, _gravityEnabled, _canJump, _canDash;
     private Vector3 _velocity;
+    public Vector3 Velocity => _velocity;
 
     private void OnMove(InputAction.CallbackContext context)
     {
@@ -66,24 +71,24 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         //animation
-        Debug.Log(_velocity.y);
+        if (Input.GetKeyDown(KeyCode.Escape)) MySceneManager.Instance.LoadSceneWithLoadingScreen(Scene.Next);//test
     }
 
     void LateUpdate()
     {
         //we move the camera in late update so all the movement has finished before positioning it
-        Look();
+        //Look();
     }
 
     private void Look()
     {
-        //turn
+        //rotate player
         transform.Rotate(Vector3.up * _look.x * _lookSensitivity);
 
-        //look
+        //rotate camera vertically (since camera is a child of player, it  automarically rotates on x axis)
         _lookRotation += -_look.y * _lookSensitivity;
         _lookRotation = Mathf.Clamp(_lookRotation, -90, 90);
-        _cameraHolder.transform.eulerAngles = new Vector3(_lookRotation, _cameraHolder.transform.eulerAngles.y, _cameraHolder.transform.eulerAngles.z);
+        _camera.transform.eulerAngles = new Vector3(_lookRotation, _camera.transform.eulerAngles.y, _camera.transform.eulerAngles.z);
     }
 
     private void Move()
@@ -113,7 +118,6 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         _velocity.y = Mathf.Sqrt(-Physics.gravity.y * _gravityMultiplier * _jumpForce);
-        MySceneManager.Instance.LoadSceneWithLoadingScreen(Scene.Next);
     }
 
     private IEnumerator Dash()
@@ -121,8 +125,8 @@ public class PlayerController : MonoBehaviour
         _canDash = false;
 
         _gravityEnabled = false;
-        _tr.emitting = true;
-        float originalFov = _cameraHolder.fieldOfView;
+        _trail.emitting = true;
+        float originalFov = _camera.fieldOfView;
 
         Vector3 dashDirection = transform.right * _move.x + transform.forward * _move.y;
 
@@ -132,7 +136,7 @@ public class PlayerController : MonoBehaviour
             float progress = elapsedTime / _dashDuration;
 
             float curveValue = _dashFovCurve.Evaluate(progress);
-            _cameraHolder.fieldOfView = originalFov + (curveValue * _dashFovChange);
+            _camera.fieldOfView = originalFov + (curveValue * _dashFovChange);
 
             _cc.Move(dashDirection * _dashForce * Time.deltaTime / _dashDuration);
 
@@ -141,8 +145,8 @@ public class PlayerController : MonoBehaviour
         }
 
         _gravityEnabled = true;
-        _tr.emitting = false;
-        _cameraHolder.fieldOfView = originalFov;
+        _trail.emitting = false;
+        _camera.fieldOfView = originalFov;
 
         yield return new WaitForSeconds(_dashCooldown);
         _canDash = true;

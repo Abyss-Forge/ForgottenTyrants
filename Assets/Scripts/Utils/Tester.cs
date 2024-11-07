@@ -26,6 +26,11 @@ public class Tester : MonoBehaviour
         //Do something
     }
 
+    void OnValidate()
+    {
+
+    }
+
     void Awake()
     {
 
