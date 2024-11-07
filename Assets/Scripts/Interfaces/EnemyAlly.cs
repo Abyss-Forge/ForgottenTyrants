@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class Enemy : MonoBehaviour, IDamageable
+public class EnemyAlly : MonoBehaviour, IDamageable
 {
     [field: SerializeField]
     public int _health { get; set; }
