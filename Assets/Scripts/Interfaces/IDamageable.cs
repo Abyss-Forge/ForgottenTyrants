@@ -6,7 +6,7 @@ using System;
 public interface IDamageable
 {
     // Property to get and set the health of the object.
-    int _health { get; set; }
+    int Health { get; }
 
     // Method to apply damage to the object.
     void Damage(int damageAmount);

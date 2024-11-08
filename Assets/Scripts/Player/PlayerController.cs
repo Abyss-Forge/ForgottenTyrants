@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         //animation
-        if (Input.GetKeyDown(KeyCode.Escape)) MySceneManager.Instance.LoadSceneWithLoadingScreen(Scene.Next);//test
+        if (Input.GetKeyDown(KeyCode.Tab)) MySceneManager.Instance.LoadSceneWithLoadingScreen(Scene.Next);//test
     }
 
     void LateUpdate()
