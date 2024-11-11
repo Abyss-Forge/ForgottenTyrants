@@ -6,7 +6,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private GameObject _player;
 
     [SerializeField, Range(0f, 90f)] private float _upperVerticalLimit = 90f, _lowerVerticalLimit = 90f;
-    [SerializeField] private float _cameraSpeed = 50f;
+    [SerializeField] private float _horizontalSensitivity = 15f, _verticalSensitivity = 15f;
     [SerializeField] private bool _smoothCameraRotation;
     [SerializeField, Range(1f, 50f)] private float _cameraSmoothingFactor = 25f;
 
@@ -29,7 +29,7 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        RotateCamera(_look.x, -_look.y);
+        RotateCamera(_look.x * _horizontalSensitivity, -_look.y * _verticalSensitivity);
     }
 
     private void OnLook(InputAction.CallbackContext context)
@@ -45,8 +45,8 @@ public class CameraController : MonoBehaviour
             verticalInput = Mathf.Lerp(0, verticalInput, Time.deltaTime * _cameraSmoothingFactor);
         }
 
-        _currentXAngle += verticalInput * _cameraSpeed * Time.deltaTime;
-        _currentYAngle += horizontalInput * _cameraSpeed * Time.deltaTime;
+        _currentXAngle += verticalInput * Time.deltaTime;
+        _currentYAngle += horizontalInput * Time.deltaTime;
 
         _currentXAngle = Mathf.Clamp(_currentXAngle, -_upperVerticalLimit, _lowerVerticalLimit);
 

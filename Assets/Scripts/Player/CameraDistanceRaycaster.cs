@@ -23,6 +23,11 @@ namespace AdvancedController
 
         void LateUpdate()
         {
+            MoveCamera();
+        }
+
+        private void MoveCamera()
+        {
             Vector3 castDirection = _cameraTargetTransform.position - _tr.position;
 
             float distance = GetCameraDistance(castDirection);

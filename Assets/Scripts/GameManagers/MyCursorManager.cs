@@ -1,13 +1,21 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MyCursorManager : Singleton<MyCursorManager>
 {
     [SerializeField] private GameObject _crosshairParent;
+    public bool IsCaptured => GetCaptured();
 
     void Start()
     {
         Release();
         Capture();
+    }
+
+    private bool GetCaptured()
+    {
+        return Cursor.lockState == CursorLockMode.Locked;
     }
 
     public void Capture()
@@ -20,11 +28,6 @@ public class MyCursorManager : Singleton<MyCursorManager>
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-    }
-
-    public bool IsCaptured()
-    {
-        return Cursor.lockState == CursorLockMode.Locked;
     }
 
     public void EnableCrosshair()

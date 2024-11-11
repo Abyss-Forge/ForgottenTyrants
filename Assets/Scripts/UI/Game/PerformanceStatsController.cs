@@ -9,14 +9,7 @@ public class PerformanceStatsController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _fpsText;
     [SerializeField] private float _textUpdateRate = 1f;
 
-    private float _lastUpdate, _frames, _fps;
-
-    void Start()
-    {
-        _lastUpdate = 0f;
-        _frames = 0f;
-        _fps = 0f;
-    }
+    private float _lastUpdate = 0f, _frames = 0f, _fps = 0f;
 
     void Update()
     {

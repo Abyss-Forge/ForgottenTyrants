@@ -12,8 +12,8 @@ EditorBuildSettings:
     path: Assets/Scenes/PruebasIvan.unity
     guid: 66f1da52f6b05f04bbbdce73b7b8c9a0
   - enabled: 1
-    path: Assets/Scenes/PruebasIvan2.unity
-    guid: 4197f791507c48142895d9a7a1447ecd
+    path: Assets/Scenes/PruebasDiego.unity
+    guid: 407a9079a8d27064c99112cacadaaaa6
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 19b8d2ba29a951f47988e13947465717,
       type: 2}

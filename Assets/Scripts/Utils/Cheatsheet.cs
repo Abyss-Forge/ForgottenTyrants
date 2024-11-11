@@ -62,6 +62,11 @@ public class Cheatsheet : MonoBehaviour
 
     }
 
+    void OnDrawGizmos()
+    {
+
+    }
+
     void OnDisable()
     {
 

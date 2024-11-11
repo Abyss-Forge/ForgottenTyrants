@@ -10,7 +10,10 @@ using ForgottenTyrants;
 public class CrosshairController : Configurable<string, string>
 {
     private Image _image;
+
     [SerializeField] private Crosshair[] _crosshairs;
+    [SerializeField] private Color _defaultColor;
+
     public GameObject _targetObject { get; private set; }
 
     public CrosshairController() : base("CrosshairSettings", "Crosshair", "Target", "Color") { }
@@ -19,20 +22,12 @@ public class CrosshairController : Configurable<string, string>
     {
         _defaultSettings.Add(Tag.Enemy, Color.red.ToHexString());
         _defaultSettings.Add(Tag.Ally, Color.green.ToHexString());
-
-        foreach (var item in _defaultSettings)
-        {
-            Debug.Log(item.Key + item.Value);
-        }
     }
 
     protected override void OnAwake()
     {
         _image = GetComponent<Image>();
-    }
 
-    private void Start()
-    {
         SetCrosshair(_crosshairs[0]);
     }
 
@@ -44,13 +39,14 @@ public class CrosshairController : Configurable<string, string>
     private void PerformRaycast()
     {
         Ray rayOrigin = Camera.main.ScreenPointToRay(_image.transform.position);
-        Color color = Color.white;
+        Color color = _defaultColor;
 
         if (Physics.Raycast(rayOrigin, out RaycastHit hitInfo))
         {
             if (hitInfo.collider != null)
             {
                 _targetObject = hitInfo.collider.gameObject;
+
                 string tag = hitInfo.collider.gameObject.tag;
                 foreach (var item in _settings)
                 {
@@ -78,7 +74,7 @@ public class CrosshairController : Configurable<string, string>
         {
             return colorObj;
         }
-        return Color.blue;
+        return _defaultColor;
     }
 
 }

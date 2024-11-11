@@ -1,26 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
-using ForgottenTyrants;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ForgottenTyrants;
 
 public class LivingChainsAbility : MonoBehaviour
 {
-    [Header("Ability Settings")]
-    [SerializeField] float _cd;
-    [SerializeField] float _range;
-    [SerializeField] float _effectDuration;
-    [SerializeField] float _animDuration;
+    [SerializeField] private LineRenderer _lineRendererTemplate;
 
-    [SerializeField] Material _chainMaterial;
+    [Header("Ability Settings")]
+    [SerializeField] private float _range = 10;
+    [SerializeField] private float _cooldownDuration = 5, _effectDuration = 5, _animDuration = 2;
 
     [Header("Effect Modifiers")]
-    [SerializeField] float percentageMovementReduction = 25f;
-    [SerializeField] float percentageDamageReduction = 20f;
-    [SerializeField] float percentageMovementBoost = 25f;
-    [SerializeField] float percentageDamageBoost = 15f;
+    [SerializeField] private float percentageMovementReduction = 25f;
+    [SerializeField] private float percentageDamageReduction = 20f, percentageMovementBoost = 25f, percentageDamageBoost = 15f;
 
-    Dictionary<GameObject, GameObject> _playerChains;
+    private Dictionary<GameObject, GameObject> _playerChains = new();
     private float _cooldownTimer = 0f;
     private bool _isAbilityActive = false;
 
@@ -31,7 +27,6 @@ public class LivingChainsAbility : MonoBehaviour
 
     void Start()
     {
-        _playerChains = new Dictionary<GameObject, GameObject>();
         MyInputManager.Instance.SubscribeToInput(EInputActions.ClassAbility1, OnCast, true);
     }
 
@@ -45,8 +40,17 @@ public class LivingChainsAbility : MonoBehaviour
     {
         if (_isAbilityActive)
         {
-            Gizmos.color = new Color(0, 1, 0, 0.3f);
+            Gizmos.color = new(0, 1, 0, 0.3f);
             Gizmos.DrawSphere(transform.position, _range);
+        }
+    }
+
+    private void Cast()
+    {
+        if (_cooldownTimer <= 0f && !_isAbilityActive)
+        {
+            StartCoroutine(EntityDetection());
+            _cooldownTimer = _cooldownDuration;
         }
     }
 
@@ -67,36 +71,62 @@ public class LivingChainsAbility : MonoBehaviour
                 ApplyEnemyEffect(hitCollider.gameObject);
             }
         }
-        yield return new WaitForSeconds(_effectDuration);
 
+        yield return new WaitForSeconds(_effectDuration);
         _isAbilityActive = false;
+        ResetChains();
     }
 
-    public void ApplyEnemyEffect(GameObject enemy)
+    private void ApplyAllyEffect()
+    {
+        Debug.Log("Ally hit!");
+    }
+
+    private void ApplyEnemyEffect(GameObject enemy)
     {
         if (!_playerChains.ContainsKey(enemy))
         {
-            GameObject emptyObject = new GameObject("Chain");
-            GameObject chain = Instantiate(emptyObject, Vector3.zero, Quaternion.identity, transform);
-            LineRenderer lr = chain.AddComponent<LineRenderer>();
+            GameObject chain = new();
+            chain.transform.SetParent(transform);
+            LineRenderer lr = chain.CopyComponent(_lineRendererTemplate);
+            chain.name = "Chain";
 
             lr.SetPosition(0, transform.position);
             lr.SetPosition(1, enemy.transform.position);
-
-            lr.startWidth = 1f;
-            lr.endWidth = 1f;
-            lr.startColor = Color.white;
-            lr.endColor = Color.black;
-            lr.material = _chainMaterial;
-            //_chainMaterial.proper
+            //StartCoroutine(AnimateChain(lr, enemy.transform.position));
 
             _playerChains.Add(enemy, chain);
         }
-        Debug.Log("Enemy hit!");
     }
 
+    private IEnumerator AnimateChain(LineRenderer lr, Vector3 targetPosition)
+    {
+        float timeElapsed = 0f;
+        float animationDuration = 2f;
 
-    void UpdateChains()
+        while (timeElapsed < animationDuration)
+        {
+            timeElapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(timeElapsed / animationDuration);
+            lr.SetPosition(1, Vector3.Lerp(lr.GetPosition(0), targetPosition, t));
+
+            yield return null;
+        }
+
+        lr.SetPosition(1, targetPosition);
+        //Destroy(lr.gameObject);
+    }
+
+    private void ResetChains()
+    {
+        foreach (var item in _playerChains)
+        {
+            StartCoroutine(AnimateChain(item.Value.GetComponent<LineRenderer>(), transform.position));
+        }
+        _playerChains.Clear();
+    }
+
+    private void UpdateChains()
     {
         if (_isAbilityActive)
         {
@@ -107,34 +137,11 @@ public class LivingChainsAbility : MonoBehaviour
                 lineRenderer.SetPosition(1, item.Key.transform.position);
             }
         }
-        else if (_cooldownTimer <= 0f && !_isAbilityActive)
-        {
-            foreach (var item in _playerChains)
-            {
-                Destroy(item.Value.gameObject);
-            }
-        }
     }
 
-    public void ApplyAllyEffect()
-    {
-        Debug.Log("Ally hit!");
-    }
-
-    public void Cast()
-    {
-        if (_cooldownTimer <= 0f && !_isAbilityActive)
-        {
-            Debug.Log("execute ability");
-            StartCoroutine(EntityDetection());
-            _cooldownTimer = _cd;
-        }
-    }
-
-    public void UpdateCooldownTimer()
+    private void UpdateCooldownTimer()
     {
         if (_cooldownTimer > 0 && !_isAbilityActive) _cooldownTimer -= Time.deltaTime;
     }
-
 
 }
