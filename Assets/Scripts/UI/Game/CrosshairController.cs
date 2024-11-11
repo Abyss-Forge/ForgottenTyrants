@@ -11,6 +11,7 @@ public class CrosshairController : Configurable<string, string>
 {
     private Image _image;
     [SerializeField] private Crosshair[] _crosshairs;
+    public GameObject _targetObject { get; private set; }
 
     public CrosshairController() : base("CrosshairSettings", "Crosshair", "Target", "Color") { }
 
@@ -37,6 +38,11 @@ public class CrosshairController : Configurable<string, string>
 
     void LateUpdate()
     {
+        PerformRaycast();
+    }
+
+    private void PerformRaycast()
+    {
         Ray rayOrigin = Camera.main.ScreenPointToRay(_image.transform.position);
         Color color = Color.white;
 
@@ -44,6 +50,7 @@ public class CrosshairController : Configurable<string, string>
         {
             if (hitInfo.collider != null)
             {
+                _targetObject = hitInfo.collider.gameObject;
                 string tag = hitInfo.collider.gameObject.tag;
                 foreach (var item in _settings)
                 {
