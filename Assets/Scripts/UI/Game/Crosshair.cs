@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Crosshair", menuName = "ScriptableObjects/Crosshair", order = 1)]
+[CreateAssetMenu(fileName = "Crosshair", menuName = "ScriptableObject/Crosshair", order = 1)]
 public class Crosshair : ScriptableObject
 {
     [SerializeField] private Sprite _sprite;
