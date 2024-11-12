@@ -10,7 +10,7 @@ public class LivingChainsAbility : MonoBehaviour
 
     [Header("Ability Settings")]
     [SerializeField] private float _range = 10;
-    [SerializeField] private float _cooldownDuration = 5, _effectDuration = 5, _animDuration = 2;
+    [SerializeField] private float _cooldownDuration = 5, _effectDuration = 5, _animationDuration = 2;
 
     [Header("Effect Modifiers")]
     [SerializeField] private float percentageMovementReduction = 25f;
@@ -64,7 +64,7 @@ public class LivingChainsAbility : MonoBehaviour
         {
             if (hitCollider.gameObject.CompareTag(Tag.Ally))
             {
-                ApplyAllyEffect();
+                ApplyAllyEffect(hitCollider.gameObject);
             }
             else if (hitCollider.gameObject.CompareTag(Tag.Enemy))
             {
@@ -77,9 +77,9 @@ public class LivingChainsAbility : MonoBehaviour
         ResetChains();
     }
 
-    private void ApplyAllyEffect()
+    private void ApplyAllyEffect(GameObject ally)
     {
-        Debug.Log("Ally hit!");
+        Debug.Log("Ally hit!: " + ally.name);
     }
 
     private void ApplyEnemyEffect(GameObject enemy)
@@ -102,26 +102,25 @@ public class LivingChainsAbility : MonoBehaviour
     private IEnumerator AnimateChain(LineRenderer lr, Vector3 targetPosition)
     {
         float timeElapsed = 0f;
-        float animationDuration = 2f;
 
-        while (timeElapsed < animationDuration)
+        while (timeElapsed < _animationDuration)
         {
             timeElapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(timeElapsed / animationDuration);
+
+            float t = Mathf.Clamp01(timeElapsed / _animationDuration);
             lr.SetPosition(1, Vector3.Lerp(lr.GetPosition(0), targetPosition, t));
 
             yield return null;
         }
 
         lr.SetPosition(1, targetPosition);
-        //Destroy(lr.gameObject);
     }
 
     private void ResetChains()
     {
         foreach (var item in _playerChains)
         {
-            StartCoroutine(AnimateChain(item.Value.GetComponent<LineRenderer>(), transform.position));
+            Destroy(item.Value);
         }
         _playerChains.Clear();
     }
