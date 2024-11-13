@@ -140,7 +140,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d74cd6874ced15a4a84a2996f0c484db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _name: 
   _cooldownDuration: 5
   _effectDuration: 7
   _animationDuration: 2
@@ -220,24 +219,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 259f3e23502e84b4a80a831f963bc22d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _crosshair: {fileID: 666713756}
   _cooldownDuration: 7
   _effectDuration: 5
   _animationDuration: 2
   _dots: 5
   _damagePerDot: 3
---- !u!114 &666713756 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9054031253328385965, guid: b028d9fd039d92e488636a3c84591be1,
-    type: 3}
-  m_PrefabInstance: {fileID: 2037319806}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac03488475aee86429a06e4f9050d6c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &714794443 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 599614359825085148, guid: 7e049ff92d73c1b4596a749756850e55,
@@ -919,7 +905,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0

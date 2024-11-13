@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 using TMPro;
 using UnityEngine.UI;
 
-public class TotalDarknessAbility : Ability
+public class TotalDarknessAbility : MonoBehaviour
 {
     [Header("Ability Settings")]
     //[SerializeField] private float _range = 10;

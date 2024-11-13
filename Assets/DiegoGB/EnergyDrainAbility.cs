@@ -5,8 +5,6 @@ using UnityEngine.InputSystem;
 
 public class EnergyDrainAbility : MonoBehaviour
 {
-    [SerializeField] CrosshairController _crosshair;
-
 
     [Header("Ability Settings")]
     //[SerializeField] private float _range = 10;
@@ -48,7 +46,7 @@ public class EnergyDrainAbility : MonoBehaviour
     private IEnumerator ApplyDamageAbsorptionEffect()
     {
         _isAbilityActive = true;
-        GameObject objective = _crosshair._targetObject;
+        GameObject objective = MyCursorManager.Instance.GetCrosshairTarget();
         Debug.Log("casting energy drain");
         GhostStatusEffect ghostStatusEffect = new GhostStatusEffect();
         ghostStatusEffect.ApplyEffect(this.gameObject.GetComponent<Player>());

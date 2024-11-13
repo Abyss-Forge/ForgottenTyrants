@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class MyCursorManager : Singleton<MyCursorManager>
 {
-    [SerializeField] private GameObject _crosshairParent;
+    [SerializeField] private CrosshairController _crosshairController;
+
     public bool IsCaptured => GetCaptured();
 
     void Start()
@@ -30,14 +31,19 @@ public class MyCursorManager : Singleton<MyCursorManager>
         Cursor.visible = true;
     }
 
+    public GameObject GetCrosshairTarget()
+    {
+        return _crosshairController.TargetObject;
+    }
+
     public void EnableCrosshair()
     {
-        _crosshairParent.SetActive(true);
+        _crosshairController.gameObject.SetActive(true);
     }
 
     public void DisableCrosshair()
     {
-        _crosshairParent.SetActive(false);
+        _crosshairController.gameObject.SetActive(false);
     }
 
 }

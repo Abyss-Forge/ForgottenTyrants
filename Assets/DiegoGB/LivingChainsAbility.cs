@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using ForgottenTyrants;
 
-public class LivingChainsAbility : Ability
+public class LivingChainsAbility : MonoBehaviour
 {
     [SerializeField] private LineRenderer _lineRendererTemplate;
 
