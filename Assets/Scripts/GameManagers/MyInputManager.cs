@@ -25,6 +25,7 @@ public class MyInputManager : Singleton<MyInputManager>
     public delegate void OmniDelegate(InputAction.CallbackContext context);
 
     private Dictionary<EInputActions, OmniDelegate> _actionDelegates = new();
+    private HashSet<EInputActions> _disabledActions = new();
 
     public void SubscribeToInput(EInputActions action, OmniDelegate function, bool subscribe = true)
     {
@@ -45,6 +46,12 @@ public class MyInputManager : Singleton<MyInputManager>
 
     private void CallSubscribedFunction(EInputActions action, InputAction.CallbackContext context)
     {
+        if (_disabledActions.Contains(action))
+        {
+            Debug.Log($"Action {action} is disabled.");
+            return;
+        }
+
         if (_actionDelegates.TryGetValue(action, out OmniDelegate actionDelegate))
         {
             actionDelegate?.Invoke(context);
@@ -114,6 +121,22 @@ public class MyInputManager : Singleton<MyInputManager>
     public void OnMenu(InputAction.CallbackContext context)
     {
         CallSubscribedFunction(EInputActions.Menu, context);
+    }
+
+    public void DisableAction(EInputActions action)
+    {
+        if (!_disabledActions.Contains(action))
+        {
+            _disabledActions.Add(action);
+        }
+    }
+
+    public void EnableAction(EInputActions action)
+    {
+        if (_disabledActions.Contains(action))
+        {
+            _disabledActions.Remove(action);
+        }
     }
 
 }

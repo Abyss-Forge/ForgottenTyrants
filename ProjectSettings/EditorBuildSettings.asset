@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/PruebasIvan.unity
     guid: 66f1da52f6b05f04bbbdce73b7b8c9a0
   - enabled: 1
+    path: Assets/Scenes/UI Character Selection.unity
+    guid: 8bd0840c7a69c8846baaaacd0c269e74
+  - enabled: 1
     path: Assets/Scenes/PruebasDiego.unity
     guid: 407a9079a8d27064c99112cacadaaaa6
   m_configObjects:

@@ -200,7 +200,7 @@ public class CharacterUISelectionController : MonoBehaviour
         }
 
         DontDestroyOnLoad(playerInstance);
-        SceneManager.LoadScene("Test");
+        SceneManager.LoadScene("PruebasDiego");
 
     }
 
