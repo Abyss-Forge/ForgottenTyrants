@@ -7,6 +7,12 @@
       "dependencies": {},
       "hash": "a1cd7b485c3eee67abe5333500aba0e2c44a4b79"
     },
+    "com.kinematicsoup.scenefusion2": {
+      "version": "file:com.kinematicsoup.scenefusion2-2.0.3.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {}
+    },
     "com.singularitygroup.hotreload": {
       "version": "file:com.singularitygroup.hotreload",
       "depth": 0,
