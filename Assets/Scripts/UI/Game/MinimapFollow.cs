@@ -6,6 +6,7 @@ public class MinimapFollow : MonoBehaviour
 {
     [SerializeField] private Transform _objectToFollow;
     [SerializeField] private Camera _minimapCamera;
+    [SerializeField] private Vector3 _defaultPositionRespectTarget = new(0, 50, 0);
     [SerializeField] private bool _rotationEnabled, _hideShadows;
 
     [Header("Velocity zoom out effect")]
@@ -15,6 +16,11 @@ public class MinimapFollow : MonoBehaviour
     private float _storedShadowDistance;
     private float _currentSpeed;
     private Vector3 _previousPosition;
+
+    void Awake()
+    {
+        _minimapCamera.gameObject.transform.position = _defaultPositionRespectTarget;
+    }
 
     void OnEnable()
     {

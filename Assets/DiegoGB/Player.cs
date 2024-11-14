@@ -10,11 +10,16 @@ public class Player : Entity
     [SerializeField] Armour _armour;
     [SerializeField] Trinket _trinket;
 
+
+    List<StatusEffect> _statusEffects = new List<StatusEffect>();
+
+
     public CharacterRace Race => _race;
     public CharacterClass Class => _class;
     public Weapon Weapon => _weapon;
     public Armour Armour => _armour;
     public Trinket Trinket => _trinket;
+    public List<StatusEffect> StatusEffects => _statusEffects;
 
     protected override void Start()
     {
@@ -24,10 +29,7 @@ public class Player : Entity
 
     protected override void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            Test();
-        }
+
     }
     /*public Player(CharacterRaceTemplate selectedRace, CharacterClassTemplate selectedClass, WeaponTemplate selectedWeapon, ArmourTemplate selectedArmour, TrinketTemplate selectedTrinket)
     {
@@ -67,6 +69,24 @@ public class Player : Entity
         _trinket = trinket;
     }
 
+    public void AddStatusEffect(StatusEffect statusEffect)
+    {
+        if (statusEffect != null)
+        {
+            _statusEffects.Add(statusEffect);
+            Debug.Log($"Added StatusEffect: {statusEffect.Name}");
+        }
+    }
+
+    public void RemoveStatusEffect(StatusEffect statusEffect)
+    {
+        if (_statusEffects.Contains(statusEffect))
+        {
+            _statusEffects.Remove(statusEffect);
+            Debug.Log($"Removed StatusEffect: {statusEffect.Name}");
+        }
+    }
+
     private void CalculateTotalStats()
     {
         _stats.Add(_race.Stats);
@@ -93,9 +113,4 @@ public class Player : Entity
         CalculateTotalStats();
     }
 
-    public void Test()
-    {
-        Debug.Log(_stats.Hp);
-        Debug.Log(_stats.PhysicalDamage);
-    }
 }

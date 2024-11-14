@@ -14,7 +14,8 @@ public class CrosshairController : Configurable<string, string>
     [SerializeField] private Crosshair[] _crosshairs;
     [SerializeField] private Color _defaultColor;
 
-    public GameObject _targetObject { get; private set; }
+    private GameObject _targetObject;
+    public GameObject TargetObject => _targetObject;
 
     public CrosshairController() : base("CrosshairSettings", "Crosshair", "Target", "Color") { }
 
