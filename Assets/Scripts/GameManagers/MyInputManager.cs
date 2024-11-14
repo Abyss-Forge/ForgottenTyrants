@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ForgottenTyrants;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,7 +25,7 @@ public class MyInputManager : Singleton<MyInputManager>
 {
     public delegate void OmniDelegate(InputAction.CallbackContext context);
 
-    private Dictionary<EInputActions, OmniDelegate> _actionDelegates = new();
+    private Dictionary<EInputActions, OmniDelegate> _actionDelegates = new Dictionary<EInputActions, OmniDelegate>();
     //private Dictionary<EInputActions, (OmniDelegate Delegate, bool Enabled)> _actionDelegates = new();
 
     public void SubscribeToInput(EInputActions action, OmniDelegate function, bool subscribe = true)

@@ -38,7 +38,7 @@ public class Turnstile_Delegate : MonoBehaviour
     #region Delegates implementation for the states.
     void OnEnterLocked()
     {
-        Debug.Log("Turnstile LOCKED. Press C key to insert a coin");
+        Debug.Log("Turnstile LOCKED");
     }
 
     void OnUpdateLocked()
@@ -49,10 +49,6 @@ public class Turnstile_Delegate : MonoBehaviour
             {
                 Debug.Log("Turnstile unlocking");
                 _fsm.SetCurrentState(EState.UNLOCKED);
-            }
-            else
-            {
-                Debug.Log("Incorrect coin");
             }
         }
     }
