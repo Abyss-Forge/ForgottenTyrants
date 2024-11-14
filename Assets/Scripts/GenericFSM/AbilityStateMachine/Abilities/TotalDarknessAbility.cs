@@ -2,108 +2,103 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using TMPro;
-using UnityEngine.UI;
 
-public class TotalDarknessAbility : MonoBehaviour
+public class TotalDarknessAbility : AbilityStateMachine
 {
-    [Header("Ability Settings")]
-    //[SerializeField] private float _range = 10;
-    [SerializeField] private float _cooldownDuration = 5, _effectDuration = 5, _animationDuration = 2;
-    [SerializeField] private Material _newMaterial;
-
-    [Header("Effect Modifiers")]
-    //[SerializeField] private float percentageMovementReduction = 25f;
-    [SerializeField] private float _percentageMovementBoost = 25f;
+    #region Specific ability properties
 
 
-    [Header("UI Settings")]
-    [SerializeField] private TextMeshProUGUI _cooldownText;
-    [SerializeField] private Image _cooldownImage;
 
-    private float _cooldownTimer = 0f;
-    private bool _isAbilityActive = false;
+    #endregion
+    #region Setup
 
-    private void OnCast(InputAction.CallbackContext context)
+    protected override void InitializeStates()
     {
-        if (context.performed) Cast();
+        _fsm.Add(new AbilityReadyState(this));  // estados especificos de esta habilidad
+        _fsm.Add(new AbilityActiveState(this));
+        _fsm.Add(new AbilityCooldownState(this));   // estados predeterminados
+        _fsm.Add(new AbilityLockedState(this));
     }
 
-    void Start()
-    {
-        MyInputManager.Instance.SubscribeToInput(EInputActions.ClassAbility2, OnCast, true);
-    }
+    #endregion
+    #region States
 
-    void Update()
+    public class AbilityReadyState : State<EAbilityState>
     {
-        UpdateCooldownTimer();
-        UpdateCooldownText();
-        UpdateCooldownImage();
-    }
-
-    private void Cast()
-    {
-        if (_cooldownTimer <= 0f && !_isAbilityActive)
+        TotalDarknessAbility _ability;
+        public AbilityReadyState(TotalDarknessAbility ability) : base(EAbilityState.READY)
         {
-            StartCoroutine(ApplyGhostEffect());
-            _cooldownTimer = _cooldownDuration;
+            _ability = ability;
+        }
+
+        private void OnCast(InputAction.CallbackContext context)
+        {
+            if (context.performed) _ability._fsm.SetCurrentState(EAbilityState.ACTIVE);
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+
+            MyInputManager.Instance.SubscribeToInput(EInputActions.ClassAbility3, OnCast, true);
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+
+            MyInputManager.Instance.SubscribeToInput(EInputActions.ClassAbility3, OnCast, false);
         }
     }
 
-    private void UpdateCooldownText()
+    public class AbilityActiveState : State<EAbilityState>
     {
-        if (_cooldownText != null)
+        TotalDarknessAbility _ability;
+        public AbilityActiveState(TotalDarknessAbility ability) : base(EAbilityState.ACTIVE)
         {
-            if (_cooldownTimer > 0 && !_isAbilityActive)
-                _cooldownText.text = $"{_cooldownTimer:F1}";
-            else
-                _cooldownText.text = "";
+            _ability = ability;
         }
-    }
 
-    private void UpdateCooldownImage()
-    {
-        if (_cooldownImage != null)
+        private GhostStatusEffect ghostStatusEffect;
+
+        public override void Enter()
         {
-            if (_cooldownTimer > 0)
+            base.Enter();
+
+            _ability.ActiveTimer = _ability.ActiveDuration;
+
+            _ability.CooldownImage.gameObject.SetActive(true);
+
+            ghostStatusEffect = new();
+            ghostStatusEffect.ApplyEffect(_ability.gameObject.GetComponent<Player>());
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            UpdateActiveTimer();
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+
+            ghostStatusEffect.RemoveEffect(_ability.gameObject.GetComponent<Player>());
+        }
+
+        private void UpdateActiveTimer()
+        {
+            if (_ability.ActiveTimer > 0)
             {
-                _cooldownImage.fillAmount = _cooldownTimer / _cooldownDuration;
+                _ability.ActiveTimer -= Time.deltaTime;
             }
             else
             {
-                _cooldownImage.fillAmount = 0;
+                _ability._fsm.SetCurrentState(EAbilityState.COOLDOWN);
             }
         }
     }
 
-    private IEnumerator ApplyGhostEffect()
-    {
-        _isAbilityActive = true;
-        Debug.Log("casting");
-        ChangePlayerColor();
-        GhostStatusEffect ghostStatusEffect = new GhostStatusEffect();
-        ghostStatusEffect.ApplyEffect(this.gameObject.GetComponent<Player>());
-        yield return new WaitForSeconds(_effectDuration);
-        ghostStatusEffect.RemoveEffect(this.gameObject.GetComponent<Player>());
-        _isAbilityActive = false;
-        Debug.Log("end casting");
-    }
-
-    private void UpdateCooldownTimer()
-    {
-        if (_cooldownTimer > 0 && !_isAbilityActive) _cooldownTimer -= Time.deltaTime;
-    }
-
-    private void ChangePlayerColor()
-    {
-        MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
-        // Obtén el array de materiales
-        Material[] materials = meshRenderer.materials;
-
-        // Cambia un material específico
-        materials[0] = _newMaterial; // Cambia el primer material
-
-        // Asigna el array de vuelta al MeshRenderer
-        meshRenderer.materials = materials;
-    }
+    #endregion
 }

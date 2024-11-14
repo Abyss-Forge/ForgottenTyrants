@@ -2,74 +2,137 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ForgottenTyrants;
 
-public class EnergyDrainAbility : MonoBehaviour
+public class EnergyDrainAbility : AbilityStateMachine
 {
+    #region Specific ability properties
 
-    [Header("Ability Settings")]
-    //[SerializeField] private float _range = 10;
-    [SerializeField] private float _cooldownDuration = 5, _effectDuration = 5, _animationDuration = 2;
-    [SerializeField] private int _dots = 5;
+    [SerializeField] private float _dotThreshold = 5f, _dotDamage = 3f;
 
-    [Header("Effect Modifiers")]
-    //[SerializeField] private float percentageMovementReduction = 25f;
-    [SerializeField] private float _damagePerDot = 3f;
-    private float _cooldownTimer = 0f;
-    private bool _isAbilityActive = false;
-
-
-
-    private void OnCast(InputAction.CallbackContext context)
-    {
-        if (context.performed) Cast();
-    }
-
-    void Start()
-    {
-        MyInputManager.Instance.SubscribeToInput(EInputActions.ClassAbility3, OnCast, true);
-    }
-
-    void Update()
-    {
-        UpdateCooldownTimer();
-    }
-
-    private void Cast()
-    {
-        if (_cooldownTimer <= 0f && !_isAbilityActive)
-        {
-            StartCoroutine(ApplyDamageAbsorptionEffect());
-            _cooldownTimer = _cooldownDuration;
-        }
-    }
-
-    private IEnumerator ApplyDamageAbsorptionEffect()
-    {
-        _isAbilityActive = true;
-        GameObject objective = MyCursorManager.Instance.GetCrosshairTarget();
-        Debug.Log("casting energy drain");
-        GhostStatusEffect ghostStatusEffect = new GhostStatusEffect();
-        ghostStatusEffect.ApplyEffect(this.gameObject.GetComponent<Player>());
-        for (int i = 0; i < _dots; i++)
-        {
-            Debug.Log("absorbing 5 dmg from - " + objective + "at " + System.DateTime.Now);
-            yield return new WaitForSeconds(_effectDuration / _dots);
-        }
-        ghostStatusEffect.RemoveEffect(this.gameObject.GetComponent<Player>());
-        _isAbilityActive = false;
-    }
-
-    private void UpdateCooldownTimer()
-    {
-        if (_cooldownTimer > 0 && !_isAbilityActive) _cooldownTimer -= Time.deltaTime;
-    }
+    private GameObject _target;
 
     void OnDrawGizmos()
     {
-        if (_isAbilityActive)
+        if (_fsm != null && _fsm.GetCurrentState().ID == EAbilityState.ACTIVE)
         {
-            Gizmos.color = new(0, 0, 1, 0.3f);
+            Gizmos.color = new(0, 1, 0, 0.3f);
             Gizmos.DrawSphere(transform.position, 30);
         }
     }
+
+    #endregion
+    #region Setup
+
+    protected override void InitializeStates()
+    {
+        _fsm.Add(new AbilityReadyState(this));  // estados especificos de esta habilidad
+        _fsm.Add(new AbilityActiveState(this));
+        _fsm.Add(new AbilityCooldownState(this));   // estados predeterminados
+        _fsm.Add(new AbilityLockedState(this));
+    }
+
+    #endregion
+    #region States
+
+    public class AbilityReadyState : State<EAbilityState>
+    {
+        EnergyDrainAbility _ability;
+        public AbilityReadyState(EnergyDrainAbility ability) : base(EAbilityState.READY)
+        {
+            _ability = ability;
+        }
+
+        private void OnCast(InputAction.CallbackContext context)
+        {
+            if (context.performed) TargetEnemy();
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+
+            MyInputManager.Instance.SubscribeToInput(EInputActions.ClassAbility2, OnCast, true);
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+
+            MyInputManager.Instance.SubscribeToInput(EInputActions.ClassAbility2, OnCast, false);
+        }
+
+        private void TargetEnemy()
+        {
+            _ability._target = MyCursorManager.Instance.GetCrosshairTarget();
+            if (_ability._target.CompareTag(Tag.Enemy))
+            {
+                _ability._fsm.SetCurrentState(EAbilityState.ACTIVE);
+            }
+        }
+    }
+
+    public class AbilityActiveState : State<EAbilityState>
+    {
+        EnergyDrainAbility _ability;
+        public AbilityActiveState(EnergyDrainAbility ability) : base(EAbilityState.ACTIVE)
+        {
+            _ability = ability;
+        }
+
+        private GhostStatusEffect ghostStatusEffect;
+        private float timer;
+
+        public override void Enter()
+        {
+            base.Enter();
+
+            _ability.ActiveTimer = _ability.ActiveDuration;
+
+            _ability.CooldownImage.gameObject.SetActive(true);
+
+            ghostStatusEffect = new();
+            ghostStatusEffect.ApplyEffect(_ability.gameObject.GetComponent<Player>());
+            timer = 0;
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+
+            ghostStatusEffect.RemoveEffect(_ability.gameObject.GetComponent<Player>());
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            UpdateActiveTimer();
+            ApplyDamageAbsorptionEffect();
+        }
+
+        private void UpdateActiveTimer()
+        {
+            if (_ability.ActiveTimer > 0)
+            {
+                _ability.ActiveTimer -= Time.deltaTime;
+            }
+            else
+            {
+                _ability._fsm.SetCurrentState(EAbilityState.COOLDOWN);
+            }
+        }
+
+        private void ApplyDamageAbsorptionEffect()
+        {
+            timer -= Time.deltaTime;
+            if (timer <= 0)
+            {
+                Debug.Log($"Absorbing {_ability._dotDamage} dmg from {_ability._target.name} at {System.DateTime.Now}");
+                timer = _ability._dotThreshold;
+            }
+        }
+    }
+
+    #endregion
 }
