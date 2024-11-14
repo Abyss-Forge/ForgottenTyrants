@@ -118,6 +118,8 @@ public class LivingChainsAbility : AbilityStateMachine
             base.Enter();
 
             _ability.ActiveTimer = _ability.ActiveDuration;
+
+            _ability.CooldownImage.gameObject.SetActive(true);
         }
 
         public override void Update()

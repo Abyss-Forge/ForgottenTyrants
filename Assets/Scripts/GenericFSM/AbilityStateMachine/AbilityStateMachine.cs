@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public enum EAbilityState
 {
@@ -10,6 +12,9 @@ public enum EAbilityState
 public abstract class AbilityStateMachine : MonoBehaviour
 {
     #region Default logic
+
+    [field: SerializeField] public Image CooldownImage { get; private set; }
+    [field: SerializeField] public TextMeshProUGUI CooldownText { get; private set; }
 
     [field: SerializeField] public float ActiveDuration { get; private set; } = 5f;
     [field: SerializeField] public float CooldownDuration { get; private set; } = 5f;
