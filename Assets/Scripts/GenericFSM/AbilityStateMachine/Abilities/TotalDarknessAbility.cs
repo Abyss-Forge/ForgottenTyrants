@@ -7,7 +7,7 @@ public class TotalDarknessAbility : AbilityStateMachine
 {
     #region Specific ability properties
 
-
+    //TODO
 
     #endregion
     #region Setup
