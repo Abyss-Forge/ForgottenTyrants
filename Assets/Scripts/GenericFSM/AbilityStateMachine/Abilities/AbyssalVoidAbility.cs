@@ -2,15 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using ForgottenTyrants;
 
-public class EnergyDrainAbility : AbilityStateMachine
+public class AbyssalVoidAbility : AbilityStateMachine
 {
     #region Specific ability properties
-
-    [SerializeField] private float _dotThreshold = 5f, _dotDamage = 3f;
-
-    private GameObject _target;
 
     void OnDrawGizmos()
     {
@@ -37,51 +32,39 @@ public class EnergyDrainAbility : AbilityStateMachine
 
     public class AbilityReadyState : State<EAbilityState>
     {
-        EnergyDrainAbility _ability;
-        public AbilityReadyState(EnergyDrainAbility ability) : base(EAbilityState.READY)
+        AbyssalVoidAbility _ability;
+        public AbilityReadyState(AbyssalVoidAbility ability) : base(EAbilityState.READY)
         {
             _ability = ability;
         }
 
         private void OnCast(InputAction.CallbackContext context)
         {
-            if (context.performed) TargetEnemy();
+            if (context.performed) _ability._fsm.SetCurrentState(EAbilityState.ACTIVE);
         }
 
         public override void Enter()
         {
             base.Enter();
 
-            MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_2, OnCast, true);
+            MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_4, OnCast, true);
         }
 
         public override void Exit()
         {
             base.Exit();
 
-            MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_2, OnCast, false);
-        }
-
-        private void TargetEnemy()
-        {
-            _ability._target = MyCursorManager.Instance.GetCrosshairTarget();
-            if (_ability._target.CompareTag(Tag.Enemy))
-            {
-                _ability._fsm.SetCurrentState(EAbilityState.ACTIVE);
-            }
+            MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_4, OnCast, false);
         }
     }
 
     public class AbilityActiveState : State<EAbilityState>
     {
-        EnergyDrainAbility _ability;
-        public AbilityActiveState(EnergyDrainAbility ability) : base(EAbilityState.ACTIVE)
+        AbyssalVoidAbility _ability;
+        public AbilityActiveState(AbyssalVoidAbility ability) : base(EAbilityState.ACTIVE)
         {
             _ability = ability;
         }
-
-        private GhostStatusEffect ghostStatusEffect;
-        private float timer;
 
         public override void Enter()
         {
@@ -90,17 +73,7 @@ public class EnergyDrainAbility : AbilityStateMachine
             _ability.ActiveTimer = _ability.ActiveDuration;
 
             _ability.CooldownImage.gameObject.SetActive(true);
-
-            ghostStatusEffect = new();
-            ghostStatusEffect.ApplyEffect(_ability.gameObject.GetComponent<Player>());
-            timer = 0;
-        }
-
-        public override void Exit()
-        {
-            base.Exit();
-
-            ghostStatusEffect.RemoveEffect(_ability.gameObject.GetComponent<Player>());
+            Debug.Log("Abyssal Void triggered");
         }
 
         public override void Update()
@@ -108,7 +81,12 @@ public class EnergyDrainAbility : AbilityStateMachine
             base.Update();
 
             UpdateActiveTimer();
-            ApplyDamageAbsorptionEffect();
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+
         }
 
         private void UpdateActiveTimer()
@@ -120,16 +98,6 @@ public class EnergyDrainAbility : AbilityStateMachine
             else
             {
                 _ability._fsm.SetCurrentState(EAbilityState.COOLDOWN);
-            }
-        }
-
-        private void ApplyDamageAbsorptionEffect()
-        {
-            timer -= Time.deltaTime;
-            if (timer <= 0)
-            {
-                Debug.Log($"Absorbing {_ability._dotDamage} dmg from {_ability._target.name} at {System.DateTime.Now}");
-                timer = _ability._dotThreshold;
             }
         }
     }

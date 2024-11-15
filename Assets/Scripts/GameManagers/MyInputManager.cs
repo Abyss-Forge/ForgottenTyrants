@@ -4,31 +4,31 @@ using ForgottenTyrants;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum EInputActions
+public enum EInputAction
 {
-    Move,
-    Look,
-    Jump,
-    Dash,
-    WeaponBasicAttack,
-    WeaponAbility,
-    ClassAbility1,
-    ClassAbility2,
-    ClassAbility3,
-    ClassAbility4,
-    Ping,
-    Pause,
-    Menu,
+    MOVE,
+    LOOK,
+    JUMP,
+    DASH,
+    WEAPON_BASIC_ATTACK,
+    WEAPON_ABILITY,
+    CLASS_ABILITY_1,
+    CLASS_ABILITY_2,
+    CLASS_ABILITY_3,
+    CLASS_ABILITY_4,
+    PING,
+    PAUSE,
+    MENU,
 }
 
 public class MyInputManager : Singleton<MyInputManager>
 {
     public delegate void OmniDelegate(InputAction.CallbackContext context);
 
-    private Dictionary<EInputActions, OmniDelegate> _actionDelegates = new Dictionary<EInputActions, OmniDelegate>();
+    private Dictionary<EInputAction, OmniDelegate> _actionDelegates = new Dictionary<EInputAction, OmniDelegate>();
     //private Dictionary<EInputActions, (OmniDelegate Delegate, bool Enabled)> _actionDelegates = new();
 
-    public void SubscribeToInput(EInputActions action, OmniDelegate function, bool subscribe = true)
+    public void SubscribeToInput(EInputAction action, OmniDelegate function, bool subscribe = true)
     {
         if (!_actionDelegates.ContainsKey(action))
         {
@@ -45,7 +45,7 @@ public class MyInputManager : Singleton<MyInputManager>
         }
     }
 
-    private void CallSubscribedFunction(EInputActions action, InputAction.CallbackContext context)
+    private void CallSubscribedFunction(EInputAction action, InputAction.CallbackContext context)
     {
         if (_actionDelegates.TryGetValue(action, out OmniDelegate actionDelegate))
         {
@@ -55,67 +55,67 @@ public class MyInputManager : Singleton<MyInputManager>
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        CallSubscribedFunction(EInputActions.Move, context);
+        CallSubscribedFunction(EInputAction.MOVE, context);
     }
 
     public void OnLook(InputAction.CallbackContext context)
     {
-        CallSubscribedFunction(EInputActions.Look, context);
+        CallSubscribedFunction(EInputAction.LOOK, context);
     }
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        CallSubscribedFunction(EInputActions.Jump, context);
+        CallSubscribedFunction(EInputAction.JUMP, context);
     }
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        CallSubscribedFunction(EInputActions.Dash, context);
+        CallSubscribedFunction(EInputAction.DASH, context);
     }
 
     public void OnWeaponBasicAttack(InputAction.CallbackContext context)
     {
-        CallSubscribedFunction(EInputActions.WeaponBasicAttack, context);
+        CallSubscribedFunction(EInputAction.WEAPON_BASIC_ATTACK, context);
     }
 
     public void OnWeaponAbility(InputAction.CallbackContext context)
     {
-        CallSubscribedFunction(EInputActions.WeaponAbility, context);
+        CallSubscribedFunction(EInputAction.WEAPON_ABILITY, context);
     }
 
     public void OnClassAbility1(InputAction.CallbackContext context)
     {
-        CallSubscribedFunction(EInputActions.ClassAbility1, context);
+        CallSubscribedFunction(EInputAction.CLASS_ABILITY_1, context);
     }
 
     public void OnClassAbility2(InputAction.CallbackContext context)
     {
-        CallSubscribedFunction(EInputActions.ClassAbility2, context);
+        CallSubscribedFunction(EInputAction.CLASS_ABILITY_2, context);
     }
 
     public void OnClassAbility3(InputAction.CallbackContext context)
     {
-        CallSubscribedFunction(EInputActions.ClassAbility3, context);
+        CallSubscribedFunction(EInputAction.CLASS_ABILITY_3, context);
     }
 
     public void OnClassAbility4(InputAction.CallbackContext context)
     {
-        CallSubscribedFunction(EInputActions.ClassAbility4, context);
+        CallSubscribedFunction(EInputAction.CLASS_ABILITY_4, context);
     }
 
     public void OnPing(InputAction.CallbackContext context)
     {
-        CallSubscribedFunction(EInputActions.Ping, context);
+        CallSubscribedFunction(EInputAction.PING, context);
     }
 
     public void OnPause(InputAction.CallbackContext context)
     {
-        CallSubscribedFunction(EInputActions.Pause, context);
+        CallSubscribedFunction(EInputAction.PAUSE, context);
     }
 
     public void OnMenu(InputAction.CallbackContext context)
     {
-        CallSubscribedFunction(EInputActions.Menu, context);
+        CallSubscribedFunction(EInputAction.MENU, context);
     }
 
 }

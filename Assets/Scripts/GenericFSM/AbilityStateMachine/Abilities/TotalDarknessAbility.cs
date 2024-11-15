@@ -40,14 +40,14 @@ public class TotalDarknessAbility : AbilityStateMachine
         {
             base.Enter();
 
-            MyInputManager.Instance.SubscribeToInput(EInputActions.ClassAbility3, OnCast, true);
+            MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_3, OnCast, true);
         }
 
         public override void Exit()
         {
             base.Exit();
 
-            MyInputManager.Instance.SubscribeToInput(EInputActions.ClassAbility3, OnCast, false);
+            MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_3, OnCast, false);
         }
     }
 

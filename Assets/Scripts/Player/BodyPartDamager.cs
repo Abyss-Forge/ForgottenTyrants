@@ -11,26 +11,26 @@ public class BodyPartDamager : MonoBehaviour
     [System.Serializable]
     private struct BodyPartData
     {
-        public EBodyParts BodyPart;
+        public EBodyPart BodyPart;
         public Collider[] Colliders;
         public float DamageMultiplier;
     }
 
     [SerializeField] private BodyPartData[] _bodyPartsData;
 
-    private Dictionary<EBodyParts, (Collider[], float)> _bodyPartsDictionary;
+    private Dictionary<EBodyPart, (Collider[], float)> _bodyPartsDictionary;
     private DamageInfo _damageInfo;
 
-    private enum EBodyParts
+    private enum EBodyPart
     {
-        Head, Torso, Arms, Legs
+        HEAD, TORSO, ARMS, LEGS
     }
 
     void Awake()
     {
         _health = GetComponentInParent<HealthBehaviour>();
 
-        _bodyPartsDictionary = new Dictionary<EBodyParts, (Collider[], float)>();
+        _bodyPartsDictionary = new Dictionary<EBodyPart, (Collider[], float)>();
         foreach (BodyPartData data in _bodyPartsData)
         {
             _bodyPartsDictionary[data.BodyPart] = (data.Colliders, data.DamageMultiplier);
@@ -46,7 +46,7 @@ public class BodyPartDamager : MonoBehaviour
             {
                 Debug.Log("Te ha dado: " + other.gameObject.name);
                 _damageInfo = dmg;
-                EBodyParts? bodyPart = GetBodyPartHit(other.contacts);
+                EBodyPart? bodyPart = GetBodyPartHit(other.contacts);
 
                 if (bodyPart.HasValue)
                 {
@@ -58,7 +58,7 @@ public class BodyPartDamager : MonoBehaviour
         }
     }
 
-    private EBodyParts? GetBodyPartHit(ContactPoint[] contacts)
+    private EBodyPart? GetBodyPartHit(ContactPoint[] contacts)
     {
         foreach (ContactPoint contact in contacts)
         {
@@ -77,7 +77,7 @@ public class BodyPartDamager : MonoBehaviour
         return null;
     }
 
-    private void ApplyDamage(EBodyParts bodyPart, float baseDamage)
+    private void ApplyDamage(EBodyPart bodyPart, float baseDamage)
     {
         if (_bodyPartsDictionary.TryGetValue(bodyPart, out var bodyPartData))
         {
@@ -101,9 +101,9 @@ public class HitBox : MonoBehaviour
     [SerializeField] private Collider[] _headColliders, _torsoColliders, _armColliders, _legColliders;
     [SerializeField] private float _headDamageMultiplier, _torsoDamageMultiplier, _armDamageMultiplier, _legDamageMultiplier;
 
-    private enum EBodyParts
+    private enum EBodyPart
     {
-        Head, Torso, Arms, Legs
+        HEAD, TORSO, ARMS, LEGS
     }
 
     private DamageInfo _damageInfo;

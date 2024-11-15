@@ -27,6 +27,11 @@ public class Cheatsheet : MonoBehaviour
         //Do something
     }
 
+    void OnDrawGizmos()
+    {
+
+    }
+
     void OnValidate()
     {
 
@@ -58,11 +63,6 @@ public class Cheatsheet : MonoBehaviour
     }
 
     void LateUpdate()
-    {
-
-    }
-
-    void OnDrawGizmos()
     {
 
     }
