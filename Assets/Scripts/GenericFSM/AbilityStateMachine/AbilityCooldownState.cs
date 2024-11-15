@@ -30,8 +30,8 @@ public class AbilityCooldownState : State<EAbilityState>
 
         _ability.CooldownTimer = _ability.CooldownDuration;
 
-        _ability.CooldownImage.fillAmount = 0;
         _ability.CooldownText.text = "";
+        _ability.CooldownImage.fillAmount = 1;
         _ability.CooldownImage.gameObject.SetActive(false);
     }
 

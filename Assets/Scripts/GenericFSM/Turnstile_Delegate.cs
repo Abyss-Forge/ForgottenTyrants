@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//clase de ejemplo
 public class Turnstile_Delegate : MonoBehaviour
 {
     private FiniteStateMachine<EState> _fsm = new();

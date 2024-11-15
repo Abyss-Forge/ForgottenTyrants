@@ -53,14 +53,14 @@ public class LivingChainsAbility : AbilityStateMachine
         {
             base.Enter();
 
-            MyInputManager.Instance.SubscribeToInput(EInputActions.ClassAbility1, OnCast, true);
+            MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_1, OnCast, true);
         }
 
         public override void Exit()
         {
             base.Exit();
 
-            MyInputManager.Instance.SubscribeToInput(EInputActions.ClassAbility1, OnCast, false);
+            MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_1, OnCast, false);
         }
 
         private void DetectPlayersInRange()

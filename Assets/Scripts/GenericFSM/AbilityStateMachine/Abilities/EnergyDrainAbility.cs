@@ -52,14 +52,14 @@ public class EnergyDrainAbility : AbilityStateMachine
         {
             base.Enter();
 
-            MyInputManager.Instance.SubscribeToInput(EInputActions.ClassAbility2, OnCast, true);
+            MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_2, OnCast, true);
         }
 
         public override void Exit()
         {
             base.Exit();
 
-            MyInputManager.Instance.SubscribeToInput(EInputActions.ClassAbility2, OnCast, false);
+            MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_2, OnCast, false);
         }
 
         private void TargetEnemy()
