@@ -66,20 +66,23 @@ public class LivingChainsAbility : AbilityStateMachine
         private void DetectPlayersInRange()
         {
             Collider[] hitColliders = Physics.OverlapSphere(_ability.transform.position, _ability._range);
+            bool hasFailed = true;
 
             foreach (Collider hitCollider in hitColliders)
             {
                 if (hitCollider.gameObject.CompareTag(Tag.Ally))
                 {
                     ApplyAllyEffect(hitCollider.gameObject);
+                    hasFailed = false;
                 }
                 else if (hitCollider.gameObject.CompareTag(Tag.Enemy))
                 {
                     ApplyEnemyEffect(hitCollider.gameObject);
+                    hasFailed = false;
                 }
             }
 
-            _ability._fsm.SetCurrentState(EAbilityState.ACTIVE);
+            _ability._fsm.SetCurrentState(hasFailed ? EAbilityState.COOLDOWN : EAbilityState.ACTIVE);
         }
 
         private void ApplyAllyEffect(GameObject ally)

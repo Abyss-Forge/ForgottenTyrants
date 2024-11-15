@@ -15,7 +15,7 @@ MonoBehaviour:
   ServerVersion: 2.5.2
   Debug: 1
   LastVersion: 2.0.3
-  ShowGettingStartedScreen: 1
+  ShowGettingStartedScreen: 0
   UI:
     ShowUserCameras: 1
     m_showLockShaders: 1
