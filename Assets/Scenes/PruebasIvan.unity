@@ -3039,51 +3039,6 @@ PrefabInstance:
       propertyPath: <AbilityIcon>k__BackingField
       value: 
       objectReference: {fileID: 988648608}
-    - target: {fileID: 990098497199859721, guid: 5f77e369e2c445340866d55e2917973d,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 990098497199859721, guid: 5f77e369e2c445340866d55e2917973d,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 990098497199859721, guid: 5f77e369e2c445340866d55e2917973d,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048120504710834224, guid: 5f77e369e2c445340866d55e2917973d,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048120504710834224, guid: 5f77e369e2c445340866d55e2917973d,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1048120504710834224, guid: 5f77e369e2c445340866d55e2917973d,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2008434184368253726, guid: 5f77e369e2c445340866d55e2917973d,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2008434184368253726, guid: 5f77e369e2c445340866d55e2917973d,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2008434184368253726, guid: 5f77e369e2c445340866d55e2917973d,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2471761912260363661, guid: 5f77e369e2c445340866d55e2917973d,
         type: 3}
       propertyPath: m_Name
@@ -3094,31 +3049,11 @@ PrefabInstance:
       propertyPath: <AbilityIcon>k__BackingField
       value: 
       objectReference: {fileID: 1493097423}
-    - target: {fileID: 5381313590006229838, guid: 5f77e369e2c445340866d55e2917973d,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5381313590006229838, guid: 5f77e369e2c445340866d55e2917973d,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5381313590006229838, guid: 5f77e369e2c445340866d55e2917973d,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6145250656639219842, guid: 5f77e369e2c445340866d55e2917973d,
         type: 3}
       propertyPath: <AbilityIcon>k__BackingField
       value: 
       objectReference: {fileID: 765159162}
-    - target: {fileID: 6314373588797244775, guid: 5f77e369e2c445340866d55e2917973d,
-        type: 3}
-      propertyPath: _layerMask.m_Bits
-      value: 95
-      objectReference: {fileID: 0}
     - target: {fileID: 9007527570711957083, guid: 5f77e369e2c445340866d55e2917973d,
         type: 3}
       propertyPath: <AbilityIcon>k__BackingField

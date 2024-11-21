@@ -1,16 +1,18 @@
 <CharacterTemplates>
   <Preset>
-    <Race>Human (CharacterRaceTemplate)</Race>
-    <Class>Blademaster (CharacterClassTemplate)</Class>
-    <Weapon>Claymore (WeaponTemplate)</Weapon>
-    <Armour>Hunters Jacket (ArmourTemplate)</Armour>
-    <Trinket>Sage's Clock (TrinketTemplate)</Trinket>
+    <Name>Name</Name>
+    <Race>Shytrax</Race>
+    <Class>Elementalist</Class>
+    <Weapon>Sword &amp; Shield</Weapon>
+    <Armour>Titanium Plates</Armour>
+    <Trinket>Sage's Clock</Trinket>
   </Preset>
   <Preset>
-    <Race>Human (CharacterRaceTemplate)</Race>
-    <Class>Blademaster (CharacterClassTemplate)</Class>
-    <Weapon>Claymore (WeaponTemplate)</Weapon>
-    <Armour>Aether Veil (ArmourTemplate)</Armour>
-    <Trinket>Sage's Clock (TrinketTemplate)</Trinket>
+    <Name>Name</Name>
+    <Race>Human</Race>
+    <Class>Catalyst</Class>
+    <Weapon>Sword &amp; Shield</Weapon>
+    <Armour>Hunters Jacket</Armour>
+    <Trinket>Vital Rejuvenation</Trinket>
   </Preset>
 </CharacterTemplates>

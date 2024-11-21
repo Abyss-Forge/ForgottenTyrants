@@ -4,17 +4,22 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Unity.Mathematics;
 
 public class CharacterPresetXML
 {
-    public CharacterRaceTemplate Race { get; }
-    public CharacterClassTemplate Class { get; }
-    public WeaponTemplate Weapon { get; }
-    public ArmourTemplate Armour { get; }
-    public TrinketTemplate Trinket { get; }
+    public string Name { get; set; }
+    public string Race { get; set; }
+    public string Class { get; set; }
+    public string Weapon { get; set; }
+    public string Armour { get; set; }
+    public string Trinket { get; set; }
 
-    public CharacterPresetXML(CharacterRaceTemplate race, CharacterClassTemplate characterClass, WeaponTemplate weapon, ArmourTemplate armour, TrinketTemplate trinket)
+    public CharacterPresetXML() { }
+
+    public CharacterPresetXML(string name, string race, string characterClass, string weapon, string armour, string trinket)
     {
+        Name = name;
         Race = race;
         Class = characterClass;
         Weapon = weapon;
@@ -22,7 +27,6 @@ public class CharacterPresetXML
         Trinket = trinket;
     }
 }
-
 
 public class CharacterUISelectionController : Presettable<CharacterPresetXML>
 {
@@ -63,7 +67,7 @@ public class CharacterUISelectionController : Presettable<CharacterPresetXML>
     public ArmourTemplate SelectedArmour => _armours[_currentArmourIndex];
     public TrinketTemplate SelectedTrinket => _trinkets[_currentTrinketIndex];
 
-    protected override void OnAwake()
+    private void Awake()
     {
         _xmlFilePath = "presets.xml";
 
@@ -91,17 +95,12 @@ public class CharacterUISelectionController : Presettable<CharacterPresetXML>
 
     public void ConfirmSelection()
     {
-        GameObject playerInstance = Instantiate(_playerPrefab);
+        GameObject playerInstance = Instantiate(_playerPrefab, Vector3.zero, quaternion.identity);
 
-        Player playerScript = playerInstance.GetComponent<Player>();
-
-        if (playerScript != null)
-        {
-            playerScript?.BuildPlayer(SelectedRace, SelectedClass, SelectedWeapon, SelectedArmour, SelectedTrinket, "YOU YOU");
-        }
+        Player playerScript = playerInstance.GetComponentInChildren<Player>();
+        playerScript?.BuildPlayer(SelectedRace, SelectedClass, SelectedWeapon, SelectedArmour, SelectedTrinket, "YOU YOU");
 
         DontDestroyOnLoad(playerInstance);
-
         SceneManager.LoadScene(ForgottenTyrants.Scene.PruebasDiego);
     }
 
@@ -112,8 +111,8 @@ public class CharacterUISelectionController : Presettable<CharacterPresetXML>
 
     public void SavePreset()
     {
-        CharacterPresetXML preset = new CharacterPresetXML(SelectedRace, SelectedClass, SelectedWeapon, SelectedArmour, SelectedTrinket);
-        Debug.Log(CreatePreset(preset));
+        CharacterPresetXML preset = new CharacterPresetXML("Name", SelectedRace.name, SelectedClass.name, SelectedWeapon.name, SelectedArmour.name, SelectedTrinket.name);
+        CreatePreset(preset);
     }
 
     public void LoadPreset()
@@ -123,19 +122,21 @@ public class CharacterUISelectionController : Presettable<CharacterPresetXML>
 
     private void OnSelectPreset(CharacterPreset preset)
     {
-        _currentRaceIndex = _races.IndexOf(preset._presetModel.Race);
+        _presetSelectorController.Close();
+
+        _currentRaceIndex = _races.FindIndex(item => item.name == preset._presetModel.Race);
         ShowRace(_currentRaceIndex);
 
-        _currentClassIndex = _classes.IndexOf(preset._presetModel.Class);
+        _currentClassIndex = _classes.FindIndex(item => item.name == preset._presetModel.Class);
         ShowClass(_currentClassIndex);
 
-        _currentWeaponIndex = _weapons.IndexOf(preset._presetModel.Weapon);
+        _currentWeaponIndex = _weapons.FindIndex(item => item.name == preset._presetModel.Weapon);
         ShowWeapon(_currentWeaponIndex);
 
-        _currentArmourIndex = _armours.IndexOf(preset._presetModel.Armour);
+        _currentArmourIndex = _armours.FindIndex(item => item.name == preset._presetModel.Armour);
         ShowArmour(_currentArmourIndex);
 
-        _currentTrinketIndex = _trinkets.IndexOf(preset._presetModel.Trinket);
+        _currentTrinketIndex = _trinkets.FindIndex(item => item.name == preset._presetModel.Trinket);
         ShowTrinket(_currentTrinketIndex);
     }
 

@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class PresetSelectorController : MonoBehaviour
 {
-    [SerializeField] private List<CharacterPreset> _presets;
     [SerializeField] private Button _closeButton;
     [SerializeField] private GameObject _menu, _list, _presetPrefab;
 
@@ -15,7 +14,7 @@ public class PresetSelectorController : MonoBehaviour
         _closeButton.onClick.AddListener(Close);
     }
 
-    private void Close()
+    public void Close()
     {
         _menu.SetActive(false);
 
@@ -34,17 +33,15 @@ public class PresetSelectorController : MonoBehaviour
             GameObject instance = Instantiate(_presetPrefab, Vector2.zero, Quaternion.identity, _list.GetComponent<RectTransform>());
             CharacterPreset preset = instance.GetComponent<CharacterPreset>();
 
-            preset._raceText.text = $"Race: {item.Race.name}";
-            preset._classText.text = $"Class: {item.Class.name}";
-            preset._weaponText.text = $"Weapon: {item.Weapon.name}";
-            preset._armourText.text = $"Armour: {item.Armour.name}";
-            preset._trinketText.text = $"Trinket: {item.Trinket.name}";
+            preset._raceText.text = $"Race: {item.Race}";
+            preset._classText.text = $"Class: {item.Class}";
+            preset._weaponText.text = $"Weapon: {item.Weapon}";
+            preset._armourText.text = $"Armour: {item.Armour}";
+            preset._trinketText.text = $"Trinket: {item.Trinket}";
 
             preset._presetModel = item;
-            preset.OnSelect += OnDelete;
+            preset.OnSelect += OnSelect;
             preset.OnDelete += OnDelete;
-
-            _presets.Add(preset);
         }
     }
 

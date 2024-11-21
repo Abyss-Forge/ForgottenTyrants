@@ -5,10 +5,9 @@ using UnityEditor;
 
 public class RootModelGenerator : MonoBehaviour
 {
-    public Transform meshRoot;    // Transform del padre de los meshes
-    public Transform colliderRoot; // Transform del padre de los colliders
+    public Transform meshRoot;
+    public Transform colliderRoot;
 
-    // Agrega el botón en el Inspector
     public void GenerateColliderStructure()
     {
         if (meshRoot == null || colliderRoot == null)

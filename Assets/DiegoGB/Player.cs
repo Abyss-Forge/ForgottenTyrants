@@ -4,21 +4,13 @@ using UnityEngine;
 
 public class Player : Entity
 {
-    [SerializeField] CharacterRace _race;
-    [SerializeField] CharacterClass _class;
-    [SerializeField] Weapon _weapon;
-    [SerializeField] Armour _armour;
-    [SerializeField] Trinket _trinket;
+    [field: SerializeField] public CharacterRace Race { get; set; }
+    [field: SerializeField] public CharacterClass Class { get; set; }
+    [field: SerializeField] public Weapon Weapon { get; set; }
+    [field: SerializeField] public Armour Armour { get; set; }
+    [field: SerializeField] public Trinket Trinket { get; set; }
 
-
-    List<StatusEffect> _statusEffects = new List<StatusEffect>();
-
-
-    public CharacterRace Race => _race;
-    public CharacterClass Class => _class;
-    public Weapon Weapon => _weapon;
-    public Armour Armour => _armour;
-    public Trinket Trinket => _trinket;
+    private List<StatusEffect> _statusEffects = new();
     public List<StatusEffect> StatusEffects => _statusEffects;
 
     protected override void Start()
@@ -30,43 +22,6 @@ public class Player : Entity
     protected override void Update()
     {
 
-    }
-    /*public Player(CharacterRaceTemplate selectedRace, CharacterClassTemplate selectedClass, WeaponTemplate selectedWeapon, ArmourTemplate selectedArmour, TrinketTemplate selectedTrinket)
-    {
-        _race = new CharacterRace(selectedRace);
-        _class = new CharacterClass(selectedClass);
-        _weapon = new Weapon(selectedWeapon);
-        _armour = new Armour(selectedArmour);
-        _trinket = new Trinket(selectedTrinket);
-
-        _playerStats = new Stats(0, 0, 0, 0f, 0f, 0, 0, 0f);
-
-        CalculateTotalStats();
-    }*/
-
-    public void SetRace(CharacterRace race)
-    {
-        _race = race;
-    }
-
-    public void SetClass(CharacterClass characterClass)
-    {
-        _class = characterClass;
-    }
-
-    public void SetWeapon(Weapon weapon)
-    {
-        _weapon = weapon;
-    }
-
-    public void SetArmour(Armour armour)
-    {
-        _armour = armour;
-    }
-
-    public void SetTrinket(Trinket trinket)
-    {
-        _trinket = trinket;
     }
 
     public void AddStatusEffect(StatusEffect statusEffect)
@@ -89,11 +44,11 @@ public class Player : Entity
 
     private void CalculateTotalStats()
     {
-        _stats.Add(_race.Stats);
-        _stats.Add(_class.Stats);
-        _stats.Add(_weapon.Stats);
-        _stats.Add(_armour.Stats);
-        _stats.Add(_trinket.Stats);
+        _stats.Add(Race.Stats);
+        _stats.Add(Class.Stats);
+        _stats.Add(Weapon.Stats);
+        _stats.Add(Armour.Stats);
+        _stats.Add(Trinket.Stats);
 
         Debug.Log($"Total HP: {_stats.Hp}, Physical Damage: {_stats.PhysicalDamage}, " +
                  $"Magical Damage: {_stats.MagicalDamage}, Movement Speed: {_stats.MovementSpeed}, " +
@@ -104,11 +59,11 @@ public class Player : Entity
     public void BuildPlayer(CharacterRaceTemplate selectedRace, CharacterClassTemplate selectedClass, WeaponTemplate selectedWeapon, ArmourTemplate selectedArmour, TrinketTemplate selectedTrinket, string selectedName)
     {
         _name = selectedName;
-        _race = new CharacterRace(selectedRace);
-        _class = new CharacterClass(selectedClass);
-        _weapon = new Weapon(selectedWeapon);
-        _armour = new Armour(selectedArmour);
-        _trinket = new Trinket(selectedTrinket);
+        Race = new CharacterRace(selectedRace);
+        Class = new CharacterClass(selectedClass);
+        Weapon = new Weapon(selectedWeapon);
+        Armour = new Armour(selectedArmour);
+        Trinket = new Trinket(selectedTrinket);
 
         CalculateTotalStats();
     }

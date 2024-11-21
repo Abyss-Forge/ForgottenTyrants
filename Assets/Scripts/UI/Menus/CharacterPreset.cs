@@ -8,15 +8,15 @@ using UnityEngine.UI;
 
 public class CharacterPreset : MonoBehaviour, IPointerClickHandler
 {
-    public CharacterPresetXML _presetModel;
     [SerializeField] private Button _deleteButton;
     public TextMeshProUGUI _raceText, _classText, _weaponText, _armourText, _trinketText;
+    public CharacterPresetXML _presetModel;
 
     public event Action<CharacterPreset> OnDelete, OnSelect;
 
     void OnEnable()
     {
-        _deleteButton.onClick.AddListener(() => OnDelete.Invoke(this));
+        _deleteButton.onClick.AddListener(WhenDeleted);
     }
 
     void OnDisable()
@@ -27,6 +27,12 @@ public class CharacterPreset : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         OnSelect.Invoke(this);
+    }
+
+    private void WhenDeleted()
+    {
+        OnDelete.Invoke(this);
+        Destroy(gameObject);
     }
 
 }

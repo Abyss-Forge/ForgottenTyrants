@@ -7,8 +7,8 @@ using System.Xml;
 
 public abstract class Presettable<T> : MonoBehaviour where T : class
 {
-    protected List<T> _presets { get; private set; }
-    protected string _xmlFilePath { get; set; }
+    protected List<T> _presets { get; private set; } = new();
+    protected string _xmlFilePath { get; set; } = SGlobalSettings.XmlFilePath;
 
     private string _rootName, _parentName;
     private int _presetLimit;
@@ -22,14 +22,12 @@ public abstract class Presettable<T> : MonoBehaviour where T : class
         _arePresetsDeleteable = arePresetsDeleteable;
     }
 
-    void Awake()
+    void Start()
     {
-        _presets = new();
-        _xmlFilePath = SGlobalSettings.XmlFilePath;
         LoadFromXml();
-        OnAwake();
+        OnStart();
     }
-    protected virtual void OnAwake() { }
+    protected virtual void OnStart() { }
 
     public bool CreatePreset(T preset)
     {
@@ -95,8 +93,7 @@ public abstract class Presettable<T> : MonoBehaviour where T : class
         doc.Save(_xmlFilePath);
     }
 
-
-    public virtual void LoadFromXml()
+    public void LoadFromXml()
     {
         if (File.Exists(_xmlFilePath))
         {
@@ -106,6 +103,7 @@ public abstract class Presettable<T> : MonoBehaviour where T : class
 
             var properties = typeof(T).GetProperties();
             XmlNodeList parentNodes = doc.SelectNodes($"/{_rootName}/{_parentName}");
+
             foreach (XmlNode parentNode in parentNodes)
             {
                 T item = Activator.CreateInstance<T>();
