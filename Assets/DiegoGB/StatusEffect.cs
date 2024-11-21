@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class StatusEffect : MonoBehaviour
+public abstract class StatusEffect
 {
     [SerializeField] protected string _name;
     [SerializeField] protected float _duration;
@@ -18,6 +18,6 @@ public abstract class StatusEffect : MonoBehaviour
         ApplyEffect(player);
         yield return new WaitForSeconds(_duration);
         RemoveEffect(player);
-        Destroy(this);
     }
+
 }

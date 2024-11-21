@@ -6,7 +6,24 @@ using UnityEngine;
 public class FiniteStateMachine<EState> where EState : Enum
 {
     protected Dictionary<EState, State<EState>> _states;
-    protected State<EState> _currentState;
+    protected State<EState> _currentState, _previousState;
+    public State<EState> CurrentState => _currentState;
+    public State<EState> PreviousState => _previousState;
+
+    public delegate void DelegateWithState(EState oldState, EState newState);
+    private DelegateWithState OnStateChange;
+
+    public void SubscribeOnStateChange(DelegateWithState function, bool subscribe = true)
+    {
+        if (subscribe)
+        {
+            OnStateChange += function;
+        }
+        else
+        {
+            OnStateChange -= function;
+        }
+    }
 
     public FiniteStateMachine()
     {
@@ -38,11 +55,6 @@ public class FiniteStateMachine<EState> where EState : Enum
         SetCurrentState(state);
     }
 
-    public State<EState> GetCurrentState()
-    {
-        return _currentState;
-    }
-
     public void SetCurrentState(State<EState> state)
     {
         if (_currentState == state)
@@ -50,41 +62,28 @@ public class FiniteStateMachine<EState> where EState : Enum
             return;
         }
 
-        if (_currentState != null)
-        {
-            _currentState.Exit();
-        }
-
+        _previousState = _currentState;
         _currentState = state;
 
-        if (_currentState != null)
-        {
-            _currentState.Enter();
-        }
+        OnStateChange?.Invoke(_previousState.ID, _currentState.ID);
+
+        _previousState?.Exit();
+        _currentState?.Enter();
     }
 
     public void Update()
     {
-        if (_currentState != null)
-        {
-            _currentState.Update();
-        }
+        _currentState?.Update();
     }
 
     public void FixedUpdate()
     {
-        if (_currentState != null)
-        {
-            _currentState.FixedUpdate();
-        }
+        _currentState?.FixedUpdate();
     }
 
     public void LateUpdate()
     {
-        if (_currentState != null)
-        {
-            _currentState.LateUpdate();
-        }
+        _currentState?.LateUpdate();
     }
 
 }

@@ -1,7 +1,8 @@
+#if UNITY_EDITOR
+
 using UnityEngine;
 using UnityEditor;
 
-[ExecuteInEditMode]
 public class RootModelGenerator : MonoBehaviour
 {
     public Transform meshRoot;    // Transform del padre de los meshes
@@ -143,3 +144,5 @@ public class RootModelGeneratorEditor : Editor
         }
     }
 }
+
+#endif

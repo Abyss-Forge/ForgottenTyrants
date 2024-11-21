@@ -39,14 +39,12 @@ public class TotalDarknessAbility : AbilityStateMachine
         public override void Enter()
         {
             base.Enter();
-
             MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_3, OnCast, true);
         }
 
         public override void Exit()
         {
             base.Exit();
-
             MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_3, OnCast, false);
         }
     }
@@ -61,13 +59,20 @@ public class TotalDarknessAbility : AbilityStateMachine
 
         private GhostStatusEffect ghostStatusEffect;
 
+        private void OnCast(InputAction.CallbackContext context)
+        {
+            if (context.performed) _ability._fsm.SetCurrentState(EAbilityState.COOLDOWN);
+        }
+
         public override void Enter()
         {
             base.Enter();
 
+            MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_3, OnCast, true);
+
             _ability.ActiveTimer = _ability.ActiveDuration;
 
-            _ability.CooldownImage.gameObject.SetActive(true);
+            //_ability.AbilityIcon.OnEnterActive();
 
             ghostStatusEffect = new();
             ghostStatusEffect.ApplyEffect(_ability.gameObject.GetComponent<Player>());
@@ -83,6 +88,8 @@ public class TotalDarknessAbility : AbilityStateMachine
         public override void Exit()
         {
             base.Exit();
+
+            MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_3, OnCast, false);
 
             ghostStatusEffect.RemoveEffect(_ability.gameObject.GetComponent<Player>());
         }

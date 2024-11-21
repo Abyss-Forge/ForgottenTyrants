@@ -1,0 +1,16 @@
+<CharacterTemplates>
+  <Preset>
+    <Race>Human (CharacterRaceTemplate)</Race>
+    <Class>Blademaster (CharacterClassTemplate)</Class>
+    <Weapon>Claymore (WeaponTemplate)</Weapon>
+    <Armour>Hunters Jacket (ArmourTemplate)</Armour>
+    <Trinket>Sage's Clock (TrinketTemplate)</Trinket>
+  </Preset>
+  <Preset>
+    <Race>Human (CharacterRaceTemplate)</Race>
+    <Class>Blademaster (CharacterClassTemplate)</Class>
+    <Weapon>Claymore (WeaponTemplate)</Weapon>
+    <Armour>Aether Veil (ArmourTemplate)</Armour>
+    <Trinket>Sage's Clock (TrinketTemplate)</Trinket>
+  </Preset>
+</CharacterTemplates>

@@ -6,6 +6,8 @@ namespace ForgottenTyrants
    {
       public const string StartMenu = "StartMenu";
       public const string PruebasIvan = "PruebasIvan";
+      public const string PruebasDiego = "PruebasDiego";
+      public const string UICharacterSelection = "UI Character Selection";
 
       public static int Next => GetNext();
       public static int Previous => GetPrevious();

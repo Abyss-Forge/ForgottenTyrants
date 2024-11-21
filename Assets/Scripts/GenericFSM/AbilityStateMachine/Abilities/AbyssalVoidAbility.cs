@@ -9,7 +9,7 @@ public class AbyssalVoidAbility : AbilityStateMachine
 
     void OnDrawGizmos()
     {
-        if (_fsm != null && _fsm.GetCurrentState().ID == EAbilityState.ACTIVE)
+        if (_fsm != null && _fsm.CurrentState.ID == EAbilityState.ACTIVE)
         {
             Gizmos.color = new(0, 1, 0, 0.3f);
             Gizmos.DrawSphere(transform.position, 30);
@@ -46,14 +46,12 @@ public class AbyssalVoidAbility : AbilityStateMachine
         public override void Enter()
         {
             base.Enter();
-
             MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_4, OnCast, true);
         }
 
         public override void Exit()
         {
             base.Exit();
-
             MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_4, OnCast, false);
         }
     }
@@ -72,7 +70,7 @@ public class AbyssalVoidAbility : AbilityStateMachine
 
             _ability.ActiveTimer = _ability.ActiveDuration;
 
-            _ability.CooldownImage.gameObject.SetActive(true);
+            //_ability.AbilityIcon.OnEnterActive();
             Debug.Log("Abyssal Void triggered");
         }
 

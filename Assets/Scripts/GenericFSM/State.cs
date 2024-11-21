@@ -5,17 +5,11 @@ using UnityEngine;
 
 public class State<EState> where EState : Enum
 {
-    public string Name { get; set; }
     public EState ID { get; private set; }
 
     public State(EState id)
     {
         ID = id;
-    }
-
-    public State(EState id, string name) : this(id)
-    {
-        Name = name;
     }
 
     public delegate void DelegateNoArg();
@@ -32,20 +26,6 @@ public class State<EState> where EState : Enum
         DelegateNoArg onUpdate = null,
         DelegateNoArg onFixedUpdate = null,
         DelegateNoArg onLateUpdate = null) : this(id)
-    {
-        OnEnter = onEnter;
-        OnExit = onExit;
-        OnUpdate = onUpdate;
-        OnFixedUpdate = onFixedUpdate;
-        OnLateUpdate = onLateUpdate;
-    }
-    public State(EState id,
-        string name,
-        DelegateNoArg onEnter,
-        DelegateNoArg onExit = null,
-        DelegateNoArg onUpdate = null,
-        DelegateNoArg onFixedUpdate = null,
-        DelegateNoArg onLateUpdate = null) : this(id, name)
     {
         OnEnter = onEnter;
         OnExit = onExit;

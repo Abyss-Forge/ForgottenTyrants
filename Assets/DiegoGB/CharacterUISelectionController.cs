@@ -5,10 +5,29 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-public class CharacterUISelectionController : MonoBehaviour
+public class CharacterPresetXML
+{
+    public CharacterRaceTemplate Race { get; }
+    public CharacterClassTemplate Class { get; }
+    public WeaponTemplate Weapon { get; }
+    public ArmourTemplate Armour { get; }
+    public TrinketTemplate Trinket { get; }
+
+    public CharacterPresetXML(CharacterRaceTemplate race, CharacterClassTemplate characterClass, WeaponTemplate weapon, ArmourTemplate armour, TrinketTemplate trinket)
+    {
+        Race = race;
+        Class = characterClass;
+        Weapon = weapon;
+        Armour = armour;
+        Trinket = trinket;
+    }
+}
+
+
+public class CharacterUISelectionController : Presettable<CharacterPresetXML>
 {
     [SerializeField] private GameObject _playerPrefab;
-
+    [SerializeField] private PresetSelectorController _presetSelectorController;
 
     [SerializeField] private List<CharacterRaceTemplate> _races;
     [SerializeField] private List<CharacterClassTemplate> _classes;
@@ -16,13 +35,11 @@ public class CharacterUISelectionController : MonoBehaviour
     [SerializeField] private List<ArmourTemplate> _armours;
     [SerializeField] private List<TrinketTemplate> _trinkets;
 
-
     private int _currentRaceIndex = 0;
     private int _currentClassIndex = 0;
     private int _currentWeaponIndex = 0;
     private int _currentArmourIndex = 0;
     private int _currentTrinketIndex = 0;
-
 
     [SerializeField] private TMP_Text _raceNameText, _raceStatsText;
     [SerializeField] private TMP_Text _classNameText, _classStatsText;
@@ -30,17 +47,26 @@ public class CharacterUISelectionController : MonoBehaviour
     [SerializeField] private TMP_Text _armourNameText, _armourStatsText;
     [SerializeField] private TMP_Text _trinketNameText, _trinketStatsText;
 
-
-    [SerializeField] private Button _confirmButton;
+    [SerializeField] private Button _savePresetButton, _loadPresetButton;
+    [SerializeField] private Button _confirmButton, _cancelButton;
     [SerializeField] private Button _nextRaceButton, _prevRaceButton;
     [SerializeField] private Button _nextClassButton, _prevClassButton;
     [SerializeField] private Button _nextWeaponButton, _prevWeaponButton;
     [SerializeField] private Button _nextArmourButton, _prevArmourButton;
     [SerializeField] private Button _nextTrinketButton, _prevTrinketButton;
 
+    public CharacterUISelectionController() : base("CharacterTemplates", "Preset") { }
 
-    private void Start()
+    public CharacterRaceTemplate SelectedRace => _races[_currentRaceIndex];
+    public CharacterClassTemplate SelectedClass => _classes[_currentClassIndex];
+    public WeaponTemplate SelectedWeapon => _weapons[_currentWeaponIndex];
+    public ArmourTemplate SelectedArmour => _armours[_currentArmourIndex];
+    public TrinketTemplate SelectedTrinket => _trinkets[_currentTrinketIndex];
+
+    protected override void OnAwake()
     {
+        _xmlFilePath = "presets.xml";
+
         ShowRace(_currentRaceIndex);
         ShowClass(_currentClassIndex);
         ShowWeapon(_currentWeaponIndex);
@@ -58,72 +84,142 @@ public class CharacterUISelectionController : MonoBehaviour
         _nextTrinketButton.onClick.AddListener(NextTrinket);
         _prevTrinketButton.onClick.AddListener(PreviousTrinket);
         _confirmButton.onClick.AddListener(ConfirmSelection);
+        _cancelButton.onClick.AddListener(Back);
+        _loadPresetButton.onClick.AddListener(LoadPreset);
+        _savePresetButton.onClick.AddListener(SavePreset);
     }
 
+    public void ConfirmSelection()
+    {
+        GameObject playerInstance = Instantiate(_playerPrefab);
+
+        Player playerScript = playerInstance.GetComponent<Player>();
+
+        if (playerScript != null)
+        {
+            playerScript?.BuildPlayer(SelectedRace, SelectedClass, SelectedWeapon, SelectedArmour, SelectedTrinket, "YOU YOU");
+        }
+
+        DontDestroyOnLoad(playerInstance);
+
+        SceneManager.LoadScene(ForgottenTyrants.Scene.PruebasDiego);
+    }
+
+    public void Back()
+    {
+
+    }
+
+    public void SavePreset()
+    {
+        CharacterPresetXML preset = new CharacterPresetXML(SelectedRace, SelectedClass, SelectedWeapon, SelectedArmour, SelectedTrinket);
+        Debug.Log(CreatePreset(preset));
+    }
+
+    public void LoadPreset()
+    {
+        _presetSelectorController.Open(_presets, OnSelectPreset, OnDeletePreset);
+    }
+
+    private void OnSelectPreset(CharacterPreset preset)
+    {
+        _currentRaceIndex = _races.IndexOf(preset._presetModel.Race);
+        ShowRace(_currentRaceIndex);
+
+        _currentClassIndex = _classes.IndexOf(preset._presetModel.Class);
+        ShowClass(_currentClassIndex);
+
+        _currentWeaponIndex = _weapons.IndexOf(preset._presetModel.Weapon);
+        ShowWeapon(_currentWeaponIndex);
+
+        _currentArmourIndex = _armours.IndexOf(preset._presetModel.Armour);
+        ShowArmour(_currentArmourIndex);
+
+        _currentTrinketIndex = _trinkets.IndexOf(preset._presetModel.Trinket);
+        ShowTrinket(_currentTrinketIndex);
+    }
+
+    private void OnDeletePreset(CharacterPreset preset)
+    {
+        DeletePreset(preset._presetModel);
+    }
+
+    #region Interacción con la UI
 
     private void ShowRace(int index)
     {
         CharacterRaceTemplate selectedRace = _races[index];
 
-        _raceNameText.text = selectedRace.Name;
+        _raceNameText.text = selectedRace.name;
         _raceStatsText.text = FormatStats(selectedRace.Stats);
     }
+
     private void NextRace()
     {
         _currentRaceIndex = (_currentRaceIndex + 1) % _races.Count;
         ShowRace(_currentRaceIndex);
     }
+
     private void PreviousRace()
     {
         _currentRaceIndex = (_currentRaceIndex - 1 + _races.Count) % _races.Count;
         ShowRace(_currentRaceIndex);
     }
+
     private void ShowClass(int index)
     {
         CharacterClassTemplate selectedClass = _classes[index];
 
-        _classNameText.text = selectedClass.Name;
+        _classNameText.text = selectedClass.name;
         _classStatsText.text = FormatStats(selectedClass.Stats);
     }
+
     private void NextClass()
     {
         _currentClassIndex = (_currentClassIndex + 1) % _classes.Count;
         ShowClass(_currentClassIndex);
     }
+
     private void PreviousClass()
     {
         _currentClassIndex = (_currentClassIndex - 1 + _classes.Count) % _classes.Count;
         ShowClass(_currentClassIndex);
     }
+
     private void ShowWeapon(int index)
     {
         WeaponTemplate selectedWeapon = _weapons[index];
 
-        _weaponNameText.text = selectedWeapon.Name;
+        _weaponNameText.text = selectedWeapon.name;
         _weaponStatsText.text = FormatStats(selectedWeapon.Stats);
     }
+
     private void NextWeapon()
     {
         _currentWeaponIndex = (_currentWeaponIndex + 1) % _weapons.Count;
         ShowWeapon(_currentWeaponIndex);
     }
+
     private void PreviousWeapon()
     {
         _currentWeaponIndex = (_currentWeaponIndex - 1 + _weapons.Count) % _weapons.Count;
         ShowWeapon(_currentWeaponIndex);
     }
+
     private void ShowArmour(int index)
     {
         ArmourTemplate selectedArmour = _armours[index];
 
-        _armourNameText.text = selectedArmour.Name;
+        _armourNameText.text = selectedArmour.name;
         _armourStatsText.text = FormatStats(selectedArmour.Stats);
     }
+
     private void NextArmour()
     {
         _currentArmourIndex = (_currentArmourIndex + 1) % _armours.Count;
         ShowArmour(_currentArmourIndex);
     }
+
     private void PreviousArmour()
     {
         _currentArmourIndex = (_currentArmourIndex - 1 + _armours.Count) % _armours.Count;
@@ -134,42 +230,21 @@ public class CharacterUISelectionController : MonoBehaviour
     {
         TrinketTemplate selectedTrinket = _trinkets[index];
 
-        _trinketNameText.text = selectedTrinket.Name;
+        _trinketNameText.text = selectedTrinket.name;
         _trinketStatsText.text = FormatStats(selectedTrinket.Stats);
     }
+
     private void NextTrinket()
     {
         _currentTrinketIndex = (_currentTrinketIndex + 1) % _trinkets.Count;
         ShowTrinket(_currentTrinketIndex);
     }
+
     private void PreviousTrinket()
     {
         _currentTrinketIndex = (_currentTrinketIndex - 1 + _trinkets.Count) % _trinkets.Count;
         ShowTrinket(_currentTrinketIndex);
     }
-
-
-    public CharacterRaceTemplate GetSelectedRace()
-    {
-        return _races[_currentRaceIndex];
-    }
-    public CharacterClassTemplate GetSelectedClass()
-    {
-        return _classes[_currentClassIndex];
-    }
-    public WeaponTemplate GetSelectedWeapon()
-    {
-        return _weapons[_currentWeaponIndex];
-    }
-    public ArmourTemplate GetSelectedArmour()
-    {
-        return _armours[_currentArmourIndex];
-    }
-    public TrinketTemplate GetSelectedTrinket()
-    {
-        return _trinkets[_currentTrinketIndex];
-    }
-
 
     private string FormatStats(Stats stats)
     {
@@ -182,26 +257,6 @@ public class CharacterUISelectionController : MonoBehaviour
                $"Magical Defense: {stats.MagicalDefense}\n" +
                $"Cd: {stats.CooldownReduction}";
     }
-    public void ConfirmSelection()
-    {
-        GameObject playerInstance = Instantiate(_playerPrefab);
 
-        CharacterRaceTemplate selectedRace = GetSelectedRace();
-        CharacterClassTemplate selectedClass = GetSelectedClass();
-        WeaponTemplate selectedWeapon = GetSelectedWeapon();
-        ArmourTemplate selectedArmour = GetSelectedArmour();
-        TrinketTemplate selectedTrinket = GetSelectedTrinket();
-
-        Player playerScript = playerInstance.GetComponent<Player>();
-
-        if (playerScript != null)
-        {
-            playerScript.BuildPlayer(selectedRace, selectedClass, selectedWeapon, selectedArmour, selectedTrinket, "YOU YOU");
-        }
-
-        DontDestroyOnLoad(playerInstance);
-        SceneManager.LoadScene("PruebasDiego");
-
-    }
-
+    #endregion
 }

@@ -4,9 +4,10 @@ using UnityEngine;
 
 public abstract class ItemTemplate : ScriptableObject
 {
+    [SerializeField] protected string _uid;
     [SerializeField] protected Stats _stats;
-    [SerializeField] protected string _name;
 
+    public string UID => _uid;
     public Stats Stats => _stats;
-    public string Name => _name;
+
 }

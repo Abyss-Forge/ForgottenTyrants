@@ -14,7 +14,7 @@ public class EnergyDrainAbility : AbilityStateMachine
 
     void OnDrawGizmos()
     {
-        if (_fsm != null && _fsm.GetCurrentState().ID == EAbilityState.ACTIVE)
+        if (_fsm != null && _fsm.CurrentState.ID == EAbilityState.ACTIVE)
         {
             Gizmos.color = new(0, 1, 0, 0.3f);
             Gizmos.DrawSphere(transform.position, 30);
@@ -51,14 +51,12 @@ public class EnergyDrainAbility : AbilityStateMachine
         public override void Enter()
         {
             base.Enter();
-
             MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_2, OnCast, true);
         }
 
         public override void Exit()
         {
             base.Exit();
-
             MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_2, OnCast, false);
         }
 
@@ -89,7 +87,7 @@ public class EnergyDrainAbility : AbilityStateMachine
 
             _ability.ActiveTimer = _ability.ActiveDuration;
 
-            _ability.CooldownImage.gameObject.SetActive(true);
+            //_ability.AbilityIcon.OnEnterActive();
 
             ghostStatusEffect = new();
             ghostStatusEffect.ApplyEffect(_ability.gameObject.GetComponent<Player>());
