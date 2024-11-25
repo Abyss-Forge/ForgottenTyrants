@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 public enum EAbilityState
 {
@@ -13,8 +11,7 @@ public abstract class AbilityStateMachine : MonoBehaviour
 {
     #region Default logic
 
-    [field: SerializeField] public Image CooldownImage { get; private set; }
-    [field: SerializeField] public TextMeshProUGUI CooldownText { get; private set; }
+    [field: SerializeField] public AbilityIcon AbilityIcon { get; private set; }
 
     [field: SerializeField] public float ActiveDuration { get; private set; } = 5f;
     [field: SerializeField] public float CooldownDuration { get; private set; } = 5f;
@@ -27,7 +24,7 @@ public abstract class AbilityStateMachine : MonoBehaviour
 
     private IEnumerator ApplyLock(float time)
     {
-        if (_fsm.GetCurrentState().ID != EAbilityState.ACTIVE)
+        if (_fsm.CurrentState.ID != EAbilityState.ACTIVE)
         {
             _fsm.SetCurrentState(EAbilityState.LOCKED);
 
@@ -60,6 +57,8 @@ public abstract class AbilityStateMachine : MonoBehaviour
         _fsm = new();
         InitializeStates();
         _fsm.SetCurrentState(EAbilityState.READY);
+
+        AbilityIcon?.Initialize(this);
     }
 
     void Update()

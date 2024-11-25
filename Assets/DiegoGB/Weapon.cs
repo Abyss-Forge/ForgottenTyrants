@@ -17,7 +17,7 @@ public class Weapon
     }
     public Weapon(WeaponTemplate selectedWeapon)
     {
-        _name = selectedWeapon.Name;
+        _name = selectedWeapon.name;
         _stats = selectedWeapon.Stats;
     }
 }

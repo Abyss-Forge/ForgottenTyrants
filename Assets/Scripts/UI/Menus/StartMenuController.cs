@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using ForgottenTyrants;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class StartMenuController : MonoBehaviour
@@ -17,7 +19,8 @@ public class StartMenuController : MonoBehaviour
 
     private void Play()
     {
-        MySceneManager.Instance.LoadSceneWithLoadingScreen(1);
+        // MySceneManager.Instance.LoadSceneWithLoadingScreen(Scene.Next);
+        SceneManager.LoadScene(ForgottenTyrants.Scene.Next);
     }
 
     private void Quit()

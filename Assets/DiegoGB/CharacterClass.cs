@@ -20,9 +20,11 @@ public class CharacterClass
         _name = name;
         _stats = stats;
     }
+
     public CharacterClass(CharacterClassTemplate selectedClass)
     {
-        _name = selectedClass.Name;
+        _name = selectedClass.name;
         _stats = selectedClass.Stats;
     }
+
 }

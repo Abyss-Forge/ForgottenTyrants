@@ -15,9 +15,10 @@ public class CharacterRace
         _name = name;
         _stats = stats;
     }
+
     public CharacterRace(CharacterRaceTemplate selectedRace)
     {
-        _name = selectedRace.Name;
+        _name = selectedRace.name;
         _stats = selectedRace.Stats;
     }
 

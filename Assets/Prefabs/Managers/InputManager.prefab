@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3135435163631379821
+--- !u!1 &6602379526786727805
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,9 +8,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1776115801233934858}
-  - component: {fileID: 422836046772471295}
-  - component: {fileID: 5056221432078405071}
+  - component: {fileID: 171706720182160894}
+  - component: {fileID: 8579863897910182281}
+  - component: {fileID: 4818883493141071390}
   m_Layer: 0
   m_Name: InputManager
   m_TagString: Untagged
@@ -18,13 +18,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1776115801233934858
+--- !u!4 &171706720182160894
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3135435163631379821}
+  m_GameObject: {fileID: 6602379526786727805}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -33,25 +33,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &422836046772471295
+--- !u!114 &8579863897910182281
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3135435163631379821}
+  m_GameObject: {fileID: 6602379526786727805}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cea193e586d42a45a8e53c626dd8d7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5056221432078405071
+--- !u!114 &4818883493141071390
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3135435163631379821}
+  m_GameObject: {fileID: 6602379526786727805}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
@@ -73,7 +73,7 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 422836046772471295}
+      - m_Target: {fileID: 8579863897910182281}
         m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
         m_MethodName: OnMove
         m_Mode: 0
@@ -89,7 +89,7 @@ MonoBehaviour:
     m_ActionName: Player/Move[/DualShock4GamepadHID/leftStick,/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 422836046772471295}
+      - m_Target: {fileID: 8579863897910182281}
         m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
         m_MethodName: OnLook
         m_Mode: 0
@@ -105,7 +105,7 @@ MonoBehaviour:
     m_ActionName: Player/Look[/DualShock4GamepadHID/rightStick,/Mouse/delta,/Pen/delta]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 422836046772471295}
+      - m_Target: {fileID: 8579863897910182281}
         m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
         m_MethodName: OnWeaponBasicAttack
         m_Mode: 0
@@ -121,7 +121,7 @@ MonoBehaviour:
     m_ActionName: Player/Fire[/DualShock4GamepadHID/rightTrigger,/Mouse/leftButton]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 422836046772471295}
+      - m_Target: {fileID: 8579863897910182281}
         m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
         m_MethodName: OnJump
         m_Mode: 0
@@ -137,7 +137,7 @@ MonoBehaviour:
     m_ActionName: Player/Jump[/Keyboard/space]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 422836046772471295}
+      - m_Target: {fileID: 8579863897910182281}
         m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
         m_MethodName: OnDash
         m_Mode: 0
@@ -193,7 +193,7 @@ MonoBehaviour:
     m_ActionName: UI/TrackedDeviceOrientation
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 422836046772471295}
+      - m_Target: {fileID: 8579863897910182281}
         m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
         m_MethodName: OnWeaponAbility
         m_Mode: 0
@@ -209,7 +209,7 @@ MonoBehaviour:
     m_ActionName: Player/WeaponAbility[/Mouse/rightButton]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 422836046772471295}
+      - m_Target: {fileID: 8579863897910182281}
         m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
         m_MethodName: OnClassAbility1
         m_Mode: 0
@@ -225,7 +225,7 @@ MonoBehaviour:
     m_ActionName: Player/ClassAbility1[/Keyboard/e]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 422836046772471295}
+      - m_Target: {fileID: 8579863897910182281}
         m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
         m_MethodName: OnClassAbility2
         m_Mode: 0
@@ -241,7 +241,7 @@ MonoBehaviour:
     m_ActionName: Player/ClassAbility2[/Keyboard/r]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 422836046772471295}
+      - m_Target: {fileID: 8579863897910182281}
         m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
         m_MethodName: OnClassAbility3
         m_Mode: 0
@@ -257,7 +257,7 @@ MonoBehaviour:
     m_ActionName: Player/ClassAbility3[/Keyboard/f]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 422836046772471295}
+      - m_Target: {fileID: 8579863897910182281}
         m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
         m_MethodName: OnClassAbility4
         m_Mode: 0
@@ -273,7 +273,7 @@ MonoBehaviour:
     m_ActionName: Player/ClassAbility4[/Keyboard/q]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 422836046772471295}
+      - m_Target: {fileID: 8579863897910182281}
         m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
         m_MethodName: OnPing
         m_Mode: 0
@@ -289,7 +289,7 @@ MonoBehaviour:
     m_ActionName: Player/Ping[/Mouse/middleButton]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 422836046772471295}
+      - m_Target: {fileID: 8579863897910182281}
         m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
         m_MethodName: OnPause
         m_Mode: 0
@@ -305,7 +305,7 @@ MonoBehaviour:
     m_ActionName: Player/Pause[/Keyboard/escape]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 422836046772471295}
+      - m_Target: {fileID: 8579863897910182281}
         m_TargetAssemblyTypeName: MyInputManager, Assembly-CSharp
         m_MethodName: OnMenu
         m_Mode: 0

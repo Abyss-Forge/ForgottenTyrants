@@ -15,8 +15,8 @@ public class Turnstile_Delegate : MonoBehaviour
 
     private void Start()
     {
-        _fsm.Add(new State<EState>(EState.LOCKED, "Locked", OnEnterLocked, null, OnUpdateLocked, null, null));
-        _fsm.Add(new State<EState>(EState.UNLOCKED, "Unlocked", OnEnterUnlocked, null, OnUpdateUnlocked, null, null));
+        _fsm.Add(new State<EState>(EState.LOCKED, OnEnterLocked, null, OnUpdateLocked, null, null));
+        _fsm.Add(new State<EState>(EState.UNLOCKED, OnEnterUnlocked, null, OnUpdateUnlocked, null, null));
 
         _fsm.SetCurrentState(EState.LOCKED);
     }

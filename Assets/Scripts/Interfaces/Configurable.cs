@@ -22,15 +22,15 @@ public abstract class Configurable<T, U> : MonoBehaviour
 
     void Awake()
     {
-        _settings = new Dictionary<T, U>();
-        _defaultSettings = new Dictionary<T, U>();
+        _settings = new();
+        _defaultSettings = new();
         _xmlFilePath = SGlobalSettings.XmlFilePath;
         LoadFromXml();
         OnAwake();
     }
     protected virtual void OnAwake() { }
 
-    protected abstract void InitializeDefaults();
+    protected abstract void InitializeDefaults(); // _defaultSettings.Add(x, y);
 
     public void ResetAllToDefault()
     {
