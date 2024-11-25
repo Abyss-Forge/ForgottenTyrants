@@ -44,16 +44,16 @@ public class Player : Entity
 
     private void CalculateTotalStats()
     {
-        _stats.Add(Race.Stats);
-        _stats.Add(Class.Stats);
-        _stats.Add(Weapon.Stats);
-        _stats.Add(Armour.Stats);
-        _stats.Add(Trinket.Stats);
+        _baseStats.Add(Race.Stats);
+        _baseStats.Add(Class.Stats);
+        _baseStats.Add(Weapon.Stats);
+        _baseStats.Add(Armour.Stats);
+        _baseStats.Add(Trinket.Stats);
 
-        Debug.Log($"Total HP: {_stats.Hp}, Physical Damage: {_stats.PhysicalDamage}, " +
-                 $"Magical Damage: {_stats.MagicalDamage}, Movement Speed: {_stats.MovementSpeed}, " +
-                 $"Attack Speed: {_stats.AttackSpeed}, Physical Defense: {_stats.PhysicalDefense}, " +
-                 $"Magical Defense: {_stats.MagicalDefense}, Cooldown Reduction: {_stats.CooldownReduction}");
+        Debug.Log($"Total HP: {_baseStats.Hp}, Physical Damage: {_baseStats.PhysicalDamage}, " +
+                 $"Magical Damage: {_baseStats.MagicalDamage}, Movement Speed: {_baseStats.MovementSpeed}, " +
+                 $"Attack Speed: {_baseStats.AttackSpeed}, Physical Defense: {_baseStats.PhysicalDefense}, " +
+                 $"Magical Defense: {_baseStats.MagicalDefense}, Cooldown Reduction: {_baseStats.CooldownReduction}");
     }
 
     public void BuildPlayer(CharacterRaceTemplate selectedRace, CharacterClassTemplate selectedClass, WeaponTemplate selectedWeapon, ArmourTemplate selectedArmour, TrinketTemplate selectedTrinket, string selectedName)

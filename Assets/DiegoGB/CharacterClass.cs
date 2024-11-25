@@ -7,10 +7,7 @@ public class CharacterClass
 {
     [SerializeField] string _name;
     [SerializeField] Stats _stats;
-    [SerializeField] LivingChainsAbility _firstAbility;
-    [SerializeField] LivingChainsAbility _secondAbility;
-    [SerializeField] LivingChainsAbility _thirdAbility;
-    [SerializeField] LivingChainsAbility _ultimateAbility;
+    [SerializeField] AbilityStateMachine _firstAbility, _secondAbility, _thirdAbility, _ultimateAbility;
 
     public string Name => _name;
     public Stats Stats => _stats;
