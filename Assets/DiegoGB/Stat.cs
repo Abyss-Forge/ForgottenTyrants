@@ -1,48 +1,47 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
-public class Stat<T> where T : int or T : float
+[System.Serializable]
+public class Stat
 {
-    [SerializeField] T _value;
+    [SerializeField] private float _value;
 
-    private enum EBuffApplyType
+    public enum EBuffApplyType
     {
         PERCENTUAL, ABSOLUTE
     }
 
-    public void Buff(T value, EBuffApplyType type)
+    // Sobrescribir el operador implícito para acceder directamente al valor
+    public static implicit operator float(Stat stat)
     {
-        if (type == EBuffApplyType.PERCENTUAL)
-        {
-            value *= (_value / 100);
-        }
-        SetValue(value, true)
+        return stat._value;
     }
 
-    public void Debuff(T value, EBuffApplyType type)
+    public Stat(float value)
     {
-        if (type == EBuffApplyType.PERCENTUAL)
-        {
-            value *= (_value / 100);
-        }
-        SetValue(value, false)
+        _value = value;
     }
 
-    private void SetValue(T value, bool buff)
+    public void Buff(float value, EBuffApplyType type)
     {
-        if (!buff)
-        {
-            value *= -1;
-        }
+        SetValue(value, false, type == EBuffApplyType.PERCENTUAL);
+    }
 
-        _value += value
+    public void Debuff(float value, EBuffApplyType type)
+    {
+        SetValue(value, true, type == EBuffApplyType.PERCENTUAL);
+    }
 
-        if (_value < 0)
-        {
-            _value = 0;
-        }
+    private void SetValue(float value, bool isDebuff, bool isPercentual)
+    {
+        if (isPercentual) value *= _value / 100;
 
+        if (isDebuff) value *= -1;
 
+        _value += value;
+
+        if (_value < 0) _value = 0;
     }
 }
