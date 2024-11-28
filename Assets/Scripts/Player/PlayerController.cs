@@ -163,4 +163,9 @@ public class PlayerController : MonoBehaviour
         _isDashOnCooldown = false;
     }
 
+    public void SetVelocity(Vector3 newVelocity)
+    {
+        _velocity = newVelocity;
+    }
+
 }
