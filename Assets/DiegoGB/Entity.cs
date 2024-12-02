@@ -11,13 +11,14 @@ public abstract class Entity : MonoBehaviour
     public Stats BaseStats => _baseStats;
     public Stats ModifiedStats => _modifiedStats;
 
-    public void AppyStatsModifier(Stats stats)
+    public void AppyStatsModifier(Stats stats, bool isAppliedToBase)
     {
 
     }
 
     protected virtual void Awake()
     {
+
     }
 
     protected virtual void Start()

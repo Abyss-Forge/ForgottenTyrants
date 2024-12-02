@@ -13,11 +13,6 @@ public class MySceneManager : Singleton<MySceneManager>
 {
     [SerializeField] private LoadingScreenController _loadingScreenParent;
 
-    public void ReloadCurrentScene()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
     public void LoadSceneWithLoadingScreen(object sceneId)
     {
         AsyncOperation operation;

@@ -24,7 +24,7 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
-        MyInputManager.Instance.SubscribeToInput(EInputAction.LOOK, OnLook);
+        MyInputManager.Instance.Subscribe(EInputAction.LOOK, OnLook);
     }
 
     void Update()

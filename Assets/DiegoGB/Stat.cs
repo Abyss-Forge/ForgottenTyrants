@@ -1,22 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 [System.Serializable]
 public class Stat
 {
     [SerializeField] private float _value;
+    public float Value => _value;
 
-    public enum EBuffApplyType
+    public Stat()
     {
-        PERCENTUAL, ABSOLUTE
-    }
-
-    // Sobrescribir el operador implícito para acceder directamente al valor
-    public static implicit operator float(Stat stat)
-    {
-        return stat._value;
+        _value = 0;
     }
 
     public Stat(float value)
@@ -24,17 +18,17 @@ public class Stat
         _value = value;
     }
 
-    public void Buff(float value, EBuffApplyType type)
+    public float Buff(float value, bool isPercentual = true, float duration = -1)
     {
-        SetValue(value, false, type == EBuffApplyType.PERCENTUAL);
+        return SetValue(value, false, isPercentual, duration);
     }
 
-    public void Debuff(float value, EBuffApplyType type)
+    public float Debuff(float value, bool isPercentual = true, float duration = -1)
     {
-        SetValue(value, true, type == EBuffApplyType.PERCENTUAL);
+        return SetValue(value, true, isPercentual, duration);
     }
 
-    private void SetValue(float value, bool isDebuff, bool isPercentual)
+    private float SetValue(float value, bool isDebuff, bool isPercentual, float duration)
     {
         if (isPercentual) value *= _value / 100;
 
@@ -43,5 +37,21 @@ public class Stat
         _value += value;
 
         if (_value < 0) _value = 0;
+
+        if (duration > 0) ResetBuff(value, duration);//corrutina
+
+        Debug.Log("Buff apply ");
+        return value;
     }
+
+    private IEnumerator ResetBuff(float value, float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        _value += -value;
+        Debug.Log("Buff reset");
+
+        yield return null;
+    }
+
 }

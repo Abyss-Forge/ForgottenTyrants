@@ -1,11 +1,21 @@
 {
   "dependencies": {
     "com.alkimeegames.taglayertypegenerator": {
-      "version": "https://github.com/AlkimeeGames/TagLayerTypeGenerator.git",
+      "version": "https://github.com/IvanTheDeveloper/UnityTagLayerSceneTypeGenerator.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "a1cd7b485c3eee67abe5333500aba0e2c44a4b79"
+      "hash": "129e4dde9f5a54125a4a283099bb09ca38bd98d2"
+    },
+    "com.eflatun.scenereference": {
+      "version": "git+https://github.com/starikcetin/Eflatun.SceneReference.git#4.1.1",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.settings-manager": "2.0.1",
+        "com.unity.nuget.newtonsoft-json": "3.0.2"
+      },
+      "hash": "b849990020c30ac6ead4e4fb4881428f86dcde0d"
     },
     "com.singularitygroup.hotreload": {
       "version": "file:com.singularitygroup.hotreload",
@@ -21,6 +31,20 @@
       "depth": 0,
       "source": "builtin",
       "dependencies": {}
+    },
+    "com.unity.addressables": {
+      "version": "1.22.3",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.assetbundle": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.imageconversion": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.scriptablebuildpipeline": "1.21.25",
+        "com.unity.modules.unitywebrequestassetbundle": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
     },
     "com.unity.animation.rigging": {
       "version": "1.2.1",
@@ -211,6 +235,13 @@
         "com.unity.render-pipelines.core": "14.0.10"
       }
     },
+    "com.unity.scriptablebuildpipeline": {
+      "version": "1.21.25",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.searcher": {
       "version": "4.9.2",
       "depth": 2,
@@ -235,9 +266,9 @@
       "depth": 2,
       "source": "registry",
       "dependencies": {
-        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.modules.androidjni": "1.0.0",
         "com.unity.nuget.newtonsoft-json": "3.2.1",
-        "com.unity.modules.androidjni": "1.0.0"
+        "com.unity.modules.unitywebrequest": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
@@ -246,11 +277,11 @@
       "depth": 2,
       "source": "registry",
       "dependencies": {
+        "com.unity.collections": "1.2.4",
         "com.unity.services.core": "1.12.4",
-        "com.unity.modules.unitywebrequest": "1.0.0",
         "com.unity.nuget.newtonsoft-json": "3.0.2",
-        "com.unity.services.authentication": "2.0.0",
-        "com.unity.collections": "1.2.4"
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.services.authentication": "2.0.0"
       },
       "url": "https://packages.unity.com"
     },
@@ -274,7 +305,7 @@
     },
     "com.unity.settings-manager": {
       "version": "2.0.1",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"

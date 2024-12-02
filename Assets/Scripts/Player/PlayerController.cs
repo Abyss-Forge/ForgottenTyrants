@@ -60,10 +60,10 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        MyInputManager.Instance.SubscribeToInput(EInputAction.MOVE, OnMove, true);
-        MyInputManager.Instance.SubscribeToInput(EInputAction.LOOK, OnLook, true);
-        MyInputManager.Instance.SubscribeToInput(EInputAction.JUMP, OnJump, true);
-        MyInputManager.Instance.SubscribeToInput(EInputAction.DASH, OnDash, true);
+        MyInputManager.Instance.Subscribe(EInputAction.MOVE, OnMove, true);
+        MyInputManager.Instance.Subscribe(EInputAction.LOOK, OnLook, true);
+        MyInputManager.Instance.Subscribe(EInputAction.JUMP, OnJump, true);
+        MyInputManager.Instance.Subscribe(EInputAction.DASH, OnDash, true);
     }
 
     void FixedUpdate()

@@ -19,8 +19,9 @@ public class StartMenuController : MonoBehaviour
 
     private void Play()
     {
-        // MySceneManager.Instance.LoadSceneWithLoadingScreen(Scene.Next);
-        SceneManager.LoadScene(ForgottenTyrants.Scene.Next);
+        // MySceneManager.Instance.LoadSceneWithLoadingScreen(SceneUtils.Next);
+        //SceneManager.LoadScene(SceneUtils.Next);
+        EventBus<SceneEvent>.Raise(new SceneEvent { SceneGroupToLoad = 1 });
     }
 
     private void Quit()

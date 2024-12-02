@@ -25,7 +25,8 @@ public class MyInputManager : Singleton<MyInputManager>
     public delegate void OmniDelegate(InputAction.CallbackContext context);
     private Dictionary<EInputAction, (OmniDelegate Delegate, bool Enabled)> _actionDelegates = new();
 
-    public void SubscribeToInput(EInputAction action, OmniDelegate function, bool subscribe = true)
+    public void Unsubscribe(EInputAction action, OmniDelegate function) => Subscribe(action, function, false);
+    public void Subscribe(EInputAction action, OmniDelegate function, bool subscribe = true)
     {
         if (!_actionDelegates.ContainsKey(action))
         {
