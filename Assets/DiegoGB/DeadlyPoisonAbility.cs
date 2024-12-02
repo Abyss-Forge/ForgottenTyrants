@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,13 +15,15 @@ public class DeadlyPoisonAbility : MonoBehaviour
     [SerializeField] private float _damageBoosted = 20f;
     [SerializeField] private float _poisonDotDamage = 1f;
     [SerializeField] private float _poisonEffectTime = 3f;
+    [SerializeField] private float _timeBetweenDots = .5f;
     float _cooldownTimer = 0f;
     bool _isAbilityActive = false;
-    GameObject enemy;
+    bool _isPoisonApplied = false;
+    float _poisonTimer;
 
     void Start()
     {
-        MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_1, OnCast, true);
+        //MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_1, OnCast, true);
     }
 
     void Update()
@@ -51,10 +54,26 @@ public class DeadlyPoisonAbility : MonoBehaviour
         _isAbilityActive = false;
     }
 
-    private void ApplyPoison()
+    IEnumerator ApplyPoison()
     {
-        Debug.Log("Dot poison " + _poisonDotDamage);
+        _poisonTimer = 0;
+        _isPoisonApplied = true;
+        while (_poisonTimer < _poisonEffectTime)
+        {
+            Debug.Log("Dot poison " + _poisonDotDamage);
+            yield return new WaitForSeconds(_timeBetweenDots);
+            _poisonTimer += _timeBetweenDots;
+        }
+        _isPoisonApplied = false;
+    }
 
+    private void CheckPoisonApplied()
+    {
+        if (_isPoisonApplied)
+        {
+            _poisonTimer = 0;
+        }
+        else StartCoroutine(ApplyPoison());
     }
 
     private void ApplyDamageBuff()

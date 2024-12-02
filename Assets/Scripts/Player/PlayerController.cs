@@ -126,7 +126,7 @@ public class PlayerController : MonoBehaviour
         _velocity.y = Mathf.Sqrt(-Physics.gravity.y * _gravityMultiplier * _jumpForce);
     }
 
-    private IEnumerator Dash()
+    public IEnumerator Dash()
     {
         _isDashing = true;
         _isDashOnCooldown = true;
