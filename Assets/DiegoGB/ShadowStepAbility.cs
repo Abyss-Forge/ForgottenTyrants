@@ -51,7 +51,7 @@ public class ShadowStepAbility : MonoBehaviour
         if (_charges > 0)
         {
             StartCoroutine(_playerController.Dash());
-            Debug.Log("nigs");
+            Debug.Log("ni");
             _charges--;
         }
     }
