@@ -39,7 +39,7 @@ public class TotalDarknessAbility : AbilityStateMachine
         public override void Enter()
         {
             base.Enter();
-            MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_3, OnCast, true);
+            //MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_3, OnCast, true);
         }
 
         public override void Exit()
@@ -68,7 +68,7 @@ public class TotalDarknessAbility : AbilityStateMachine
         {
             base.Enter();
 
-            MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_3, OnCast, true);
+            //MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_3, OnCast, true);
 
             _ability.ActiveTimer = _ability.ActiveDuration;
 

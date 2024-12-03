@@ -126,7 +126,7 @@ public class PlayerController : MonoBehaviour
         _velocity.y = Mathf.Sqrt(-Physics.gravity.y * _gravityMultiplier * _jumpForce);
     }
 
-    private IEnumerator Dash()
+    public IEnumerator Dash()
     {
         _isDashing = true;
         _isDashOnCooldown = true;
@@ -161,6 +161,11 @@ public class PlayerController : MonoBehaviour
         _isDashing = false;
         yield return new WaitForSeconds(_dashCooldown + _dashDuration); //avoid counting the performing time as cooldown
         _isDashOnCooldown = false;
+    }
+
+    public void SetVelocity(Vector3 newVelocity)
+    {
+        _velocity = newVelocity;
     }
 
 }
