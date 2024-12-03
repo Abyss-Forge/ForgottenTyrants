@@ -18,5 +18,5 @@ public interface IDamageable
     event Action OnDeath;
 
     // Optional: Event to notify whenever the object takes damage.
-    event Action<int> OnTakeDamage;
+    event Action<int> OnDamage, OnHeal;
 }

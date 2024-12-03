@@ -963,11 +963,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f1d393c9a0204546a1d963ebbdeab5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _loadingBar: {fileID: 0}
+  _loadingBarFill: {fileID: 341645102}
   _fillSpeed: 0.5
-  _loadingCanvas: {fileID: 0}
-  _loadingCamera: {fileID: 0}
-  _sceneGroups: []
+  _loadingCanvas: {fileID: 1665273457}
+  _loadingCamera: {fileID: 1558128562}
+  _sceneGroups:
+  - GroupName: Start menu
+    Scenes:
+    - Reference:
+        asset: {fileID: 102900000, guid: 99c9720ab356a0642a771bea13969a05, type: 3}
+        guid: 99c9720ab356a0642a771bea13969a05
+      SceneType: 1
+  - GroupName: Game
+    Scenes:
+    - Reference:
+        asset: {fileID: 102900000, guid: 66f1da52f6b05f04bbbdce73b7b8c9a0, type: 3}
+        guid: 66f1da52f6b05f04bbbdce73b7b8c9a0
+      SceneType: 5
 --- !u!4 &1035797033
 Transform:
   m_ObjectHideFlags: 0
@@ -1135,7 +1147,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1424379370
 Transform:
   m_ObjectHideFlags: 0
@@ -1576,7 +1588,7 @@ GameObject:
   m_IsActive: 1
 --- !u!114 &2101147194
 MonoBehaviour:
-  m_ObjectHideFlags: 2
+  m_ObjectHideFlags: 10
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}

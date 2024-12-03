@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using ForgottenTyrants;
 using UnityEngine;
+using ForgottenTyrants;
 
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public abstract class Projectile : MonoBehaviour
@@ -20,13 +20,15 @@ public abstract class Projectile : MonoBehaviour
     [SerializeField] protected bool _hasDamage;
     [SerializeField] protected float _damage = 100;
 
-    [Header("Bounce")]
-    [SerializeField] protected bool _canBounce;
-    [SerializeField] protected int _bounces = 5;
-    [SerializeField, Range(0, 90)] protected float _maxBounceAngle = 45;
+    [Header("Ricochet")]
+    [SerializeField] protected bool _canRicochet;
+    [SerializeField] protected int _ricochets = 5;
+    [SerializeField, Range(0, 90)] protected float _maxRicochetAngle = 45;
 
     protected float _lifetimeTimer;
-    protected int _remainingBounces;
+    protected int _remainingRicochets;
+
+    event Action OnLifetimeEnd;
 
     void Awake()
     {
@@ -34,41 +36,33 @@ public abstract class Projectile : MonoBehaviour
         _collider = GetComponent<Collider>();
 
         _lifetimeTimer = _lifetime;
-        _remainingBounces = _bounces;
+        _remainingRicochets = _ricochets;
+
+        OnLifetimeEnd += OnHit;
     }
 
     void Update()
     {
-        if (_lifetimeTimer > 0)
-        {
-            _lifetimeTimer -= Time.deltaTime;
-        }
-        else
-        {
-            OnLifetimeEnd();
-        }
+        if (_lifetimeTimer > 0) _lifetimeTimer -= Time.deltaTime;
+        else OnLifetimeEnd?.Invoke();
     }
 
     void FixedUpdate()
     {
-        if (_rigidbody.useGravity)
-        {
-            _rigidbody.AddForce(Physics.gravity * (_gravityMultiplier - 1f), ForceMode.Acceleration);   //-1 porque de base la gravedad ya se aplica una vez
-        }
-    }
+        if (_rigidbody.useGravity) _rigidbody.AddForce(Physics.gravity * (_gravityMultiplier - 1f), ForceMode.Acceleration);
+    }   // Al multiplicador se le resta 1 porque  por defecto la gravedad ya se aplica una vez al tener rigidbody
 
     protected virtual void OnCollisionEnter(Collision other)
     {
-        if (_canBounce && _remainingBounces > 0)
+        if (_canRicochet && _remainingRicochets > 0)
         {
-            // Calcular el ángulo entre la normal de la superficie y la dirección de movimiento
             Vector3 collisionNormal = other.contacts[0].normal;
             Vector3 incomingDirection = _rigidbody.velocity.normalized;
             float angle = Vector3.Angle(incomingDirection, -collisionNormal) - 90;
 
-            if (angle <= _maxBounceAngle)
+            if (angle <= _maxRicochetAngle)
             {
-                _remainingBounces--;
+                _remainingRicochets--;
                 return;
                 //  Vector3 reflectedDirection = Vector3.Reflect(incomingDirection, collisionNormal);
                 //  _rigidbody.velocity = reflectedDirection * _rigidbody.velocity.magnitude;
@@ -81,26 +75,8 @@ public abstract class Projectile : MonoBehaviour
 
     protected virtual void OnHit()
     {
-        //
         //vfx & sound
         Destroy(gameObject);
     }
-
-    protected virtual void OnLifetimeEnd()
-    {
-        OnHit();
-    }
-}
-
-public class ExplosiveProjectile : Projectile
-{
-    [Header("Explosive")]
-    [SerializeField] protected AnimationCurve _explosionAreaCurve;
-    [SerializeField] protected float _explosionRadius = 5;
-    [SerializeField] protected bool _proximityEnabled;
-    [SerializeField] protected float _proximityDetectionRadius = 5;
-    [SerializeField] protected bool _explodeOnLifetimeEnd;
-
-    protected bool _isDirectHit;
 
 }

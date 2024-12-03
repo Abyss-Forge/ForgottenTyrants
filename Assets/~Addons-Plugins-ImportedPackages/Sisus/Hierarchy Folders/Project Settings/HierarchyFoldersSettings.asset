@@ -38,10 +38,10 @@ MonoBehaviour:
     will be removed.'
   enableHierarchyIcons: 0
   doubleClickSelectsChildrens: 1
-  allowInactiveHierarchyFolders: 0
+  allowInactiveHierarchyFolders: 1
   allowComponentsOnHierarchyFolders: 0
   whitelistedComponents: []
-  askAboutAllowInactiveHierarchyFolders: 1
+  askAboutAllowInactiveHierarchyFolders: 0
   enableMenuItems: 1
   enableToolbarIcon: 1
   extensionMethodsInGlobalNamespace: 1

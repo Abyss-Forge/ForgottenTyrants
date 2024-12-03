@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface AbilityBase
+public interface IAbilityBase
 {
     //animator
 
@@ -13,24 +13,26 @@ public interface AbilityBase
     public float CooldownTimer { get; set; }
 }
 
-public interface AbilityWithRange : AbilityBase
+public interface IAbilityWithRange : IAbilityBase
 {
     public float Range { get; }
+
+    void OnDrawGizmos();
 }
 
-public interface AbilityWithProjectile : AbilityBase
+public interface IAbilityWithProjectile : IAbilityBase
 {
     public GameObject ProjectilePrefab { get; }
     public int ProjectileAmount { get; }
     public float ProjectileInterval { get; }
 }
 
-public interface AbilityWithTarget : AbilityBase
+public interface IAbilityWithTarget : IAbilityBase
 {
     public GameObject Target { get; }
 }
 
-public interface AbilityWithBuff : AbilityBase
+public interface IAbilityWithBuff : IAbilityBase
 {
     public Stats StatModifier { get; }
 }

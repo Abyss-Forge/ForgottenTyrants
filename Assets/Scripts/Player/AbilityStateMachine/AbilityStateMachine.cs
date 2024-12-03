@@ -61,20 +61,9 @@ public abstract class AbilityStateMachine : MonoBehaviour
         AbilityIcon?.Initialize(this);
     }
 
-    void Update()
-    {
-        _fsm.Update();
-    }
-
-    void FixedUpdate()
-    {
-        _fsm.FixedUpdate();
-    }
-
-    void LateUpdate()
-    {
-        _fsm.LateUpdate();
-    }
+    void Update() => _fsm.Update();
+    void FixedUpdate() => _fsm.FixedUpdate();
+    void LateUpdate() => _fsm.LateUpdate();
 
     protected virtual void InitializeStates()
     {

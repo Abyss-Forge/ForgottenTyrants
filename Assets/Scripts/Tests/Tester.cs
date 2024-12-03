@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -5,9 +6,10 @@ using UnityEngine;
 
 public class Tester : MonoBehaviour
 {
-    [SerializeField] GameObject _bomb;
-    [SerializeField] Transform _spawnPoint;
-    [SerializeField] float _force = 10;
+    [RequiredField, SerializeField] Texture2D _bomba;
+    [RequiredField, SerializeField] GameObject _bomb;
+    [RequiredField, SerializeField] Transform _spawnPoint;
+    [RequiredField, SerializeField] float _force = 10f;
 
     void Update()
     {

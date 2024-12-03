@@ -15,46 +15,21 @@ public class FiniteStateMachine<EState> where EState : Enum
 
     public void SubscribeOnStateChange(DelegateWithState function, bool subscribe = true)
     {
-        if (subscribe)
-        {
-            OnStateChange += function;
-        }
-        else
-        {
-            OnStateChange -= function;
-        }
+        if (subscribe) OnStateChange += function;
+        else OnStateChange -= function;
     }
 
     public FiniteStateMachine()
     {
-        _states = new Dictionary<EState, State<EState>>();
+        _states = new();
     }
 
-    public void Add(State<EState> state)
-    {
-        _states.Add(state.ID, state);
-    }
+    public void Add(State<EState> state) => _states.Add(state.ID, state);
+    public void Add(State<EState> state, EState stateID) => _states.Add(stateID, state);
 
-    public void Add(State<EState> state, EState stateID)
-    {
-        _states.Add(stateID, state);
-    }
+    public State<EState> GetState(EState stateID) => _states.ContainsKey(stateID) ? _states[stateID] : null;
 
-    public State<EState> GetState(EState stateID)
-    {
-        if (_states.ContainsKey(stateID))
-        {
-            return _states[stateID];
-        }
-        return null;
-    }
-
-    public void SetCurrentState(EState stateID)
-    {
-        State<EState> state = _states[stateID];
-        SetCurrentState(state);
-    }
-
+    public void SetCurrentState(EState stateID) => SetCurrentState(_states[stateID]);
     public void SetCurrentState(State<EState> state)
     {
         if (_currentState == state)
@@ -71,19 +46,8 @@ public class FiniteStateMachine<EState> where EState : Enum
         _currentState?.Enter();
     }
 
-    public void Update()
-    {
-        _currentState?.Update();
-    }
-
-    public void FixedUpdate()
-    {
-        _currentState?.FixedUpdate();
-    }
-
-    public void LateUpdate()
-    {
-        _currentState?.LateUpdate();
-    }
+    public void Update() => _currentState?.Update();
+    public void FixedUpdate() => _currentState?.FixedUpdate();
+    public void LateUpdate() => _currentState?.LateUpdate();
 
 }
