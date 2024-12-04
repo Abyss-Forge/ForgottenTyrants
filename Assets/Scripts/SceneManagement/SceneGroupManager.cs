@@ -47,6 +47,7 @@ namespace Systems.SceneManagement
                 if (sceneData.Reference.State == SceneReferenceState.Regular)
                 {
                     var operation = SceneManager.LoadSceneAsync(sceneData.Reference.Path, LoadSceneMode.Additive);
+                    //await Task.Delay(TimeSpan.FromSeconds(2));    // TODO: remove
                     operationGroup.Operations.Add(operation);
                 }
                 else if (sceneData.Reference.State == SceneReferenceState.Addressable)
@@ -123,7 +124,7 @@ namespace Systems.SceneManagement
             }
 
             // Optional: UnloadUnusedAssets - unloads all unused assets from memory
-            // await Resources.UnloadUnusedAssets();
+            await Resources.UnloadUnusedAssets().AsTask();
         }
     }
 

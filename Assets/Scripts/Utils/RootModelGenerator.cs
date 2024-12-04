@@ -5,18 +5,17 @@ using UnityEditor;
 
 public class RootModelGenerator : MonoBehaviour
 {
-    public Transform meshRoot;
-    public Transform colliderRoot;
+    public Transform _meshRoot, _colliderRoot;
 
     public void GenerateColliderStructure()
     {
-        if (meshRoot == null || colliderRoot == null)
+        if (_meshRoot == null || _colliderRoot == null)
         {
             Debug.LogError("Por favor, selecciona ambos Transforms antes de generar.");
             return;
         }
 
-        DuplicateStructure(meshRoot, colliderRoot);
+        DuplicateStructure(_meshRoot, _colliderRoot);
         Debug.Log("Estructura de colliders generada exitosamente.");
     }
 
@@ -128,6 +127,7 @@ public class RootModelGenerator : MonoBehaviour
     }
 }
 
+
 // Clase Editor personalizada para agregar un botón en el Inspector
 [CustomEditor(typeof(RootModelGenerator))]
 public class RootModelGeneratorEditor : Editor
@@ -137,10 +137,17 @@ public class RootModelGeneratorEditor : Editor
         DrawDefaultInspector();
 
         RootModelGenerator generator = (RootModelGenerator)target;
+
+        // Deshabilitar el botón si _colliderRoot es nulo
+        GUI.enabled = generator._colliderRoot != null && generator._meshRoot;
+
         if (GUILayout.Button("Generate Collider Structure"))
         {
             generator.GenerateColliderStructure();
         }
+
+        // Restaurar el estado predeterminado de GUI.enabled
+        GUI.enabled = true;
     }
 }
 

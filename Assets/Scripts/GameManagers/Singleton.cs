@@ -14,11 +14,14 @@ public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
             Destroy(gameObject);
             return;
         }
+
+        transform.SetParent(null);  // Singletons need to be in the hierarchy root to work
         DontDestroyOnLoad(gameObject);
         Instance = (T)this;
+
         OnAwake();  // base.Awake();
     }
 
-    // Virtual method to allow implementations to use Awake: protected override void OnAwake() { }
+    // Overridable method to allow implementations to use Awake
     protected virtual void OnAwake() { }
 }

@@ -69,69 +69,31 @@ public class MyInputManager : Singleton<MyInputManager>
         }
     }
 
-    private void OnMove(InputAction.CallbackContext context)
-    {
-        CallSubscribedFunction(EInputAction.MOVE, context);
-    }
+    //esto deberia estar publico para poder asignarlo en el inspector, pero una vez asignado no se borra aunque lo pongas privado asi que XD
+    private void OnMove(InputAction.CallbackContext context) => CallSubscribedFunction(EInputAction.MOVE, context);
 
-    private void OnLook(InputAction.CallbackContext context)
-    {
-        CallSubscribedFunction(EInputAction.LOOK, context);
-    }
+    private void OnLook(InputAction.CallbackContext context) => CallSubscribedFunction(EInputAction.LOOK, context);
 
-    private void OnJump(InputAction.CallbackContext context)
-    {
-        CallSubscribedFunction(EInputAction.JUMP, context);
-    }
+    private void OnJump(InputAction.CallbackContext context) => CallSubscribedFunction(EInputAction.JUMP, context);
 
-    private void OnDash(InputAction.CallbackContext context)
-    {
-        CallSubscribedFunction(EInputAction.DASH, context);
-    }
+    private void OnDash(InputAction.CallbackContext context) => CallSubscribedFunction(EInputAction.DASH, context);
 
-    private void OnWeaponBasicAttack(InputAction.CallbackContext context)
-    {
-        CallSubscribedFunction(EInputAction.WEAPON_BASIC_ATTACK, context);
-    }
+    private void OnWeaponBasicAttack(InputAction.CallbackContext context) => CallSubscribedFunction(EInputAction.WEAPON_BASIC_ATTACK, context);
 
-    private void OnWeaponAbility(InputAction.CallbackContext context)
-    {
-        CallSubscribedFunction(EInputAction.WEAPON_ABILITY, context);
-    }
+    private void OnWeaponAbility(InputAction.CallbackContext context) => CallSubscribedFunction(EInputAction.WEAPON_ABILITY, context);
 
-    private void OnClassAbility1(InputAction.CallbackContext context)
-    {
-        CallSubscribedFunction(EInputAction.CLASS_ABILITY_1, context);
-    }
+    private void OnClassAbility1(InputAction.CallbackContext context) => CallSubscribedFunction(EInputAction.CLASS_ABILITY_1, context);
 
-    private void OnClassAbility2(InputAction.CallbackContext context)
-    {
-        CallSubscribedFunction(EInputAction.CLASS_ABILITY_2, context);
-    }
+    private void OnClassAbility2(InputAction.CallbackContext context) => CallSubscribedFunction(EInputAction.CLASS_ABILITY_2, context);
 
-    private void OnClassAbility3(InputAction.CallbackContext context)
-    {
-        CallSubscribedFunction(EInputAction.CLASS_ABILITY_3, context);
-    }
+    private void OnClassAbility3(InputAction.CallbackContext context) => CallSubscribedFunction(EInputAction.CLASS_ABILITY_3, context);
 
-    private void OnClassAbility4(InputAction.CallbackContext context)
-    {
-        CallSubscribedFunction(EInputAction.CLASS_ABILITY_4, context);
-    }
+    private void OnClassAbility4(InputAction.CallbackContext context) => CallSubscribedFunction(EInputAction.CLASS_ABILITY_4, context);
 
-    private void OnPing(InputAction.CallbackContext context)
-    {
-        CallSubscribedFunction(EInputAction.PING, context);
-    }
+    private void OnPing(InputAction.CallbackContext context) => CallSubscribedFunction(EInputAction.PING, context);
 
-    private void OnPause(InputAction.CallbackContext context)
-    {
-        CallSubscribedFunction(EInputAction.PAUSE, context);
-    }
+    private void OnPause(InputAction.CallbackContext context) => CallSubscribedFunction(EInputAction.PAUSE, context);
 
-    private void OnMenu(InputAction.CallbackContext context)
-    {
-        CallSubscribedFunction(EInputAction.MENU, context);
-    }
+    private void OnMenu(InputAction.CallbackContext context) => CallSubscribedFunction(EInputAction.MENU, context);
 
 }

@@ -28,6 +28,4 @@ namespace Systems.SceneManagement.Editor
             await sceneLoader.LoadSceneGroup(index);
         }
     }
-
-
 }

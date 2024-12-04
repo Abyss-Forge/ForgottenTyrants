@@ -3,11 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Reflection;
+using System.Threading.Tasks;
 
 public static class ExtensionMethods
 {
 
     public static bool IsInRange<T>(this T[] array, int index) => index >= 0 && index < array.Length;
+
+    public static Task AsTask(this AsyncOperation operation)
+    {
+        var tcs = new TaskCompletionSource<object>();
+        operation.completed += _ => tcs.SetResult(null);
+        return tcs.Task;
+    }
 
     /// <summary>
     /// Returns the object itself if it exists, null otherwise.

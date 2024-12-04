@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 #endif
 
-public class Bootstrapper : Singleton<Bootstrapper>
+public class Bootstrapper : PersistentSingleton<Bootstrapper>
 {
     // NOTE: This script is intended to be placed in your first scene included in the build settings.
     static readonly int sceneIndex = 0;

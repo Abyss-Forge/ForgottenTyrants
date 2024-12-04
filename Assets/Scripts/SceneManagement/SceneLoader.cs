@@ -1,15 +1,16 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace Systems.SceneManagement
 {
     public class SceneLoader : MonoBehaviour
     {
         [SerializeField] Image _loadingBarFill;
-        [SerializeField] float _fillSpeed = 0.5f;
+        [SerializeField] TMP_Text _percentajeText;
+        [SerializeField] float _fillSpeed = 1f;
         [SerializeField] Canvas _loadingCanvas;
         [SerializeField] Camera _loadingCamera;
         [SerializeField] SceneGroup[] _sceneGroups;
@@ -17,22 +18,9 @@ namespace Systems.SceneManagement
         float _targetProgress;
         bool _isLoading;
 
-        EventBinding<SceneEvent> _sceneEventBinding;
-
         public readonly SceneGroupManager _manager = new();
 
-        void Awake()
-        {
-            // TODO can remove
-            _manager.OnSceneLoaded += sceneName => Debug.Log("Loaded: " + sceneName);
-            _manager.OnSceneUnloaded += sceneName => Debug.Log("Unloaded: " + sceneName);
-            _manager.OnSceneGroupLoaded += () => Debug.Log("Scene group loaded");
-        }
-
-        async void Start()
-        {
-            await LoadSceneGroup(0);
-        }
+        EventBinding<SceneEvent> _sceneEventBinding;
 
         void OnEnable()
         {
@@ -50,16 +38,48 @@ namespace Systems.SceneManagement
             if (_sceneGroups.IsInRange(playerEvent.SceneGroupToLoad)) await LoadSceneGroup(playerEvent.SceneGroupToLoad);
         }
 
+        void Awake()
+        {
+            // TODO can remove
+            _manager.OnSceneLoaded += sceneName => Debug.Log("Loaded: " + sceneName);
+            _manager.OnSceneUnloaded += sceneName => Debug.Log("Unloaded: " + sceneName);
+            _manager.OnSceneGroupLoaded += () => Debug.Log("Scene group loaded");
+        }
+
+        async void Start()
+        {
+            await LoadSceneGroup(0);
+        }
+
         void Update()
         {
             if (!_isLoading) return;
 
+            UpdateBarFill();
+            UpdatePercentageText();
+        }
+
+        private void UpdateBarFill()
+        {
             float currentFillAmount = _loadingBarFill.fillAmount;
             float progressDifference = Mathf.Abs(currentFillAmount - _targetProgress);
 
             float dynamicFillSpeed = progressDifference * _fillSpeed;
 
             _loadingBarFill.fillAmount = Mathf.Lerp(currentFillAmount, _targetProgress, Time.deltaTime * dynamicFillSpeed);
+        }
+
+        private void UpdatePercentageText()
+        {
+            _percentajeText.text = $"{_loadingBarFill.fillAmount * 100:F0}%";
+
+            Vector3 position = _percentajeText.rectTransform.localPosition;
+            RectTransform parentRect = _percentajeText.rectTransform.parent as RectTransform;
+
+            float maxPosX = (parentRect.sizeDelta.x - _percentajeText.rectTransform.sizeDelta.x) / 2;
+            position.x = Mathf.Lerp(-maxPosX, maxPosX, _loadingBarFill.fillAmount / 2);
+
+            _percentajeText.rectTransform.localPosition = position;
         }
 
         public async Task LoadSceneGroup(string name)
@@ -98,7 +118,9 @@ namespace Systems.SceneManagement
         {
             _isLoading = enable;
             _loadingCanvas.gameObject.SetActive(enable);
+            _loadingCamera.gameObject.SetActive(enable);
         }
+
     }
 
     public class LoadingProgress : IProgress<float>
@@ -112,4 +134,5 @@ namespace Systems.SceneManagement
             Progressed?.Invoke(value / ratio);
         }
     }
+
 }

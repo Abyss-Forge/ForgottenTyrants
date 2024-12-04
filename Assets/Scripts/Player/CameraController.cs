@@ -22,9 +22,14 @@ public class CameraController : MonoBehaviour
         _currentYAngle = transform.localRotation.eulerAngles.y;
     }
 
-    void Start()
+    void OnEnable()
     {
         MyInputManager.Instance.Subscribe(EInputAction.LOOK, OnLook);
+    }
+
+    void OnDisable()
+    {
+        MyInputManager.Instance.Unsubscribe(EInputAction.LOOK, OnLook);
     }
 
     void Update()

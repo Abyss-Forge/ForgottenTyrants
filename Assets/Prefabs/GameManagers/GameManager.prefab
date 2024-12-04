@@ -30,57 +30,11 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8339986944088556966}
-  - {fileID: 54604855788681374}
   - {fileID: 7657280831930915645}
   - {fileID: 6169945735689724146}
   - {fileID: 5311485329860661924}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &4386083541782621174
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 54604855788681374}
-  - component: {fileID: 8621864024463846143}
-  m_Layer: 0
-  m_Name: CursorManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &54604855788681374
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4386083541782621174}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2649679287972876843}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8621864024463846143
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4386083541782621174}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d777982fb7868c40a3f9a791f3a760f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _crosshairParent: {fileID: 8079160048926523776}
 --- !u!1 &4673455167116524923
 GameObject:
   m_ObjectHideFlags: 0
@@ -750,7 +704,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40481a15d30b9424ab778574687ba391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _messageText: {fileID: 3447725756158372568}
   _progressBar: {fileID: 9065174670142136307}
   _transitionDuration: 1
 --- !u!1 &7214452019511534306

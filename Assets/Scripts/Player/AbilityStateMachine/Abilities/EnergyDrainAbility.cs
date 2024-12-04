@@ -10,6 +10,8 @@ public class EnergyDrainAbility : AbilityStateMachine
 
     [SerializeField] private float _dotThreshold = 5f, _dotDamage = 3f;
 
+    [SerializeField] private CrosshairController _crosshair;
+
     private GameObject _target;
 
     void OnDrawGizmos()
@@ -62,7 +64,7 @@ public class EnergyDrainAbility : AbilityStateMachine
 
         private void TargetEnemy()
         {
-            _ability._target = MyCursorManager.Instance.GetCrosshairTarget();
+            _ability._target = _ability._crosshair.TargetObject;
             if (_ability._target.CompareTag(Tag.Enemy))
             {
                 _ability._fsm.SetCurrentState(EAbilityState.ACTIVE);
