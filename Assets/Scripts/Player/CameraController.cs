@@ -20,6 +20,8 @@ public class CameraController : MonoBehaviour
 
         _currentXAngle = transform.localRotation.eulerAngles.x;
         _currentYAngle = transform.localRotation.eulerAngles.y;
+
+        CursorUtils.Capture();
     }
 
     void OnEnable()

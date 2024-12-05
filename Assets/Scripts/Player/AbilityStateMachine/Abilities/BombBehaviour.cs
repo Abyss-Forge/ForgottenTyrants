@@ -15,7 +15,7 @@ public class BombBehaviour : ExplosiveProjectile
 
     public FiniteStateMachine<EProjectileState> _fsm { get; private set; }
 
-    void Awake()
+    /*void Awake()
     {
         _fsm = new();
         InitializeStates();
@@ -31,7 +31,7 @@ public class BombBehaviour : ExplosiveProjectile
         _fsm.Add(new BombLiveState(this));
         _fsm.Add(new BombExplodingState(this));
         _fsm.Add(new BombDestroyedState(this));
-    }
+    }*/
 
     #endregion
 

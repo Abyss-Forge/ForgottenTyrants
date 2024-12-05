@@ -21,17 +21,22 @@ public abstract class ExplosiveProjectile : Projectile, IDamageable
     [SerializeField] protected bool _explodeOnDestroy;
 
     protected GameObject _directHit;
-    protected bool _isExploding;
 
     void LateUpdate()
     {
         if (_proximityEnabled) PerformProximityCheck(_proximityDetectionRadius);
     }
 
-    public bool PerformProximityCheck(float detectionRadius)
+    protected override void OnHit()
+    {
+        PerformProximityCheck(_explosionRadius);
+        base.OnHit();
+    }
+
+    public bool PerformProximityCheck(float radius)
     {
         bool hasHit = false;
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, detectionRadius);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
 
         foreach (Collider hitCollider in hitColliders)
         {

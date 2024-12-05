@@ -4,12 +4,12 @@ using UnityEngine;
 
 public sealed class CursorUtils
 {
-    public bool IsCaptured => GetCaptured();
+    public static bool IsCaptured => GetCaptured();
 
-    private bool GetCaptured() => Cursor.lockState == CursorLockMode.Locked;
+    private static bool GetCaptured() => Cursor.lockState == CursorLockMode.Locked;
 
-    public void Release() => Capture(false);
-    public void Capture(bool locked = true)
+    public static void Release() => Capture(false);
+    public static void Capture(bool locked = true)
     {
         if (locked) Cursor.lockState = CursorLockMode.Locked;
         else Cursor.lockState = CursorLockMode.None;

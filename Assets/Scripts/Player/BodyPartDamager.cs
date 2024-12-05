@@ -50,8 +50,10 @@ public class BodyPartDamager : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
+        Debug.Log("sdfd");
         if (other.gameObject.CompareTag(Tag.Enemy)) // Solo afecta proyectiles enemigos
         {
+            Debug.Log("sdsfdsfdfsdfsfdsdfd");
             DamageInfo dmg = other.gameObject.GetComponent<DamageInfo>();
             if (dmg != null && dmg != _damageInfo)
             {
@@ -69,14 +71,13 @@ public class BodyPartDamager : MonoBehaviour
         }
     }
 
-    public void HandleDeath()
+    public void HandleDeath()   //Ragdoll
     {
-
         foreach (var entry in _bodyPartsDictionary)
         {
             foreach (Collider collider in entry.Value.Item1)
             {
-                collider.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+                collider.gameObject.GetComponent<Rigidbody>().isKinematic = false;
             }
         }
     }

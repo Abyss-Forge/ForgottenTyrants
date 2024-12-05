@@ -3,10 +3,32 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using JetBrains.Annotations;
+using UnityEditor;
+
+[AttributeUsage(AttributeTargets.Field)]
+public sealed class TagAttribute : PropertyAttribute { }
+
+[CustomPropertyDrawer(typeof(TagAttribute))]
+internal sealed class TagAttributePropertyDrawer : PropertyDrawer
+{
+    /// <inheritdoc />
+    public override void OnGUI(Rect position, [NotNull] SerializedProperty property, GUIContent label)
+    {
+        EditorGUI.BeginProperty(position, label, property);
+
+        if (property.propertyType != SerializedPropertyType.String)
+            EditorGUI.PropertyField(position, property, label);
+        else
+            property.stringValue = EditorGUI.TagField(position, label, property.stringValue);
+
+        EditorGUI.EndProperty();
+    }
+}
 
 public class Tester : MonoBehaviour
 {
-    [RequiredField, SerializeField] Texture2D _bomba;
+    [Tag, SerializeField] string _tag;
     [RequiredField, SerializeField] GameObject _bomb;
     [RequiredField, SerializeField] Transform _spawnPoint;
     [RequiredField, SerializeField] float _force = 10f;
@@ -17,10 +39,10 @@ public class Tester : MonoBehaviour
         {
             GameObject instance = Instantiate(_bomb, _spawnPoint.position, quaternion.identity);
 
-            // Calcular la dirección ajustada teniendo en cuenta el desplazamiento del spawn point respecto a la camara
             Transform camera = Camera.main.transform;
-            Vector3 targetPoint = camera.position + camera.forward * 100f; // Obtener un punto lejano en la dirección de la cámara
+            Vector3 targetPoint = camera.position + camera.forward * 100f;
             Vector3 adjustedDirection = (targetPoint - _spawnPoint.position).normalized;
+            adjustedDirection.y += 0.5f;
 
             Rigidbody rb = instance.GetComponent<Rigidbody>();
             rb.AddForce(adjustedDirection * _force * rb.mass, ForceMode.Impulse);

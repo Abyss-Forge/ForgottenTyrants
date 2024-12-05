@@ -54,7 +54,11 @@ public abstract class Projectile : MonoBehaviour
 
     protected virtual void OnCollisionEnter(Collision other)
     {
-        if (_canRicochet && _remainingRicochets > 0)
+        if (other.gameObject.CompareTag(Tag.Enemy))
+        {
+            OnHit();
+        }
+        else if (_canRicochet && _remainingRicochets > 0)
         {
             Vector3 collisionNormal = other.contacts[0].normal;
             Vector3 incomingDirection = _rigidbody.velocity.normalized;
@@ -76,6 +80,7 @@ public abstract class Projectile : MonoBehaviour
     protected virtual void OnHit()
     {
         //vfx & sound
+        Debug.Log("boom");
         Destroy(gameObject);
     }
 
