@@ -80,7 +80,7 @@ public class LivingChainsAbility : AbilityStateMachine
                 }
             }
 
-            _ability._fsm.SetCurrentState(hasFailed ? EAbilityState.COOLDOWN : EAbilityState.ACTIVE);
+            _ability._fsm.TransitionTo(hasFailed ? EAbilityState.COOLDOWN : EAbilityState.ACTIVE);
         }
 
         private void ApplyAllyEffect(GameObject ally)
@@ -146,7 +146,7 @@ public class LivingChainsAbility : AbilityStateMachine
             }
             else
             {
-                _ability._fsm.SetCurrentState(EAbilityState.COOLDOWN);
+                _ability._fsm.TransitionTo(EAbilityState.COOLDOWN);
             }
         }
 

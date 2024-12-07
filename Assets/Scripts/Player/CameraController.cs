@@ -10,41 +10,80 @@ public class CameraController : MonoBehaviour
     [SerializeField] private bool _smoothCameraRotation;
     [SerializeField, Range(1f, 50f)] private float _cameraSmoothingFactor = 25f;
 
-    private Camera _cam;
-    private Vector2 _look;
-    private float _currentXAngle, _currentYAngle;
+    private Camera _camera;
+    private Vector2 _look, _move;
+    private float _lookAngleX, _lookAngleY;
+    private float _moveAngleX, _moveAngleY;
+
+    #region Setup
+
+    public enum ECameraMode
+    {
+        THIRD_PERSON, ORBITAL, FREE
+    }
+
+    public FiniteStateMachine<ECameraMode> _fsm { get; private set; }
+
+    EventBinding<PlayerDeathEvent> _playerDeathEventBinding;
 
     void Awake()
     {
-        _cam = GetComponentInChildren<Camera>();
+        _fsm = new();
+        InitializeStates();
+        _fsm.TransitionTo(ECameraMode.THIRD_PERSON);
 
-        _currentXAngle = transform.localRotation.eulerAngles.x;
-        _currentYAngle = transform.localRotation.eulerAngles.y;
-
+        _camera = GetComponentInChildren<Camera>();
+        _lookAngleX = transform.localRotation.eulerAngles.x;
+        _lookAngleY = transform.localRotation.eulerAngles.y;
+        _moveAngleX = transform.localPosition.x;
+        _moveAngleY = transform.localPosition.y;
         CursorUtils.Capture();
+    }
+
+    protected virtual void InitializeStates()
+    {
+        _fsm.Add(new CameraThirdPerson(this));
+        _fsm.Add(new CameraOrbital(this));
+        _fsm.Add(new CameraFree(this));
+    }
+
+    void FixedUpdate() => _fsm.FixedUpdate();
+    void LateUpdate() => _fsm.LateUpdate();
+    #endregion
+    void Update()
+    {
+        _fsm.Update();
+
+        CalculateRotation(_look.x * _horizontalSensitivity, -_look.y * _verticalSensitivity);
+        CalculateMovement(_move.x * _horizontalSensitivity, -_move.y * _verticalSensitivity);
     }
 
     void OnEnable()
     {
+        _playerDeathEventBinding = new EventBinding<PlayerDeathEvent>(HandlePlayerDeath);
+        EventBus<PlayerDeathEvent>.Register(_playerDeathEventBinding);
+
         MyInputManager.Instance.Subscribe(EInputAction.LOOK, OnLook);
+        MyInputManager.Instance.Subscribe(EInputAction.MOVE, OnMove);
     }
 
     void OnDisable()
     {
+        EventBus<PlayerDeathEvent>.Deregister(_playerDeathEventBinding);
+
         MyInputManager.Instance.Unsubscribe(EInputAction.LOOK, OnLook);
+        MyInputManager.Instance.Unsubscribe(EInputAction.MOVE, OnMove);
     }
 
-    void Update()
+    private void HandlePlayerDeath()
     {
-        RotateCamera(_look.x * _horizontalSensitivity, -_look.y * _verticalSensitivity);
+        _fsm.TransitionTo(ECameraMode.ORBITAL);
     }
 
-    private void OnLook(InputAction.CallbackContext context)
-    {
-        _look = context.ReadValue<Vector2>();
-    }
+    private void OnLook(InputAction.CallbackContext context) => _look = context.ReadValue<Vector2>();
+    private void OnMove(InputAction.CallbackContext context) => _move = context.ReadValue<Vector2>();
 
-    private void RotateCamera(float horizontalInput, float verticalInput)
+    private void CalculateRotation(float horizontalInput, float verticalInput)
     {
         if (_smoothCameraRotation)
         {
@@ -52,13 +91,60 @@ public class CameraController : MonoBehaviour
             verticalInput = Mathf.Lerp(0, verticalInput, Time.deltaTime * _cameraSmoothingFactor);
         }
 
-        _currentXAngle += verticalInput * Time.deltaTime;
-        _currentYAngle += horizontalInput * Time.deltaTime;
+        _lookAngleX += verticalInput * Time.deltaTime;
+        _lookAngleY += horizontalInput * Time.deltaTime;
 
-        _currentXAngle = Mathf.Clamp(_currentXAngle, -_upperVerticalLimit, _lowerVerticalLimit);
-
-        transform.localRotation = Quaternion.Euler(_currentXAngle, 0, 0);
-        _player.transform.localRotation = Quaternion.Euler(0, _currentYAngle, 0);
+        _lookAngleX = Mathf.Clamp(_lookAngleX, -_upperVerticalLimit, _lowerVerticalLimit);
     }
 
+    private void CalculateMovement(float horizontalInput, float verticalInput)
+    {
+        _moveAngleX += verticalInput * Time.deltaTime;
+        _moveAngleY += horizontalInput * Time.deltaTime;
+    }
+
+    #region States
+
+    public class CameraThirdPerson : State<ECameraMode>
+    {
+        readonly CameraController _camera;
+        public CameraThirdPerson(CameraController camera) : base(ECameraMode.THIRD_PERSON) => _camera = camera;
+
+        public override void LateUpdate()
+        {
+            base.LateUpdate();
+
+            _camera.transform.localRotation = Quaternion.Euler(_camera._lookAngleX, 0, 0);
+            _camera._player.transform.localRotation = Quaternion.Euler(0, _camera._lookAngleY, 0);
+        }
+    }
+
+    public class CameraOrbital : State<ECameraMode>
+    {
+        readonly CameraController _camera;
+        public CameraOrbital(CameraController camera) : base(ECameraMode.ORBITAL) => _camera = camera;
+
+        public override void LateUpdate()
+        {
+            base.LateUpdate();
+
+            _camera.transform.localRotation = Quaternion.Euler(_camera._lookAngleX, _camera._lookAngleY, 0);
+        }
+    }
+
+    public class CameraFree : State<ECameraMode>
+    {
+        readonly CameraController _camera;
+        public CameraFree(CameraController camera) : base(ECameraMode.FREE) => _camera = camera;
+
+        public override void LateUpdate()
+        {
+            base.LateUpdate();
+
+            _camera.transform.localRotation = Quaternion.Euler(_camera._lookAngleX, _camera._lookAngleY, 0);
+            _camera.transform.localPosition = new Vector3(_camera._moveAngleX, _camera._moveAngleY, 0);
+        }
+    }
+
+    #endregion
 }

@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using ForgottenTyrants;
 
-[RequireComponent(typeof(Rigidbody), typeof(Collider))]
+[RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
 public abstract class Projectile : MonoBehaviour
 {
     protected Rigidbody _rigidbody;
-    protected Collider _collider;
+    protected CapsuleCollider _collider;
 
     [SerializeField] protected float _lifetime = 5, _gravityMultiplier = 1;
 
@@ -28,26 +28,23 @@ public abstract class Projectile : MonoBehaviour
     protected float _lifetimeTimer;
     protected int _remainingRicochets;
 
-    event Action OnLifetimeEnd;
 
-    void Awake()
+    protected virtual void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
-        _collider = GetComponent<Collider>();
+        _collider = GetComponent<CapsuleCollider>();
 
         _lifetimeTimer = _lifetime;
         _remainingRicochets = _ricochets;
-
-        OnLifetimeEnd += OnHit;
     }
 
-    void Update()
+    protected virtual void Update()
     {
         if (_lifetimeTimer > 0) _lifetimeTimer -= Time.deltaTime;
-        else OnLifetimeEnd?.Invoke();
+        else OnLifetimeEnd();
     }
 
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if (_rigidbody.useGravity) _rigidbody.AddForce(Physics.gravity * (_gravityMultiplier - 1f), ForceMode.Acceleration);
     }   // Al multiplicador se le resta 1 porque  por defecto la gravedad ya se aplica una vez al tener rigidbody
@@ -80,8 +77,13 @@ public abstract class Projectile : MonoBehaviour
     protected virtual void OnHit()
     {
         //vfx & sound
-        Debug.Log("boom");
+        Debug.Log("Hit");
         Destroy(gameObject);
+    }
+
+    protected virtual void OnLifetimeEnd()
+    {
+        OnHit();
     }
 
 }

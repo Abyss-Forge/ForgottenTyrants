@@ -67,7 +67,7 @@ public class EnergyDrainAbility : AbilityStateMachine
             _ability._target = _ability._crosshair.TargetObject;
             if (_ability._target.CompareTag(Tag.Enemy))
             {
-                _ability._fsm.SetCurrentState(EAbilityState.ACTIVE);
+                _ability._fsm.TransitionTo(EAbilityState.ACTIVE);
             }
         }
     }
@@ -119,7 +119,7 @@ public class EnergyDrainAbility : AbilityStateMachine
             }
             else
             {
-                _ability._fsm.SetCurrentState(EAbilityState.COOLDOWN);
+                _ability._fsm.TransitionTo(EAbilityState.COOLDOWN);
             }
         }
 

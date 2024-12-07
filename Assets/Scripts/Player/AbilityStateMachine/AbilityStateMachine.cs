@@ -20,13 +20,13 @@ public abstract class AbilityStateMachine : MonoBehaviour
     public float CooldownTimer { get; set; }
 
     public void Lock(float time = -1) => StartCoroutine(ApplyLock(time));
-    public void Unlock() => _fsm.SetCurrentState(EAbilityState.COOLDOWN);   //si el cooldown es 0, automaticamente transicionara a READY
+    public void Unlock() => _fsm.TransitionTo(EAbilityState.COOLDOWN);   //si el cooldown es 0, automaticamente transicionara a READY
 
     private IEnumerator ApplyLock(float time)
     {
         if (_fsm.CurrentState.ID != EAbilityState.ACTIVE)
         {
-            _fsm.SetCurrentState(EAbilityState.LOCKED);
+            _fsm.TransitionTo(EAbilityState.LOCKED);
 
             if (time > 0)
             {
@@ -52,11 +52,11 @@ public abstract class AbilityStateMachine : MonoBehaviour
         CooldownTimer = CooldownDuration;
     }
 
-    void Start()    //esto va en Start en vez de Awake pq usamos el MyInputManager que es un singleton
+    void OnEnable()    //esto va en OnEnable en vez de Awake pq usamos el MyInputManager que es un singleton, pero hay que cambiarlo
     {
         _fsm = new();
         InitializeStates();
-        _fsm.SetCurrentState(EAbilityState.READY);
+        _fsm.TransitionTo(EAbilityState.READY);
 
         AbilityIcon?.Initialize(this);
     }

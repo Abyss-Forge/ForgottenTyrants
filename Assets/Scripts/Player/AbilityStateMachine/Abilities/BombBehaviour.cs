@@ -40,15 +40,6 @@ public class BombBehaviour : ExplosiveProjectile
         readonly BombBehaviour _bomb;
         public BombLiveState(BombBehaviour bomb) : base(EProjectileState.LIVE) => _bomb = bomb;
 
-        void OnDrawGizmos()
-        {
-            if (_bomb._proximityEnabled)
-            {
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawSphere(_bomb.transform.position, _bomb._proximityDetectionRadius);
-            }
-        }
-
         public override void Enter()
         {
             base.Enter();

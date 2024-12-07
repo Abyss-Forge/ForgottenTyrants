@@ -5,19 +5,11 @@ using UnityEngine.InputSystem;
 
 public enum EInputAction
 {
-    MOVE,
-    LOOK,
-    JUMP,
-    DASH,
-    WEAPON_BASIC_ATTACK,
-    WEAPON_ABILITY,
-    CLASS_ABILITY_1,
-    CLASS_ABILITY_2,
-    CLASS_ABILITY_3,
-    CLASS_ABILITY_4,
-    PING,
-    PAUSE,
-    MENU,
+    MOVE, LOOK,
+    JUMP, DASH,
+    WEAPON_BASIC_ATTACK, WEAPON_ABILITY,
+    CLASS_ABILITY_1, CLASS_ABILITY_2, CLASS_ABILITY_3, CLASS_ABILITY_4,
+    PING, PAUSE, MENU,
 }
 
 public class MyInputManager : Singleton<MyInputManager>

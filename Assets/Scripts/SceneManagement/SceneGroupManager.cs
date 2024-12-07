@@ -47,7 +47,7 @@ namespace Systems.SceneManagement
                 if (sceneData.Reference.State == SceneReferenceState.Regular)
                 {
                     var operation = SceneManager.LoadSceneAsync(sceneData.Reference.Path, LoadSceneMode.Additive);
-                    //await Task.Delay(TimeSpan.FromSeconds(2));    // TODO: remove
+                    //await Task.Delay(TimeSpan.FromSeconds(5));    // TODO remove test delay
                     operationGroup.Operations.Add(operation);
                 }
                 else if (sceneData.Reference.State == SceneReferenceState.Addressable)

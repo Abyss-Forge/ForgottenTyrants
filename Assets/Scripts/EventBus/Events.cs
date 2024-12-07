@@ -4,6 +4,8 @@ public interface IEvent { }
 
 public struct TestEvent : IEvent { }
 
+public struct PlayerDeathEvent : IEvent { }
+
 public struct SceneEvent : IEvent
 {
     public int SceneGroupToLoad;

@@ -69,7 +69,7 @@ namespace Systems.SceneManagement
             _loadingBarFill.fillAmount = Mathf.Lerp(currentFillAmount, _targetProgress, Time.deltaTime * dynamicFillSpeed);
         }
 
-        private void UpdatePercentageText()
+        private void UpdatePercentageText() // TODO esto no funciona si el parent tiene un stretch
         {
             _percentajeText.text = $"{_loadingBarFill.fillAmount * 100:F0}%";
 

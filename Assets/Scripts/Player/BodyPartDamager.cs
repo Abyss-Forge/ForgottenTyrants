@@ -12,54 +12,68 @@ public class BodyPartDamager : MonoBehaviour
     [System.Serializable]
     private struct BodyPartData
     {
-        public EBodyPart BodyPart;
-        public Collider[] Colliders;
+        public EBodySection BodySection;
+        public BodyPart[] BodyPart;
         public float DamageMultiplier;
     }
 
     [SerializeField] private BodyPartData[] _bodyPartsData;
 
-    private Dictionary<EBodyPart, (Collider[], float)> _bodyPartsDictionary;
-    private DamageInfo _damageInfo;
-
-    private enum EBodyPart
+    private enum EBodySection
     {
         HEAD, TORSO, ARMS, LEGS
     }
+
+    private Dictionary<EBodySection, (BodyPart[], float)> _bodyPartsDictionary = new();
+    private DamageInfo _damageInfo;
 
     void Awake()
     {
         _health = GetComponentInParent<HealthBehaviour>();
 
-        _bodyPartsDictionary = new();
         foreach (BodyPartData data in _bodyPartsData)
         {
-            _bodyPartsDictionary[data.BodyPart] = (data.Colliders, data.DamageMultiplier);
+            _bodyPartsDictionary[data.BodySection] = (data.BodyPart, data.DamageMultiplier);
         }
     }
 
     private void OnEnable()
     {
         _health.OnDeath += HandleDeath;
+
+        foreach (BodyPartData data in _bodyPartsData)
+        {
+            foreach (BodyPart bodyPart in data.BodyPart)
+            {
+                bodyPart.OnCollision += HandleCollision;
+            }
+        }
     }
 
     private void OnDisable()
     {
         _health.OnDeath -= HandleDeath;
+
+        foreach (BodyPartData data in _bodyPartsData)
+        {
+            foreach (BodyPart bodyPart in data.BodyPart)
+            {
+                bodyPart.OnCollision -= HandleCollision;
+            }
+        }
     }
 
-    void OnCollisionEnter(Collision other)
+    private void HandleCollision(Collision other)
     {
-        Debug.Log("sdfd");
         if (other.gameObject.CompareTag(Tag.Enemy)) // Solo afecta proyectiles enemigos
         {
-            Debug.Log("sdsfdsfdfsdfsfdsdfd");
             DamageInfo dmg = other.gameObject.GetComponent<DamageInfo>();
+
             if (dmg != null && dmg != _damageInfo)
             {
                 Debug.Log("Te ha dado: " + other.gameObject.name);
                 _damageInfo = dmg;
-                EBodyPart? bodyPart = GetBodyPartHit(other.contacts);
+                EBodySection? bodyPart = GetBodyPartHit(other.contacts);
 
                 if (bodyPart.HasValue)
                 {
@@ -73,24 +87,26 @@ public class BodyPartDamager : MonoBehaviour
 
     public void HandleDeath()   //Ragdoll
     {
+        EventBus<PlayerDeathEvent>.Raise(new PlayerDeathEvent());
+
         foreach (var entry in _bodyPartsDictionary)
         {
-            foreach (Collider collider in entry.Value.Item1)
+            foreach (BodyPart bodyPart in entry.Value.Item1)
             {
-                collider.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+                bodyPart.Rigidbody.isKinematic = false;
             }
         }
     }
 
-    private EBodyPart? GetBodyPartHit(ContactPoint[] contacts)
+    private EBodySection? GetBodyPartHit(ContactPoint[] contacts)
     {
         foreach (ContactPoint contact in contacts)
         {
             foreach (var entry in _bodyPartsDictionary)
             {
-                foreach (Collider collider in entry.Value.Item1)
+                foreach (BodyPart bodyPart in entry.Value.Item1)
                 {
-                    if (collider.bounds.Contains(contact.point))
+                    if (bodyPart.Collider.bounds.Contains(contact.point))
                     {
                         return entry.Key;
                     }
@@ -101,7 +117,7 @@ public class BodyPartDamager : MonoBehaviour
         return null;
     }
 
-    private void ApplyDamage(EBodyPart bodyPart, float baseDamage)
+    private void ApplyDamage(EBodySection bodyPart, float baseDamage)
     {
         if (_bodyPartsDictionary.TryGetValue(bodyPart, out var bodyPartData))
         {

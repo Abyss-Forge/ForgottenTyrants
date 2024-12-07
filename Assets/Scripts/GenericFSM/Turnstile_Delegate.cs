@@ -18,7 +18,7 @@ public class Turnstile_Delegate : MonoBehaviour
         _fsm.Add(new State<EState>(EState.LOCKED, OnEnterLocked, null, OnUpdateLocked, null, null));
         _fsm.Add(new State<EState>(EState.UNLOCKED, OnEnterUnlocked, null, OnUpdateUnlocked, null, null));
 
-        _fsm.SetCurrentState(EState.LOCKED);
+        _fsm.TransitionTo(EState.LOCKED);
     }
 
     private void Update()
@@ -49,7 +49,7 @@ public class Turnstile_Delegate : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.C))
             {
                 Debug.Log("Turnstile unlocking");
-                _fsm.SetCurrentState(EState.UNLOCKED);
+                _fsm.TransitionTo(EState.UNLOCKED);
             }
         }
     }
@@ -66,7 +66,7 @@ public class Turnstile_Delegate : MonoBehaviour
             if (!Input.GetKeyDown(KeyCode.C))
             {
                 Debug.Log("Turnstile locking");
-                _fsm.SetCurrentState(EState.LOCKED);
+                _fsm.TransitionTo(EState.LOCKED);
             }
         }
     }

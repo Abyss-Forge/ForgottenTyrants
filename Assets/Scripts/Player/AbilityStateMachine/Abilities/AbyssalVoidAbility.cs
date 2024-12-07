@@ -40,7 +40,7 @@ public class AbyssalVoidAbility : AbilityStateMachine
 
         private void OnCast(InputAction.CallbackContext context)
         {
-            if (context.performed) _ability._fsm.SetCurrentState(EAbilityState.ACTIVE);
+            if (context.performed) _ability._fsm.TransitionTo(EAbilityState.ACTIVE);
         }
 
         public override void Enter()
@@ -95,7 +95,7 @@ public class AbyssalVoidAbility : AbilityStateMachine
             }
             else
             {
-                _ability._fsm.SetCurrentState(EAbilityState.COOLDOWN);
+                _ability._fsm.TransitionTo(EAbilityState.COOLDOWN);
             }
         }
     }

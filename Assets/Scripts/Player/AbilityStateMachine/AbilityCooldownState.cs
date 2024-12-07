@@ -52,7 +52,7 @@ public class AbilityCooldownState : State<EAbilityState>
         }
         else
         {
-            _ability._fsm.SetCurrentState(EAbilityState.READY);
+            _ability._fsm.TransitionTo(EAbilityState.READY);
         }
     }
 }

@@ -29,8 +29,8 @@ public class FiniteStateMachine<EState> where EState : Enum
 
     public State<EState> GetState(EState stateID) => _states.ContainsKey(stateID) ? _states[stateID] : null;
 
-    public void SetCurrentState(EState stateID) => SetCurrentState(_states[stateID]);
-    public void SetCurrentState(State<EState> state)
+    public void TransitionTo(EState stateID) => TransitionTo(_states[stateID]);
+    public void TransitionTo(State<EState> state)
     {
         if (_currentState == state)
         {

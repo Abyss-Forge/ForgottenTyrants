@@ -1697,12 +1697,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 938111548}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!143 &1744798353 stripped
-CharacterController:
-  m_CorrespondingSourceObject: {fileID: 6373535343249460430, guid: 5f77e369e2c445340866d55e2917973d,
-    type: 3}
-  m_PrefabInstance: {fileID: 5753895924851629195}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1848769922
 GameObject:
   m_ObjectHideFlags: 0
@@ -2276,21 +2270,22 @@ PrefabInstance:
       propertyPath: <AbilityIcon>k__BackingField
       value: 
       objectReference: {fileID: 1493097423}
-    - target: {fileID: 5224187266452112004, guid: 5f77e369e2c445340866d55e2917973d,
-        type: 3}
-      propertyPath: _bodyPartsData.Array.data[0].Colliders.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5224187266452112004, guid: 5f77e369e2c445340866d55e2917973d,
-        type: 3}
-      propertyPath: _bodyPartsData.Array.data[0].Colliders.Array.data[1]
-      value: 
-      objectReference: {fileID: 1744798353}
     - target: {fileID: 6145250656639219842, guid: 5f77e369e2c445340866d55e2917973d,
         type: 3}
       propertyPath: <AbilityIcon>k__BackingField
       value: 
       objectReference: {fileID: 765159162}
+    - target: {fileID: 7482603668743479425, guid: 5f77e369e2c445340866d55e2917973d,
+        type: 3}
+      propertyPath: _tag
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 7482603668743479425, guid: 5f77e369e2c445340866d55e2917973d,
+        type: 3}
+      propertyPath: _bomb
+      value: 
+      objectReference: {fileID: 256056090793051824, guid: 73ecb5544a02d3249a5369c8778b0ec4,
+        type: 3}
     - target: {fileID: 9007527570711957083, guid: 5f77e369e2c445340866d55e2917973d,
         type: 3}
       propertyPath: <AbilityIcon>k__BackingField

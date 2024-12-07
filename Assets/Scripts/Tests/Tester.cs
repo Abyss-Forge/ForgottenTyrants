@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using JetBrains.Annotations;
 using UnityEditor;
+using UnityEngine.SceneManagement;
 
 [AttributeUsage(AttributeTargets.Field)]
 public sealed class TagAttribute : PropertyAttribute { }
@@ -28,7 +29,7 @@ internal sealed class TagAttributePropertyDrawer : PropertyDrawer
 
 public class Tester : MonoBehaviour
 {
-    [Tag, SerializeField] string _tag;
+    [Tag, SerializeField, RequiredField] string _tag;
     [RequiredField, SerializeField] GameObject _bomb;
     [RequiredField, SerializeField] Transform _spawnPoint;
     [RequiredField, SerializeField] float _force = 10f;
@@ -37,7 +38,8 @@ public class Tester : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            GameObject instance = Instantiate(_bomb, _spawnPoint.position, quaternion.identity);
+            GameObject instance = Instantiate(_bomb, _spawnPoint.position, quaternion.identity, transform);
+            instance.transform.SetParent(null); // esto es para que spawnee en la misma escena 
 
             Transform camera = Camera.main.transform;
             Vector3 targetPoint = camera.position + camera.forward * 100f;
