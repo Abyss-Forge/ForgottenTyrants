@@ -1,11 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
+using Unity.Mathematics;
 using JetBrains.Annotations;
 using UnityEditor;
-using UnityEngine.SceneManagement;
 
 [AttributeUsage(AttributeTargets.Field)]
 public sealed class TagAttribute : PropertyAttribute { }
