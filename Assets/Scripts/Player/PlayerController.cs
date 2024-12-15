@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     public bool CanJump { get; set; }
     public bool CanDash { get; set; }
 
+    public float JumpForce => _jumpForce;
+
     private Vector3 _velocity;
     public Vector3 Velocity => _velocity;
 
@@ -166,6 +168,10 @@ public class PlayerController : MonoBehaviour
     public void SetVelocity(Vector3 newVelocity)
     {
         _velocity = newVelocity;
+    }
+    public void SetJumpForce(float jumpForce)
+    {
+        _jumpForce = jumpForce;
     }
 
 }
