@@ -11,98 +11,65 @@ public class BossController : Entity
     [SerializeField] private float _targetSelectionInterval = 6f;
     [SerializeField] private float _attackInterval = 3f;
     [SerializeField] float _meleeRange = 10f;
-    [SerializeField] float _aggroMultiplier = 2f;
     [SerializeField] float _decayValue = 5f;
     [SerializeField] float _decayInterval = 3f;
     [SerializeField] List<GameObject> _players = null;
     [SerializeField] float _gravityEventEffectDuration = 10f;
-    [SerializeField] float _jumpForceLowGrav = 5f;
 
     Dictionary<Player, float> _playerAggroList = new Dictionary<Player, float>();
-    private float _decayTimer = 0f;
-    private float _targetSelectionTimer = 0f;
-    private float _attackTimer = 0f;
     private Player _currentTarget = null;
 
 
-    // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
         InitializeBehaviorTree();
         _currentHp = _stats.Hp;
-        Debug.Log(_currentHp);
-        Debug.Log(_stats.Hp);
-        // foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
-        // {
-        //     Player player = client.PlayerObject.GetComponent<Player>();
-        //     if (player != null && !_playerAggroList.ContainsKey(player))
-        //     {
-        //         _playerAggroList[player] = 0;
-        //         Debug.Log($"Jugador {player.name} añadido al diccionario de aggro.");
-        //     }
-        // }
 
-        GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player"); // Encuentra todos los objetos con etiqueta "Player"
+        GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
 
         foreach (GameObject obj in playerObjects)
         {
-            Player player = obj.GetComponent<Player>(); // Obtiene el componente Player
+            Player player = obj.GetComponent<Player>();
             if (player != null && !_playerAggroList.ContainsKey(player))
             {
-                _playerAggroList[player] = 0; // Inicializa con aggro 0
-                Debug.Log($"Jugador {player.name} añadido al diccionario de aggro.");
+                _playerAggroList[player] = 0;
             }
         }
 
         foreach (GameObject obj in playerObjects)
         {
-            GameObject player = obj; // Obtiene el componente Player
+            GameObject player = obj;
             if (player != null)
             {
                 _players.Add(player);
-                Debug.Log($"Jugador {player.name} añadido al diccionario de aggro.");
             }
         }
-
-        //Inicializar _playerAggroList con la lista de jugadores online
     }
 
-    // Update is called once per frame
     protected override void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            SwapPositionsRandomly();
-        }
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            StartCoroutine(EventLowGravity());
-        }
-
         _rootSequence.Execute();
+
+        if (Input.GetKeyDown(KeyCode.P)) SwapPositionsRandomly();
+        if (Input.GetKeyDown(KeyCode.T)) StartCoroutine(EventLowGravity());
     }
 
     void InitializeBehaviorTree()
     {
         _rootSequence = new BehaviorSequence();
 
-        // Nodo de Decay Aggro
-        var decayAggroNode = new DecayAggroNode(this);
 
-        // Nodo de Selección de Mejor Objetivo
-        var selectTargetNode = new SelectBestTargetNode(this);
+        var decayAggroNode = new TimerNode(_decayInterval, new DecayAggroNode(this));
+        var selectTargetNode = new TimerNode(_targetSelectionInterval, new SelectBestTargetNode(this));
+        var attackTargetNode = new TimerNode(_attackInterval, new AttackTargetNode(this));
 
-        // Nodo de Ataque
-        var attackTargetNode = new AttackTargetNode(this);
-
-        // Añadir nodos a la secuencia
         _rootSequence.AddNode(decayAggroNode);
         _rootSequence.AddNode(selectTargetNode);
         _rootSequence.AddNode(attackTargetNode);
     }
 
-    void SelectBestTarget()
+    public void SelectBestTarget()
     {
         if (_playerAggroList.Count == 0) return;
 
@@ -113,9 +80,20 @@ public class BossController : Entity
             Player player = entry.Key;
             float aggro = entry.Value;
             float distance = Vector3.Distance(transform.position, player.transform.position);
-            int health = player.GetHealth();
+            int health = player.GetCurrentHp();
 
-            float score = (aggro * _aggroMultiplier) + (1 / distance) + ((100 - health) / 100);
+            float normalizedDamage = aggro / 100;
+            float normalizedDistance = 1 - (distance / 100);
+            float normalizedHealth = 1 - ((float)health / 100);
+
+            float weightDamage = 1.0f;
+            float weightDistance = 1.0f;
+            float weightHealth = 1.0f;
+
+            float score = (normalizedDamage * weightDamage + normalizedDistance * weightDistance + normalizedHealth * weightHealth) / (weightDamage + weightDistance + weightHealth);
+
+            Debug.Log($"Player: {player.name}, Aggro: {aggro}, Distance: {distance}, Health: {health}, Score: {score}");
+
             if (score > highestScore)
             {
                 highestScore = score;
@@ -124,8 +102,10 @@ public class BossController : Entity
         }
     }
 
-    void AttackTarget()
+    public void AttackTarget()
     {
+        if (_currentTarget == null) return;
+
         float distance = Vector3.Distance(transform.position, _currentTarget.transform.position);
 
         if (distance <= _meleeRange)
@@ -149,9 +129,7 @@ public class BossController : Entity
     {
         _currentHp -= damage;
         Debug.Log($"Boss recibe {damage} de daño. Vida restante: {_currentHp}");
-
         AddAggro(player, damage);
-
         if (_currentHp <= 0) Die();
     }
 
@@ -162,7 +140,6 @@ public class BossController : Entity
             _playerAggroList[player] = 0;
         }
         _playerAggroList[player] += amount;
-        Debug.Log($"{player.name} gana {amount} de aggro. Aggro total: {_playerAggroList[player]}");
     }
 
     public void ResetAggro(Player player)
@@ -192,44 +169,6 @@ public class BossController : Entity
         {
             _playerAggroList[player] -= _decayValue;
             if (_playerAggroList[player] < 0) _playerAggroList[player] = 0;
-            Debug.Log($"{player.name} pierde aggro por decaimiento. Aggro actual: {_playerAggroList[player]}");
-        }
-    }
-
-    public void ExecuteDecay()
-    {
-        _decayTimer += Time.deltaTime;
-        if (_decayTimer >= _decayInterval)
-        {
-            CalculateDecay();
-            _decayTimer = 0f;
-        }
-    }
-    public void ExecuteAttack()
-    {
-        _attackTimer += Time.deltaTime;
-        if (_attackTimer >= _attackInterval)
-        {
-            if (_currentTarget != null)
-            {
-                AttackTarget();
-            }
-            else Debug.Log("Not current target");
-            _attackTimer = 0f;
-        }
-    }
-    public void ExecuteSelectTarget()
-    {
-        _targetSelectionTimer += Time.deltaTime;
-        if (_targetSelectionTimer >= _targetSelectionInterval)
-        {
-            SelectBestTarget();
-            _targetSelectionTimer = 0f;
-
-            if (_currentTarget != null)
-            {
-                Debug.Log($"Nuevo objetivo seleccionado: {_currentTarget.name}");
-            }
         }
     }
 
@@ -237,7 +176,7 @@ public class BossController : Entity
     {
         float defaultJumpForce = 0;
 
-        Physics.gravity = new Vector3(0, -2f, 0); // Más fuerte en el eje Y
+        Physics.gravity = new Vector3(0, -2f, 0);
         foreach (GameObject player in _players)
         {
             defaultJumpForce = player.GetComponent<PlayerController>().JumpForce;
@@ -255,40 +194,31 @@ public class BossController : Entity
 
     public void SwapPositionsRandomly()
     {
-
         if (_players == null || _players.Count < 2)
         {
             Debug.LogWarning("No hay suficientes jugadores para intercambiar posiciones.");
             return;
         }
 
-        // Paso 1: Guardar las posiciones actuales
         List<Vector3> positions = new List<Vector3>();
         foreach (GameObject player in _players)
         {
             positions.Add(player.transform.position);
         }
-
-        // Paso 2: Mezclar las posiciones aleatoriamente
         Shuffle(positions);
 
-        // Paso 3: Asignar las posiciones mezcladas
-        // Paso 3: Asignar las posiciones mezcladas
         for (int i = 0; i < _players.Count; i++)
         {
             GameObject player = _players[i];
             var characterController = player.GetComponent<CharacterController>();
 
-            // Desactivar el CharacterController si existe
             if (characterController != null)
             {
                 characterController.enabled = false;
             }
 
-            // Cambiar la posición del jugador
             player.transform.position = positions[i];
 
-            // Reactivar el CharacterController si existe
             if (characterController != null)
             {
                 characterController.enabled = true;
@@ -317,9 +247,36 @@ namespace Systems.BehaviourTree
 {
     public abstract class BehaviorNode
     {
-        public abstract bool Execute();
+        public enum NodeState { Running, Success, Failure }
+        protected NodeState state = NodeState.Running;
+        public NodeState State => state;
+        public abstract NodeState Execute();
     }
+    public class TimerNode : BehaviorNode
+    {
+        private float interval;
+        private BehaviorNode childNode;
+        private float elapsedTime = 0f;
 
+        public TimerNode(float interval, BehaviorNode childNode)
+        {
+            this.interval = interval;
+            this.childNode = childNode;
+        }
+
+        public override NodeState Execute()
+        {
+            elapsedTime += Time.deltaTime;
+
+            if (elapsedTime >= interval)
+            {
+                elapsedTime = 0f;
+                return childNode.Execute();
+            }
+
+            return NodeState.Running;
+        }
+    }
     public class DecayAggroNode : BehaviorNode
     {
         private BossController boss;
@@ -328,11 +285,10 @@ namespace Systems.BehaviourTree
         {
             this.boss = boss;
         }
-
-        public override bool Execute()
+        public override NodeState Execute()
         {
-            boss.ExecuteDecay();
-            return true;
+            boss.CalculateDecay();
+            return NodeState.Success;
         }
     }
 
@@ -345,10 +301,10 @@ namespace Systems.BehaviourTree
             this.boss = boss;
         }
 
-        public override bool Execute()
+        public override NodeState Execute()
         {
-            boss.ExecuteSelectTarget();
-            return boss.GetCurrentTarget() != null;
+            boss.SelectBestTarget();
+            return boss.GetCurrentTarget() != null ? NodeState.Success : NodeState.Failure;
         }
     }
 
@@ -361,38 +317,46 @@ namespace Systems.BehaviourTree
             this.boss = boss;
         }
 
-        public override bool Execute()
+        public override NodeState Execute()
         {
-            if (boss.GetCurrentTarget() == null)
-            {
-                Debug.Log("No hay objetivo para atacar.");
-                return false;
-            }
-
-            boss.ExecuteAttack();
-            return true;
+            boss.AttackTarget();
+            return NodeState.Success;
         }
     }
-
     public class BehaviorSequence : BehaviorNode
     {
         private List<BehaviorNode> nodes = new List<BehaviorNode>();
+        private int currentNodeIndex = 0;
 
         public void AddNode(BehaviorNode node)
         {
             nodes.Add(node);
         }
 
-        public override bool Execute()
+        public override NodeState Execute()
         {
-            foreach (var node in nodes)
+            if (currentNodeIndex >= nodes.Count)
             {
-                if (!node.Execute())
-                {
-                    return false; // Si un nodo falla, la secuencia se detiene
-                }
+                currentNodeIndex = 0;
+                return NodeState.Success;
             }
-            return true; // La secuencia fue exitosa
+
+            var currentNode = nodes[currentNodeIndex];
+            var result = currentNode.Execute();
+
+            if (result == NodeState.Running)
+            {
+                return NodeState.Running;
+            }
+
+            if (result == NodeState.Success)
+            {
+                currentNodeIndex++;
+                return Execute();
+            }
+
+            return NodeState.Failure;
         }
     }
 }
+

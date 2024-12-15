@@ -71,7 +71,7 @@ public class Player : Entity
         CalculateTotalStats();
     }
 
-    public int GetHealth()
+    public int GetCurrentHp()
     {
         return _currentHp;
     }
