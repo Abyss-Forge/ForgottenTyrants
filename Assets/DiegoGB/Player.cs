@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Player : Entity
@@ -16,6 +17,8 @@ public class Player : Entity
     protected override void Start()
     {
         base.Start();
+        //BuildPlayer();
+        _currentHp = _stats.Hp;
 
     }
 
@@ -68,4 +71,41 @@ public class Player : Entity
         CalculateTotalStats();
     }
 
+    public int GetHealth()
+    {
+        return _currentHp;
+    }
+
+#if UNITY_EDITOR
+
+    [SerializeField] BossController bossController;
+    public void GenerateColliderStructure()
+    {
+
+        bossController.TakeDamage(this, 20);
+    }
+
+    [CustomEditor(typeof(Player))]
+    public class RootModelGeneratorEditor : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            DrawDefaultInspector();
+
+            Player generator = (Player)target;
+
+            if (GUILayout.Button("Generate Collider Structure"))
+            {
+                generator.GenerateColliderStructure();
+            }
+
+
+            GUI.enabled = true;
+        }
+    }
+
+#endif
+
 }
+
+
