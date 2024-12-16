@@ -28,7 +28,6 @@ namespace ForgottenTyrants
         public const string PruebasDiego = "PruebasDiego";
         public const string MainMenu = "MainMenu";
         public const string CharacterSelect = "CharacterSelect";
-        public const string Gameplay = "Gameplay";
         public const string GameplayMap = "GameplayMap";
         /// <summary>
         /// Use this type in place of scene names in code / scripts.
@@ -47,8 +46,7 @@ namespace ForgottenTyrants
             public const int PruebasDiego = 4;
             public const int MainMenu = 5;
             public const int CharacterSelect = 6;
-            public const int Gameplay = 7;
-            public const int GameplayMap = 8;
+            public const int GameplayMap = 7;
         }
     }
 }

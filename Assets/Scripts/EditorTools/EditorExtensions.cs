@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -51,3 +53,5 @@ public static class EditorExtensions
         Selection.activeObject = asset;
     }
 }
+
+#endif

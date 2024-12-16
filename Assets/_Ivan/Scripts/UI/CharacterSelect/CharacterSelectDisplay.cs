@@ -120,17 +120,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
             Destroy(_introInstance);
         }
 
-        // TODO test //character.IntroAnimationControllerTemp == null
-        if (character.IntroAnimationControllerTemp == null)
-        {
-            _introInstance = Instantiate(character.IntroPrefab, _introSpawnPoint.position, _introSpawnPoint.rotation);
-        }
-        else
-        {
-            character.PlayerModelTemp.runtimeAnimatorController = character.IntroAnimationControllerTemp;
-            _introInstance = Instantiate(character.IntroPrefab, _introSpawnPoint.position, _introSpawnPoint.rotation);
-            character.PlayerModelTemp.runtimeAnimatorController = null;
-        }
+        _introInstance = Instantiate(character.IntroPrefab.gameObject, _introSpawnPoint);
 
         SelectServerRpc(character.ID);
     }

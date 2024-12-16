@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b06c7c69874ad4390b6d9b4d73ce98, type: 3}
+  m_Name: Character_Monk
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField: 2
+  <DisplayName>k__BackingField: Monk
+  <Icon>k__BackingField: {fileID: 21300000, guid: 8848a0e873c3f1d4b9cebb5545f1cbf1,
+    type: 3}
+  <IntroPrefab>k__BackingField: {fileID: 1935013415304794284, guid: 15ba27294e1b1f048b6e1e85e80b68cc,
+    type: 3}
+  <ModelRoot>k__BackingField: {fileID: 919132149155446097, guid: d6864783fd0c6ef4181e1962a5300f4c,
+    type: 3}
+  <PlayerRef>k__BackingField: {fileID: 8011907564740039375, guid: 5f77e369e2c445340866d55e2917973d,
+    type: 3}

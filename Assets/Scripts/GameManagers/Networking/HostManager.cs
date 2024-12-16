@@ -17,8 +17,8 @@ public class HostManager : Singleton<HostManager>
     [SerializeField] private int _maxConnections = 6;
     [SerializeField] private SceneReference _characterSelectScene, _gameplayScene;
 
-    private bool gameHasStarted;
-    private string lobbyId;
+    private bool _isGameStarted;
+    private string _lobbyId;
 
     public Dictionary<ulong, ClientData> ClientData { get; private set; }
     public string JoinCode { get; private set; }
@@ -69,7 +69,7 @@ public class HostManager : Singleton<HostManager>
             };
 
             Lobby lobby = await Lobbies.Instance.CreateLobbyAsync("My Lobby", _maxConnections, createLobbyOptions);
-            lobbyId = lobby.Id;
+            _lobbyId = lobby.Id;
             StartCoroutine(HeartbeatLobbyCoroutine(15));
         }
         catch (LobbyServiceException e)
@@ -91,14 +91,14 @@ public class HostManager : Singleton<HostManager>
         var delay = new WaitForSeconds(waitTimeSeconds);
         while (true)
         {
-            Lobbies.Instance.SendHeartbeatPingAsync(lobbyId);
+            Lobbies.Instance.SendHeartbeatPingAsync(_lobbyId);
             yield return delay;
         }
     }
 
     private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
     {
-        if (ClientData.Count >= 4 || gameHasStarted)
+        if (ClientData.Count >= 4 || _isGameStarted)
         {
             response.Approved = false;
             return;
@@ -141,7 +141,7 @@ public class HostManager : Singleton<HostManager>
 
     public void StartGame()
     {
-        gameHasStarted = true;
+        _isGameStarted = true;
 
         NetworkManager.Singleton.SceneManager.LoadScene(_gameplayScene.Name, LoadSceneMode.Single);
     }

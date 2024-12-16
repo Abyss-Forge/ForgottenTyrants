@@ -27,9 +27,6 @@ EditorBuildSettings:
     path: Assets/_Ivan/Scenes/CharacterSelect.unity
     guid: b7544d5a30d9eed449267cef7699537b
   - enabled: 1
-    path: Assets/_Ivan2/Scenes/Gameplay.unity
-    guid: fd944f928e3cdc84686a7562695b5c1d
-  - enabled: 1
     path: Assets/_Ivan/Scenes/GameplayMap.unity
     guid: 1c123a5f2b6a65749b3b5346446be4c8
   m_configObjects:

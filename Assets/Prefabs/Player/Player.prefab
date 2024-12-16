@@ -1647,7 +1647,8 @@ GameObject:
   m_Component:
   - component: {fileID: 9963347311403842}
   - component: {fileID: 8011907564740039375}
-  - component: {fileID: 7568247910952730166}
+  - component: {fileID: -7936775410058264635}
+  - component: {fileID: -3100300571400905276}
   - component: {fileID: 6373535343249460430}
   - component: {fileID: 5358312612419074516}
   - component: {fileID: 3517057852779847120}
@@ -1690,13 +1691,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b6b60e716cc1504dbaa8afa37630e55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <NetworkObject>k__BackingField: {fileID: 7568247910952730166}
+  <NetworkObject>k__BackingField: {fileID: -7936775410058264635}
   <PlayerCombat>k__BackingField: {fileID: 7023587951338344644}
   <ModelRoot>k__BackingField: {fileID: 1109309290574590861}
   <CameraRoot>k__BackingField: {fileID: 4608059789406005466}
   <MinimapIconsCanvas>k__BackingField: {fileID: 2126848411653528712}
   <Audio>k__BackingField: {fileID: 4931200439019649757}
---- !u!114 &7568247910952730166
+--- !u!114 &-7936775410058264635
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1708,7 +1709,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2843875977
+  GlobalObjectIdHash: 3823583325
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -1717,6 +1718,37 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &-3100300571400905276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2471761912260363661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!143 &6373535343249460430
 CharacterController:
   m_ObjectHideFlags: 0

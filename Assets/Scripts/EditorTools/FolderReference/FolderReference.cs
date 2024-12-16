@@ -7,6 +7,7 @@ public class FolderReference
     [SerializeField] private string folderPath;
     public string FolderPath => folderPath;
 
+#if UNITY_EDITOR
     /// <summary>
     /// Abre el cuadro de diálogo para seleccionar una carpeta y actualiza la ruta.
     /// </summary>
@@ -26,4 +27,6 @@ public class FolderReference
             }
         }
     }
+#endif
+
 }

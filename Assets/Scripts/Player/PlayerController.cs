@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Systems.EventBus;
 using Systems.GameManagers;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     CharacterController _characterController;
     [SerializeField] private Camera _camera;

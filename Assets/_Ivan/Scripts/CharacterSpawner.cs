@@ -18,8 +18,7 @@ public class CharacterSpawner : NetworkBehaviour
             {
                 Vector3 spawnPos = new(Random.Range(-3f, 3f), 0f, Random.Range(-3f, 3f));
                 NetworkObject instance = Instantiate(character.PlayerRef.NetworkObject, spawnPos, Quaternion.identity);
-                //Destroy(character.PlayerRef.ModelRoot);
-                //character.PlayerRef.ModelRoot = Instantiate(character.ModelRoot, Vector3.zero, Quaternion.identity, character.PlayerRef.transform);
+                //character.PlayerRef.UpdateModel(character.ModelRoot);
                 instance.SpawnAsPlayerObject(client.Value.clientId);
             }
         }

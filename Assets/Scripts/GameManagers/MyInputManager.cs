@@ -53,6 +53,8 @@ namespace Systems.GameManagers
 
         private void CallSubscribedFunction(EInputAction action, InputAction.CallbackContext context)
         {
+            if (!CursorUtils.IsCaptured) return;
+
             if (_actionDelegates.TryGetValue(action, out var actionTuple))
             {
                 var (actionDelegate, enabled) = actionTuple;

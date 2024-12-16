@@ -1,5 +1,3 @@
-using Unity.Netcode;
-using UnityEditor.Animations;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Character", menuName = "Characters/Character")]
@@ -11,8 +9,5 @@ public class CharacterTemplate : ScriptableObject
     [field: SerializeField] public GameObject IntroPrefab { get; private set; }
     [field: SerializeField] public GameObject ModelRoot { get; private set; }
     [field: SerializeField] public PlayerRef PlayerRef { get; private set; }
-
-    [field: SerializeField] public Animator PlayerModelTemp { get; private set; }
-    [field: SerializeField] public AnimatorController IntroAnimationControllerTemp { get; private set; }
 
 }
