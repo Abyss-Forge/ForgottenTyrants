@@ -6,7 +6,7 @@ public class CharacterDatabase : ScriptableObject
 {
     [SerializeField] private CharacterTemplate[] characters = new CharacterTemplate[0];
 
-    public CharacterTemplate[] GetAllCharacters() => characters;
+    public CharacterTemplate[] Characters => characters;
 
     public CharacterTemplate GetCharacterById(int id)
     {

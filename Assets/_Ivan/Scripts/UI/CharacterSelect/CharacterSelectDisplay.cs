@@ -38,9 +38,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
     {
         if (IsClient)
         {
-            CharacterTemplate[] allCharacters = _characterDatabase.GetAllCharacters();
-
-            foreach (var character in allCharacters)
+            foreach (var character in _characterDatabase.Characters)
             {
                 var selectbuttonInstance = Instantiate(_selectButtonPrefab, _charactersHolder);
                 selectbuttonInstance.SetCharacter(this, character);
@@ -122,7 +120,17 @@ public class CharacterSelectDisplay : NetworkBehaviour
             Destroy(_introInstance);
         }
 
-        _introInstance = Instantiate(character.IntroPrefab, _introSpawnPoint);
+        // TODO test //character.IntroAnimationControllerTemp == null
+        if (character.IntroAnimationControllerTemp == null)
+        {
+            _introInstance = Instantiate(character.IntroPrefab, _introSpawnPoint.position, _introSpawnPoint.rotation);
+        }
+        else
+        {
+            character.PlayerModelTemp.runtimeAnimatorController = character.IntroAnimationControllerTemp;
+            _introInstance = Instantiate(character.IntroPrefab, _introSpawnPoint.position, _introSpawnPoint.rotation);
+            character.PlayerModelTemp.runtimeAnimatorController = null;
+        }
 
         SelectServerRpc(character.ID);
     }
