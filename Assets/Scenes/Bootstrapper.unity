@@ -540,13 +540,19 @@ MonoBehaviour:
         asset: {fileID: 102900000, guid: 99c9720ab356a0642a771bea13969a05, type: 3}
         guid: 99c9720ab356a0642a771bea13969a05
       SceneType: 1
-  - GroupName: Game
+  - GroupName: Multiplayer
+    Scenes:
+    - Reference:
+        asset: {fileID: 102900000, guid: e4255ac76c1e84a458fc2a2aafa2f6f6, type: 3}
+        guid: e4255ac76c1e84a458fc2a2aafa2f6f6
+      SceneType: 2
+  - GroupName: Ivan
     Scenes:
     - Reference:
         asset: {fileID: 102900000, guid: 66f1da52f6b05f04bbbdce73b7b8c9a0, type: 3}
         guid: 66f1da52f6b05f04bbbdce73b7b8c9a0
       SceneType: 5
-  - GroupName: Game
+  - GroupName: Diego
     Scenes:
     - Reference:
         asset: {fileID: 102900000, guid: 407a9079a8d27064c99112cacadaaaa6, type: 3}
@@ -1062,7 +1068,7 @@ GameObject:
   - component: {fileID: 1665273458}
   - component: {fileID: 1665273461}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Loading Screen Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1086,7 +1092,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: 1
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0

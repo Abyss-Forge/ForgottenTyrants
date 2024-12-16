@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using ForgottenTyrants;
+using Systems.EventBus;
 using UnityEngine;
 
 [RequireComponent(typeof(HealthBehaviour))]

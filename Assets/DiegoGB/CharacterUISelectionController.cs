@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using Unity.Mathematics;
+using System.Linq;
 
 public class CharacterPresetXML
 {
@@ -33,9 +34,9 @@ public class CharacterUISelectionController : Presettable<CharacterPresetXML>
     [SerializeField] private GameObject _playerPrefab;
     [SerializeField] private PresetSelectorController _presetSelectorController;
 
-    [SerializeField] private List<CharacterRaceTemplate> _races;
-    [SerializeField] private List<CharacterClassTemplate> _classes;
-    [SerializeField] private List<WeaponTemplate> _weapons;
+    [SerializeField] private List<RaceTemplate> _races;
+    [SerializeField] private List<ClassTemplate> _classes;
+    private List<WeaponTemplate> _weapons;//dependen de la calse
     [SerializeField] private List<ArmourTemplate> _armours;
     [SerializeField] private List<TrinketTemplate> _trinkets;
 
@@ -61,8 +62,8 @@ public class CharacterUISelectionController : Presettable<CharacterPresetXML>
 
     public CharacterUISelectionController() : base("CharacterTemplates", "Preset") { }
 
-    public CharacterRaceTemplate SelectedRace => _races[_currentRaceIndex];
-    public CharacterClassTemplate SelectedClass => _classes[_currentClassIndex];
+    public RaceTemplate SelectedRace => _races[_currentRaceIndex];
+    public ClassTemplate SelectedClass => _classes[_currentClassIndex];
     public WeaponTemplate SelectedWeapon => _weapons[_currentWeaponIndex];
     public ArmourTemplate SelectedArmour => _armours[_currentArmourIndex];
     public TrinketTemplate SelectedTrinket => _trinkets[_currentTrinketIndex];
@@ -149,7 +150,7 @@ public class CharacterUISelectionController : Presettable<CharacterPresetXML>
 
     private void ShowRace(int index)
     {
-        CharacterRaceTemplate selectedRace = _races[index];
+        RaceTemplate selectedRace = _races[index];
 
         _raceNameText.text = selectedRace.name;
         _raceStatsText.text = FormatStats(selectedRace.Stats);
@@ -169,7 +170,9 @@ public class CharacterUISelectionController : Presettable<CharacterPresetXML>
 
     private void ShowClass(int index)
     {
-        CharacterClassTemplate selectedClass = _classes[index];
+        ClassTemplate selectedClass = _classes[index];
+
+        _weapons = selectedClass.Weapons.ToList();
 
         _classNameText.text = selectedClass.name;
         _classStatsText.text = FormatStats(selectedClass.Stats);

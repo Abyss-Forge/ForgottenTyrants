@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ForgottenTyrants;
+using Systems.FSM;
+using Systems.GameManagers;
 
 public class EnergyDrainAbility : AbilityStateMachine
 {

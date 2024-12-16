@@ -3,60 +3,63 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class State<EState> where EState : Enum
+namespace Systems.FSM
 {
-    public EState ID { get; private set; }
-
-    public State(EState id)
+    public class State<EState> where EState : Enum
     {
-        ID = id;
+        public EState ID { get; private set; }
+
+        public State(EState id)
+        {
+            ID = id;
+        }
+
+        public delegate void DelegateNoArg();
+
+        public DelegateNoArg OnEnter;
+        public DelegateNoArg OnExit;
+        public DelegateNoArg OnUpdate;
+        public DelegateNoArg OnFixedUpdate;
+        public DelegateNoArg OnLateUpdate;
+
+        public State(EState id,
+            DelegateNoArg onEnter,
+            DelegateNoArg onExit = null,
+            DelegateNoArg onUpdate = null,
+            DelegateNoArg onFixedUpdate = null,
+            DelegateNoArg onLateUpdate = null) : this(id)
+        {
+            OnEnter = onEnter;
+            OnExit = onExit;
+            OnUpdate = onUpdate;
+            OnFixedUpdate = onFixedUpdate;
+            OnLateUpdate = onLateUpdate;
+        }
+
+        virtual public void Enter()
+        {
+            OnEnter?.Invoke();
+        }
+
+        virtual public void Exit()
+        {
+            OnExit?.Invoke();
+        }
+
+        virtual public void Update()
+        {
+            OnUpdate?.Invoke();
+        }
+
+        virtual public void FixedUpdate()
+        {
+            OnFixedUpdate?.Invoke();
+        }
+
+        virtual public void LateUpdate()
+        {
+            OnLateUpdate?.Invoke();
+        }
+
     }
-
-    public delegate void DelegateNoArg();
-
-    public DelegateNoArg OnEnter;
-    public DelegateNoArg OnExit;
-    public DelegateNoArg OnUpdate;
-    public DelegateNoArg OnFixedUpdate;
-    public DelegateNoArg OnLateUpdate;
-
-    public State(EState id,
-        DelegateNoArg onEnter,
-        DelegateNoArg onExit = null,
-        DelegateNoArg onUpdate = null,
-        DelegateNoArg onFixedUpdate = null,
-        DelegateNoArg onLateUpdate = null) : this(id)
-    {
-        OnEnter = onEnter;
-        OnExit = onExit;
-        OnUpdate = onUpdate;
-        OnFixedUpdate = onFixedUpdate;
-        OnLateUpdate = onLateUpdate;
-    }
-
-    virtual public void Enter()
-    {
-        OnEnter?.Invoke();
-    }
-
-    virtual public void Exit()
-    {
-        OnExit?.Invoke();
-    }
-
-    virtual public void Update()
-    {
-        OnUpdate?.Invoke();
-    }
-
-    virtual public void FixedUpdate()
-    {
-        OnFixedUpdate?.Invoke();
-    }
-
-    virtual public void LateUpdate()
-    {
-        OnLateUpdate?.Invoke();
-    }
-
 }

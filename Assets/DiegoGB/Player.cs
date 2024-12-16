@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Player : Entity
 {
-    [field: SerializeField] public CharacterRace Race { get; set; }
-    [field: SerializeField] public CharacterClass Class { get; set; }
-    [field: SerializeField] public Weapon Weapon { get; set; }
-    [field: SerializeField] public Armour Armour { get; set; }
-    [field: SerializeField] public Trinket Trinket { get; set; }
+    [field: SerializeField] public RaceTemplate Race { get; set; }
+    [field: SerializeField] public ClassTemplate Class { get; set; }
+    [field: SerializeField] public WeaponTemplate Weapon { get; set; }
+    [field: SerializeField] public ArmourTemplate Armour { get; set; }
+    [field: SerializeField] public TrinketTemplate Trinket { get; set; }
 
     private List<StatusEffect> _statusEffects = new();
     public List<StatusEffect> StatusEffects => _statusEffects;
@@ -56,14 +56,14 @@ public class Player : Entity
                  $"Magical Defense: {_baseStats.MagicalDefense}, Cooldown Reduction: {_baseStats.CooldownReduction}");
     }
 
-    public void BuildPlayer(CharacterRaceTemplate selectedRace, CharacterClassTemplate selectedClass, WeaponTemplate selectedWeapon, ArmourTemplate selectedArmour, TrinketTemplate selectedTrinket, string selectedName)
+    public void BuildPlayer(RaceTemplate selectedRace, ClassTemplate selectedClass, WeaponTemplate selectedWeapon, ArmourTemplate selectedArmour, TrinketTemplate selectedTrinket, string selectedName)
     {
         _name = selectedName;
-        Race = new CharacterRace(selectedRace);
-        Class = new CharacterClass(selectedClass);
-        Weapon = new Weapon(selectedWeapon);
-        Armour = new Armour(selectedArmour);
-        Trinket = new Trinket(selectedTrinket);
+        Race = selectedRace;
+        Class = selectedClass;
+        Weapon = selectedWeapon;
+        Armour = selectedArmour;
+        Trinket = selectedTrinket;
 
         CalculateTotalStats();
     }

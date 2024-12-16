@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ForgottenTyrants;
+using Systems.FSM;
+using Systems.GameManagers;
 
 public class LivingChainsAbility : AbilityStateMachine
 {
@@ -63,24 +65,24 @@ public class LivingChainsAbility : AbilityStateMachine
 
         private void DetectPlayersInRange()
         {
-            Collider[] hitColliders = Physics.OverlapSphere(_ability.transform.position, _ability._range);
-            bool hasFailed = true;
+            Collider[] hitColliders = Physics.OverlapSphere(_ability.transform.position, _ability._range, Layer.Player);
+            bool hasHit = false;
 
             foreach (Collider hitCollider in hitColliders)
             {
                 if (hitCollider.gameObject.CompareTag(Tag.Ally))
                 {
                     ApplyAllyEffect(hitCollider.gameObject);
-                    hasFailed = false;
+                    hasHit = true;
                 }
                 else if (hitCollider.gameObject.CompareTag(Tag.Enemy))
                 {
                     ApplyEnemyEffect(hitCollider.gameObject);
-                    hasFailed = false;
+                    hasHit = true;
                 }
             }
 
-            _ability._fsm.TransitionTo(hasFailed ? EAbilityState.COOLDOWN : EAbilityState.ACTIVE);
+            _ability._fsm.TransitionTo(hasHit ? EAbilityState.ACTIVE : EAbilityState.COOLDOWN);
         }
 
         private void ApplyAllyEffect(GameObject ally)

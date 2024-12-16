@@ -1,16 +1,20 @@
 ﻿using UnityEngine;
 
-public interface IEvent { }
-
-public struct TestEvent : IEvent { }
-
-public struct PlayerDeathEvent : IEvent { }
-
-public struct SceneEvent : IEvent
+namespace Systems.EventBus
 {
-    public int SceneGroupToLoad;
-}
+    public interface IEvent { }
 
+    public struct TestEvent : IEvent { }
+
+    public struct PlayerDeathEvent : IEvent { }
+
+    public struct SceneEvent : IEvent
+    {
+        public int SceneGroupToLoad;
+        public bool IsIndeterminate;
+    }
+
+}
 /*
 public class ExampleWithTestEvent : MonoBehaviour
 {

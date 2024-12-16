@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Bootstrapper.unity
     guid: 5e6fd55de143170408f91f5b8d0ecaaf
   - enabled: 1
-    path: Assets/Scenes/Menus/StartMenu.unity
+    path: Assets/Scenes/Menus/Start Menu.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/Scenes/Menus/UI Character Selection.unity
@@ -20,6 +20,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PruebasDiego.unity
     guid: 407a9079a8d27064c99112cacadaaaa6
+  - enabled: 1
+    path: Assets/_Ivan/Scenes/MainMenu.unity
+    guid: e4255ac76c1e84a458fc2a2aafa2f6f6
+  - enabled: 1
+    path: Assets/_Ivan/Scenes/CharacterSelect.unity
+    guid: b7544d5a30d9eed449267cef7699537b
+  - enabled: 1
+    path: Assets/_Ivan2/Scenes/Gameplay.unity
+    guid: fd944f928e3cdc84686a7562695b5c1d
+  - enabled: 1
+    path: Assets/_Ivan/Scenes/GameplayMap.unity
+    guid: 1c123a5f2b6a65749b3b5346446be4c8
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 7fad290d30951984aacf194c44092805,
       type: 2}

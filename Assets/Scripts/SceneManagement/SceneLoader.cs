@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Systems.EventBus;
 
 namespace Systems.SceneManagement
 {
@@ -35,7 +36,10 @@ namespace Systems.SceneManagement
 
         async void HandleSceneEvent(SceneEvent playerEvent)
         {
-            if (_sceneGroups.IsInRange(playerEvent.SceneGroupToLoad)) await LoadSceneGroup(playerEvent.SceneGroupToLoad);
+            if (_sceneGroups.IsInRange(playerEvent.SceneGroupToLoad))
+            {
+                await LoadSceneGroup(playerEvent.SceneGroupToLoad);
+            }
         }
 
         void Awake()

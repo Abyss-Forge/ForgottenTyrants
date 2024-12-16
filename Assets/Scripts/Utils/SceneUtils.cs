@@ -4,7 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public sealed class SceneUtils
+public static class SceneUtils
 {
     public static int Next => GetNext();
     public static int Current => GetCurrent();
