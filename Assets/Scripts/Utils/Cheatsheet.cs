@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cheatsheet : MonoBehaviour
+public sealed class Cheatsheet : MonoBehaviour
 {
     //When it has accessors { get; set; }, it's a property, when not, it's a field. Attributes are what goes in square brackets [], like SerializeField.
 

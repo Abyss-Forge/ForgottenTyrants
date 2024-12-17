@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class Player : Entity
 {
-    [field: SerializeField] public CharacterRace Race { get; set; }
-    [field: SerializeField] public CharacterClass Class { get; set; }
-    [field: SerializeField] public Weapon Weapon { get; set; }
-    [field: SerializeField] public Armour Armour { get; set; }
-    [field: SerializeField] public Trinket Trinket { get; set; }
+    [field: SerializeField] public RaceTemplate Race { get; set; }
+    [field: SerializeField] public ClassTemplate Class { get; set; }
+    [field: SerializeField] public WeaponTemplate Weapon { get; set; }
+    [field: SerializeField] public ArmourTemplate Armour { get; set; }
+    [field: SerializeField] public TrinketTemplate Trinket { get; set; }
 
     private List<StatusEffect> _statusEffects = new();
     public List<StatusEffect> StatusEffects => _statusEffects;
@@ -47,26 +47,26 @@ public class Player : Entity
 
     private void CalculateTotalStats()
     {
-        _stats.Add(Race.Stats);
-        _stats.Add(Class.Stats);
-        _stats.Add(Weapon.Stats);
-        _stats.Add(Armour.Stats);
-        _stats.Add(Trinket.Stats);
+        _baseStats.Add(Race.Stats);
+        _baseStats.Add(Class.Stats);
+        _baseStats.Add(Weapon.Stats);
+        _baseStats.Add(Armour.Stats);
+        _baseStats.Add(Trinket.Stats);
 
-        Debug.Log($"Total HP: {_stats.Hp}, Physical Damage: {_stats.PhysicalDamage}, " +
-                 $"Magical Damage: {_stats.MagicalDamage}, Movement Speed: {_stats.MovementSpeed}, " +
-                 $"Attack Speed: {_stats.AttackSpeed}, Physical Defense: {_stats.PhysicalDefense}, " +
-                 $"Magical Defense: {_stats.MagicalDefense}, Cooldown Reduction: {_stats.CooldownReduction}");
+        Debug.Log($"Total HP: {_baseStats.Hp}, Physical Damage: {_baseStats.PhysicalDamage}, " +
+                 $"Magical Damage: {_baseStats.MagicalDamage}, Movement Speed: {_baseStats.MovementSpeed}, " +
+                 $"Attack Speed: {_baseStats.AttackSpeed}, Physical Defense: {_baseStats.PhysicalDefense}, " +
+                 $"Magical Defense: {_baseStats.MagicalDefense}, Cooldown Reduction: {_baseStats.CooldownReduction}");
     }
 
-    public void BuildPlayer(CharacterRaceTemplate selectedRace, CharacterClassTemplate selectedClass, WeaponTemplate selectedWeapon, ArmourTemplate selectedArmour, TrinketTemplate selectedTrinket, string selectedName)
+    public void BuildPlayer(RaceTemplate selectedRace, ClassTemplate selectedClass, WeaponTemplate selectedWeapon, ArmourTemplate selectedArmour, TrinketTemplate selectedTrinket, string selectedName)
     {
         _name = selectedName;
-        Race = new CharacterRace(selectedRace);
-        Class = new CharacterClass(selectedClass);
-        Weapon = new Weapon(selectedWeapon);
-        Armour = new Armour(selectedArmour);
-        Trinket = new Trinket(selectedTrinket);
+        Race = selectedRace;
+        Class = selectedClass;
+        Weapon = selectedWeapon;
+        Armour = selectedArmour;
+        Trinket = selectedTrinket;
 
         CalculateTotalStats();
     }

@@ -1,7 +1,9 @@
 {
   "dependencies": {
-    "com.alkimeegames.taglayertypegenerator": "https://github.com/AlkimeeGames/TagLayerTypeGenerator.git",
+    "com.alkimeegames.taglayertypegenerator": "https://github.com/IvanTheDeveloper/UnityTagLayerSceneTypeGenerator.git",
+    "com.eflatun.scenereference": "git+https://github.com/starikcetin/Eflatun.SceneReference.git#4.1.1",
     "com.unity.2d.sprite": "1.0.0",
+    "com.unity.addressables": "1.22.3",
     "com.unity.animation.rigging": "1.2.1",
     "com.unity.collab-proxy": "2.5.2",
     "com.unity.ide.rider": "3.0.31",
@@ -13,6 +15,7 @@
     "com.unity.netcode.gameobjects": "1.11.0",
     "com.unity.render-pipelines.universal": "14.0.11",
     "com.unity.terrain-tools": "5.0.5",
+    "com.unity.services.lobby": "1.2.2",
     "com.unity.test-framework": "1.1.33",
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.timeline": "1.7.6",

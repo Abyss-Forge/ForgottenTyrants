@@ -9,13 +9,12 @@ using ForgottenTyrants;
 [RequireComponent(typeof(Image))]
 public class CrosshairController : Configurable<string, string>
 {
-    private Image _image;
+    Image _image;
 
     [SerializeField] private Crosshair[] _crosshairs;
     [SerializeField] private Color _defaultColor;
 
-    private GameObject _targetObject;
-    public GameObject TargetObject => _targetObject;
+    public GameObject TargetObject { get; private set; }
 
     public CrosshairController() : base("CrosshairSettings", "Crosshair", "Target", "Color") { }
 
@@ -46,7 +45,7 @@ public class CrosshairController : Configurable<string, string>
         {
             if (hitInfo.collider != null)
             {
-                _targetObject = hitInfo.collider.gameObject;
+                TargetObject = hitInfo.collider.gameObject;
 
                 string tag = hitInfo.collider.gameObject.tag;
                 foreach (var item in _settings)

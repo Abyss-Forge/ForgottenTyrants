@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Systems.EventBus;
+using Systems.GameManagers;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     CharacterController _characterController;
     [SerializeField] private Camera _camera;
@@ -21,25 +24,20 @@ public class PlayerController : MonoBehaviour
     private float _lookRotationX;
     private bool _isGrounded, _isDashing, _isDashOnCooldown;
 
-    public bool GravityEnabled { get; set; }
-    public bool CanMove { get; set; }
-    public bool CanJump { get; set; }
-    public bool CanDash { get; set; }
+    public bool GravityEnabled { get; set; } = true;
+    public bool CanMove { get; set; } = true;
+    public bool CanJump { get; set; } = true;
+    public bool CanDash { get; set; } = true;
 
     public float JumpForce => _jumpForce;
 
     private Vector3 _velocity;
     public Vector3 Velocity => _velocity;
 
-    private void OnMove(InputAction.CallbackContext context)
-    {
-        _move = context.ReadValue<Vector2>();
-    }
+    private EventBinding<PlayerDeathEvent> _playerDeathEventBinding;
 
-    private void OnLook(InputAction.CallbackContext context)
-    {
-        _look = context.ReadValue<Vector2>();
-    }
+    private void OnMove(InputAction.CallbackContext context) => _move = context.ReadValue<Vector2>();
+    private void OnLook(InputAction.CallbackContext context) => _look = context.ReadValue<Vector2>();
 
     private void OnJump(InputAction.CallbackContext context)
     {
@@ -54,18 +52,27 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         _characterController = GetComponent<CharacterController>();
-        CanMove = true;
-        CanJump = true;
-        CanDash = true;
-        GravityEnabled = true;
     }
 
-    void Start()
+    void OnEnable()
     {
-        MyInputManager.Instance.SubscribeToInput(EInputAction.MOVE, OnMove, true);
-        MyInputManager.Instance.SubscribeToInput(EInputAction.LOOK, OnLook, true);
-        MyInputManager.Instance.SubscribeToInput(EInputAction.JUMP, OnJump, true);
-        MyInputManager.Instance.SubscribeToInput(EInputAction.DASH, OnDash, true);
+        _playerDeathEventBinding = new EventBinding<PlayerDeathEvent>(HandlePlayerDeath);
+        EventBus<PlayerDeathEvent>.Register(_playerDeathEventBinding);
+
+        MyInputManager.Instance.Subscribe(EInputAction.MOVE, OnMove);
+        MyInputManager.Instance.Subscribe(EInputAction.LOOK, OnLook);
+        MyInputManager.Instance.Subscribe(EInputAction.JUMP, OnJump);
+        MyInputManager.Instance.Subscribe(EInputAction.DASH, OnDash);
+    }
+
+    void OnDisable()
+    {
+        EventBus<PlayerDeathEvent>.Deregister(_playerDeathEventBinding);
+
+        MyInputManager.Instance.Unsubscribe(EInputAction.MOVE, OnMove);
+        MyInputManager.Instance.Unsubscribe(EInputAction.LOOK, OnLook);
+        MyInputManager.Instance.Unsubscribe(EInputAction.JUMP, OnJump);
+        MyInputManager.Instance.Unsubscribe(EInputAction.DASH, OnDash);
     }
 
     void FixedUpdate()
@@ -86,6 +93,13 @@ public class PlayerController : MonoBehaviour
     {
         //we move the camera in late update so all the movement has finished before positioning it
         //Look();
+    }
+
+    private void HandlePlayerDeath()
+    {
+        CanMove = false;
+        CanJump = false;
+        CanDash = false;
     }
 
     private void Look()
@@ -115,7 +129,7 @@ public class PlayerController : MonoBehaviour
         _isGrounded = _characterController.isGrounded;
         if (_isGrounded && _velocity.y < 0)
         {
-            _velocity.y = -2f; //keep the character grounded
+            _velocity.y = Physics.gravity.y; //keep the character grounded
         }
         else
         {

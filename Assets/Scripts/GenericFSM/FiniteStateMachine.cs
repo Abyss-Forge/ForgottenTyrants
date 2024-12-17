@@ -1,89 +1,54 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class FiniteStateMachine<EState> where EState : Enum
+namespace Systems.FSM
 {
-    protected Dictionary<EState, State<EState>> _states;
-    protected State<EState> _currentState, _previousState;
-    public State<EState> CurrentState => _currentState;
-    public State<EState> PreviousState => _previousState;
-
-    public delegate void DelegateWithState(EState oldState, EState newState);
-    private DelegateWithState OnStateChange;
-
-    public void SubscribeOnStateChange(DelegateWithState function, bool subscribe = true)
+    public class FiniteStateMachine<EState> where EState : Enum
     {
-        if (subscribe)
+        protected Dictionary<EState, State<EState>> _states;
+        protected State<EState> _currentState, _previousState;
+        public State<EState> CurrentState => _currentState;
+        public State<EState> PreviousState => _previousState;
+
+        public delegate void DelegateWithState(EState oldState, EState newState);
+        private DelegateWithState OnStateChange;
+
+        public void SubscribeOnStateChange(DelegateWithState function, bool subscribe = true)
         {
-            OnStateChange += function;
-        }
-        else
-        {
-            OnStateChange -= function;
-        }
-    }
-
-    public FiniteStateMachine()
-    {
-        _states = new Dictionary<EState, State<EState>>();
-    }
-
-    public void Add(State<EState> state)
-    {
-        _states.Add(state.ID, state);
-    }
-
-    public void Add(State<EState> state, EState stateID)
-    {
-        _states.Add(stateID, state);
-    }
-
-    public State<EState> GetState(EState stateID)
-    {
-        if (_states.ContainsKey(stateID))
-        {
-            return _states[stateID];
-        }
-        return null;
-    }
-
-    public void SetCurrentState(EState stateID)
-    {
-        State<EState> state = _states[stateID];
-        SetCurrentState(state);
-    }
-
-    public void SetCurrentState(State<EState> state)
-    {
-        if (_currentState == state)
-        {
-            return;
+            if (subscribe) OnStateChange += function;
+            else OnStateChange -= function;
         }
 
-        _previousState = _currentState;
-        _currentState = state;
+        public FiniteStateMachine()
+        {
+            _states = new();
+        }
 
-        OnStateChange?.Invoke(_previousState.ID, _currentState.ID);
+        public void Add(State<EState> state) => _states.Add(state.ID, state);
+        public void Add(State<EState> state, EState stateID) => _states.Add(stateID, state);
 
-        _previousState?.Exit();
-        _currentState?.Enter();
+        public State<EState> GetState(EState stateID) => _states.ContainsKey(stateID) ? _states[stateID] : null;
+
+        public void TransitionTo(EState stateID) => TransitionTo(_states[stateID]);
+        public void TransitionTo(State<EState> state)
+        {
+            if (_currentState == state)
+            {
+                return;
+            }
+
+            _previousState = _currentState;
+            _currentState = state;
+
+            OnStateChange?.Invoke(_previousState.ID, _currentState.ID);
+
+            _previousState?.Exit();
+            _currentState?.Enter();
+        }
+
+        public void Update() => _currentState?.Update();
+        public void FixedUpdate() => _currentState?.FixedUpdate();
+        public void LateUpdate() => _currentState?.LateUpdate();
+
     }
-
-    public void Update()
-    {
-        _currentState?.Update();
-    }
-
-    public void FixedUpdate()
-    {
-        _currentState?.FixedUpdate();
-    }
-
-    public void LateUpdate()
-    {
-        _currentState?.LateUpdate();
-    }
-
 }

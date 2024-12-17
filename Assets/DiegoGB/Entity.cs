@@ -4,12 +4,17 @@ using UnityEngine;
 
 public abstract class Entity : MonoBehaviour
 {
-    [SerializeField] protected string _name;
-    [SerializeField] protected Stats _stats = new(0, 0, 0, 0f, 0f, 0, 0, 0f);
     public int _currentHp = 0;
-
+    [SerializeField] protected string _name;
+    [SerializeField] protected Stats _baseStats = new(), _modifiedStats = new();
     public string Name => _name;
-    public Stats Stats => _stats;
+    public Stats BaseStats => _baseStats;
+    public Stats ModifiedStats => _modifiedStats;
+
+    public void AppyStatsModifier(Stats stats, bool isAppliedToBase)
+    {
+
+    }
 
     protected virtual void Awake()
     {

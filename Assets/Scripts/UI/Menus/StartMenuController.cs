@@ -1,26 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using ForgottenTyrants;
-using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine;
 using UnityEngine.UI;
+using Systems.EventBus;
 
 public class StartMenuController : MonoBehaviour
 {
     [SerializeField] private Button _playButton, _settingsButton, _quitButton;
     [SerializeField] private GameObject _settingsMenu;
 
-    void Start()
+    void OnEnable()
     {
         _playButton.onClick.AddListener(Play);
         _quitButton.onClick.AddListener(Quit);
         _settingsButton.onClick.AddListener(OpenSettings);
     }
 
+    void OnDisable()
+    {
+        _playButton.onClick.RemoveAllListeners();
+        _quitButton.onClick.RemoveAllListeners();
+        _settingsButton.onClick.RemoveAllListeners();
+    }
+
     private void Play()
     {
-        // MySceneManager.Instance.LoadSceneWithLoadingScreen(Scene.Next);
-        SceneManager.LoadScene(ForgottenTyrants.Scene.Next);
+        // MySceneManager.Instance.LoadSceneWithLoadingScreen(SceneUtils.Next);
+        //SceneManager.LoadScene(SceneUtils.Next);
+        EventBus<SceneEvent>.Raise(new SceneEvent { SceneGroupToLoad = 1 });
     }
 
     private void Quit()
