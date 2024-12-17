@@ -26,7 +26,7 @@ namespace ForgottenTyrants
         public const string UICharacterSelection = "UI Character Selection";
         public const string PruebasIvan = "PruebasIvan";
         public const string PruebasDiego = "PruebasDiego";
-        public const string MainMenu = "MainMenu";
+        public const string MultiplayerMenu = "MultiplayerMenu";
         public const string CharacterSelect = "CharacterSelect";
         public const string GameplayMap = "GameplayMap";
         /// <summary>
@@ -44,7 +44,7 @@ namespace ForgottenTyrants
             public const int UICharacterSelection = 2;
             public const int PruebasIvan = 3;
             public const int PruebasDiego = 4;
-            public const int MainMenu = 5;
+            public const int MultiplayerMenu = 5;
             public const int CharacterSelect = 6;
             public const int GameplayMap = 7;
         }

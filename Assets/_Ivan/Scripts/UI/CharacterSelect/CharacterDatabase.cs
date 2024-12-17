@@ -1,11 +1,10 @@
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Character Database", menuName = "Characters/Database")]
+[CreateAssetMenu(menuName = "ScriptableObject/Characters/Database")]
 public class CharacterDatabase : ScriptableObject
 {
     [SerializeField] private CharacterTemplate[] characters = new CharacterTemplate[0];
-
     public CharacterTemplate[] Characters => characters;
 
     public CharacterTemplate GetCharacterById(int id)

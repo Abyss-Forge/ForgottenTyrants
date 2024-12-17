@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Systems.GameManagers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,7 +22,7 @@ public class ShadowStepAbility : MonoBehaviour
 
     void Start()
     {
-        MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_3, OnCast, true);
+        MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_3, OnCast, true);
         _playerController = GetComponent<PlayerController>();
     }
 

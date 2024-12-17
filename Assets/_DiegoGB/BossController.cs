@@ -24,7 +24,7 @@ public class BossController : Entity
     {
         base.Start();
         InitializeBehaviorTree();
-        _currentHp = _stats.Hp;
+        _currentHp = BaseStats.Hp;
 
         GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
 

@@ -18,7 +18,7 @@ public class Player : Entity
     {
         base.Start();
         //BuildPlayer();
-        _currentHp = _stats.Hp;
+        _currentHp = BaseStats.Hp;
 
     }
 
@@ -79,14 +79,14 @@ public class Player : Entity
 #if UNITY_EDITOR
 
     [SerializeField] BossController bossController;
-    public void GenerateColliderStructure()
+    public void Test()
     {
 
         bossController.TakeDamage(this, 20);
     }
 
     [CustomEditor(typeof(Player))]
-    public class RootModelGeneratorEditor : Editor
+    public class TestEditorButton : Editor
     {
         public override void OnInspectorGUI()
         {
@@ -94,9 +94,9 @@ public class Player : Entity
 
             Player generator = (Player)target;
 
-            if (GUILayout.Button("Generate Collider Structure"))
+            if (GUILayout.Button("Test"))
             {
-                generator.GenerateColliderStructure();
+                generator.Test();
             }
 
 

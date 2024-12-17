@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ForgottenTyrants;
+using Systems.GameManagers;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -23,7 +24,7 @@ public class NaturalBarrierAbility : MonoBehaviour
 
     void Start()
     {
-        MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_4, OnCast, true);
+        MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_4, OnCast, true);
     }
 
     void Update()

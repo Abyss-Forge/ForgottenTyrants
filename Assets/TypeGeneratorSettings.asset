@@ -15,18 +15,18 @@ MonoBehaviour:
   Tag:
     AutoGenerate: 1
     TypeName: Tag
-    FilePath: Scripts/Constants/Tag.cs
+    FilePath: _Project/Scripts/Constants/Tag.cs
     Namespace: ForgottenTyrants
     AssemblyDefinition: {fileID: 0}
   Layer:
     AutoGenerate: 1
     TypeName: Layer
-    FilePath: Scripts/Constants/Layer.cs
+    FilePath: _Project/Scripts/Constants/Layer.cs
     Namespace: ForgottenTyrants
     AssemblyDefinition: {fileID: 0}
   Scene:
     AutoGenerate: 1
     TypeName: Scene
-    FilePath: Scripts/Constants/Scene.cs
+    FilePath: _Project/Scripts/Constants/Scene.cs
     Namespace: ForgottenTyrants
     AssemblyDefinition: {fileID: 0}

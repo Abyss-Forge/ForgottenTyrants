@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Systems.GameManagers;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -25,7 +26,7 @@ public class FireballAbility : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_1, OnCast, true);
+        MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_1, OnCast, true);
         timer = _lifetime;
     }
 

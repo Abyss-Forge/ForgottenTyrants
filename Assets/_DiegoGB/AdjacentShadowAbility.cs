@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ForgottenTyrants;
+using Systems.GameManagers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,7 +22,7 @@ public class AdjacentShadowAbility : MonoBehaviour
 
     void Start()
     {
-        MyInputManager.Instance.SubscribeToInput(EInputAction.CLASS_ABILITY_2, OnCast, true);
+        MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_2, OnCast, true);
     }
 
     void Update()

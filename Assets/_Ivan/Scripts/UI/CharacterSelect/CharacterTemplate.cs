@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Character", menuName = "Characters/Character")]
+[CreateAssetMenu(menuName = "ScriptableObject/Characters/Character")]
 public class CharacterTemplate : ScriptableObject
 {
     [field: SerializeField] public int ID { get; private set; } = -1;
