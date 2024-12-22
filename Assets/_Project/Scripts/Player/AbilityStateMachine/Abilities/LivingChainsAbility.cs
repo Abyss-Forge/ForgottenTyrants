@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using ForgottenTyrants;
 using Systems.FSM;
 using Systems.GameManagers;
+using Utils.Extensions;
 
 public class LivingChainsAbility : AbilityStateMachine
 {

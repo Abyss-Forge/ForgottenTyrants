@@ -3,6 +3,7 @@ using Systems.FSM;
 using Systems.GameManagers;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Utils;
 
 public class CameraController : MonoBehaviour
 {
@@ -40,6 +41,7 @@ public class CameraController : MonoBehaviour
         _lookAngleY = transform.localRotation.eulerAngles.y;
         _moveAngleX = transform.localPosition.x;
         _moveAngleY = transform.localPosition.y;
+
         CursorUtils.Capture();
     }
 

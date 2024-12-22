@@ -1297,6 +1297,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d9cad122dd7b54a9723a335bd18fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentHp: 0
   _name: 
   _baseStats:
     _hp: 0
@@ -1321,6 +1322,7 @@ MonoBehaviour:
   <Weapon>k__BackingField: {fileID: 0}
   <Armour>k__BackingField: {fileID: 0}
   <Trinket>k__BackingField: {fileID: 0}
+  bossController: {fileID: 0}
 --- !u!1 &467011035
 GameObject:
   m_ObjectHideFlags: 0
@@ -4412,6 +4414,97 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1151877916}
   m_CullTransparentMesh: 1
+--- !u!1 &1173464620
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1173464621}
+  - component: {fileID: 1173464622}
+  m_Layer: 0
+  m_Name: Character Selection Menu
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1173464621
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1173464620}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 960, y: 540, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2072955447}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1173464622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1173464620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9af4aebf1b6829d45992c23ef15f4635, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerPrefab: {fileID: 230022765}
+  _presetSelectorController: {fileID: 1180661091}
+  _races:
+  - {fileID: 11400000, guid: bf086e6db2a566d4ab0fc26f035423dd, type: 2}
+  - {fileID: 11400000, guid: 4d8086587b4e2164b87f57a6ef31c07c, type: 2}
+  - {fileID: 11400000, guid: c7b0c56eece81144aafd484401dd2b35, type: 2}
+  - {fileID: 11400000, guid: 191a18deb390966438dced825ffe9c1a, type: 2}
+  - {fileID: 11400000, guid: a58ada72c9119f242be44ca98d0bdfda, type: 2}
+  _classes:
+  - {fileID: 11400000, guid: f62d11bc512e9854596ddc22006330c2, type: 2}
+  - {fileID: 11400000, guid: 5d08f7da586b26b4cbd47313e6aea01a, type: 2}
+  - {fileID: 11400000, guid: cdca97253cecdb241a81573c38607393, type: 2}
+  - {fileID: 11400000, guid: 2bc3dfec272331c4ba266b17bdfa03bb, type: 2}
+  - {fileID: 11400000, guid: 7ea5af40eba239f4c92f5a362453bf54, type: 2}
+  _armours:
+  - {fileID: 11400000, guid: 5bf1db49d7e5ea742807a7f8fb2c6899, type: 2}
+  - {fileID: 11400000, guid: 0e63a639f7ad2f043bc53608694158a3, type: 2}
+  - {fileID: 11400000, guid: b8495c22c5eb35b41bac8ef58466a270, type: 2}
+  _trinkets:
+  - {fileID: 11400000, guid: 95c6871b42416a244b1dd3c06b5a4787, type: 2}
+  - {fileID: 11400000, guid: 0152b8c2a2be07849a639afb309efd2a, type: 2}
+  - {fileID: 11400000, guid: a31e807b4c062124282caa4b32b357c5, type: 2}
+  _raceNameText: {fileID: 701109520}
+  _raceStatsText: {fileID: 2124032022}
+  _classNameText: {fileID: 42581055}
+  _classStatsText: {fileID: 896926987}
+  _weaponNameText: {fileID: 775661042}
+  _weaponStatsText: {fileID: 1381292591}
+  _armourNameText: {fileID: 1407127560}
+  _armourStatsText: {fileID: 757614582}
+  _trinketNameText: {fileID: 2067036149}
+  _trinketStatsText: {fileID: 1026847051}
+  _savePresetButton: {fileID: 623131702}
+  _loadPresetButton: {fileID: 515821484}
+  _confirmButton: {fileID: 1423075772}
+  _cancelButton: {fileID: 1712687486}
+  _nextRaceButton: {fileID: 1385182037}
+  _prevRaceButton: {fileID: 1870482207}
+  _nextClassButton: {fileID: 1609629132}
+  _prevClassButton: {fileID: 251020052}
+  _nextWeaponButton: {fileID: 1359988211}
+  _prevWeaponButton: {fileID: 1649065275}
+  _nextArmourButton: {fileID: 2012088247}
+  _prevArmourButton: {fileID: 1151877918}
+  _nextTrinketButton: {fileID: 243815857}
+  _prevTrinketButton: {fileID: 2130279822}
 --- !u!1 &1180661089
 GameObject:
   m_ObjectHideFlags: 0
@@ -6943,7 +7036,6 @@ GameObject:
   - component: {fileID: 2072955446}
   - component: {fileID: 2072955445}
   - component: {fileID: 2072955444}
-  - component: {fileID: 2072955448}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -7033,71 +7125,13 @@ RectTransform:
   - {fileID: 1913996266}
   - {fileID: 1180661090}
   - {fileID: 1026888053}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1173464621}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &2072955448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2072955443}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af4aebf1b6829d45992c23ef15f4635, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerPrefab: {fileID: 230022765}
-  _presetSelectorController: {fileID: 1180661091}
-  _races:
-  - {fileID: 11400000, guid: bf086e6db2a566d4ab0fc26f035423dd, type: 2}
-  - {fileID: 11400000, guid: 4d8086587b4e2164b87f57a6ef31c07c, type: 2}
-  - {fileID: 11400000, guid: c7b0c56eece81144aafd484401dd2b35, type: 2}
-  - {fileID: 11400000, guid: 191a18deb390966438dced825ffe9c1a, type: 2}
-  - {fileID: 11400000, guid: a58ada72c9119f242be44ca98d0bdfda, type: 2}
-  _classes:
-  - {fileID: 11400000, guid: f62d11bc512e9854596ddc22006330c2, type: 2}
-  - {fileID: 11400000, guid: 5d08f7da586b26b4cbd47313e6aea01a, type: 2}
-  - {fileID: 11400000, guid: cdca97253cecdb241a81573c38607393, type: 2}
-  - {fileID: 11400000, guid: 2bc3dfec272331c4ba266b17bdfa03bb, type: 2}
-  - {fileID: 11400000, guid: 7ea5af40eba239f4c92f5a362453bf54, type: 2}
-  _armours:
-  - {fileID: 11400000, guid: 5bf1db49d7e5ea742807a7f8fb2c6899, type: 2}
-  - {fileID: 11400000, guid: 0e63a639f7ad2f043bc53608694158a3, type: 2}
-  - {fileID: 11400000, guid: b8495c22c5eb35b41bac8ef58466a270, type: 2}
-  _trinkets:
-  - {fileID: 11400000, guid: 95c6871b42416a244b1dd3c06b5a4787, type: 2}
-  - {fileID: 11400000, guid: 0152b8c2a2be07849a639afb309efd2a, type: 2}
-  - {fileID: 11400000, guid: a31e807b4c062124282caa4b32b357c5, type: 2}
-  _raceNameText: {fileID: 701109520}
-  _raceStatsText: {fileID: 2124032022}
-  _classNameText: {fileID: 42581055}
-  _classStatsText: {fileID: 896926987}
-  _weaponNameText: {fileID: 775661042}
-  _weaponStatsText: {fileID: 1381292591}
-  _armourNameText: {fileID: 1407127560}
-  _armourStatsText: {fileID: 757614582}
-  _trinketNameText: {fileID: 2067036149}
-  _trinketStatsText: {fileID: 1026847051}
-  _savePresetButton: {fileID: 623131702}
-  _loadPresetButton: {fileID: 515821484}
-  _confirmButton: {fileID: 1423075772}
-  _cancelButton: {fileID: 1712687486}
-  _nextRaceButton: {fileID: 1385182037}
-  _prevRaceButton: {fileID: 1870482207}
-  _nextClassButton: {fileID: 1609629132}
-  _prevClassButton: {fileID: 251020052}
-  _nextWeaponButton: {fileID: 1359988211}
-  _prevWeaponButton: {fileID: 1649065275}
-  _nextArmourButton: {fileID: 2012088247}
-  _prevArmourButton: {fileID: 1151877918}
-  _nextTrinketButton: {fileID: 243815857}
-  _prevTrinketButton: {fileID: 2130279822}
 --- !u!1 &2075512995
 GameObject:
   m_ObjectHideFlags: 0
@@ -7677,5 +7711,5 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1055787883}
-  - {fileID: 2072955447}
+  - {fileID: 1173464621}
   - {fileID: 230022769}

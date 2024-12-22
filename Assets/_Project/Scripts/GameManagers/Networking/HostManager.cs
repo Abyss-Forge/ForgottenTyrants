@@ -23,7 +23,7 @@ public class HostManager : Singleton<HostManager>
     public Dictionary<ulong, ClientData> ClientData { get; private set; }
     public string JoinCode { get; private set; }
 
-    public async void StartHost()
+    public async void StartHost(bool isPrivate = false)
     {
         Allocation allocation;
 
@@ -57,7 +57,7 @@ public class HostManager : Singleton<HostManager>
         try
         {
             var createLobbyOptions = new CreateLobbyOptions();
-            createLobbyOptions.IsPrivate = false;
+            createLobbyOptions.IsPrivate = isPrivate;
             createLobbyOptions.Data = new Dictionary<string, DataObject>()
             {
                 {
@@ -68,7 +68,7 @@ public class HostManager : Singleton<HostManager>
                 }
             };
 
-            Lobby lobby = await Lobbies.Instance.CreateLobbyAsync("My Lobby", _maxConnections, createLobbyOptions);
+            Lobby lobby = await Lobbies.Instance.CreateLobbyAsync($"Room {JoinCode}", _maxConnections, createLobbyOptions);
             _lobbyId = lobby.Id;
             StartCoroutine(HeartbeatLobbyCoroutine(15));
         }
@@ -98,7 +98,7 @@ public class HostManager : Singleton<HostManager>
 
     private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
     {
-        if (ClientData.Count >= 4 || _isGameStarted)
+        if (ClientData.Count >= _maxConnections || _isGameStarted)
         {
             response.Approved = false;
             return;
