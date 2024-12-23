@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerRef : MonoBehaviour
+public class PlayerRfef : MonoBehaviour
 {
     [field: SerializeField] public NetworkObject NetworkObject { get; private set; }
     [field: SerializeField] public GameObject PlayerCombat { get; private set; }

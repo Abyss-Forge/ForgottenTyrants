@@ -1646,6 +1646,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9963347311403842}
+  - component: {fileID: 6393651471854648655}
   - component: {fileID: 8011907564740039375}
   - component: {fileID: -7936775410058264635}
   - component: {fileID: -3100300571400905276}
@@ -1679,6 +1680,21 @@ Transform:
   - {fileID: 1484020662159581804}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6393651471854648655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2471761912260363661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99f959048b0a03b489be2b1c97d20636, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _services:
+  - {fileID: -7936775410058264635}
+  - {fileID: 7673370260004093441}
 --- !u!114 &8011907564740039375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1709,8 +1725,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3823583325
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 1713363667
+  InScenePlacedSourceGlobalObjectIdHash: 3823583325
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -4047,6 +4063,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d9cad122dd7b54a9723a335bd18fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentHp: 0
   _name: Player
   _baseStats:
     _hp: 0
@@ -4071,6 +4088,7 @@ MonoBehaviour:
   <Weapon>k__BackingField: {fileID: 0}
   <Armour>k__BackingField: {fileID: 0}
   <Trinket>k__BackingField: {fileID: 0}
+  bossController: {fileID: 0}
 --- !u!114 &4467009270388897121
 MonoBehaviour:
   m_ObjectHideFlags: 0

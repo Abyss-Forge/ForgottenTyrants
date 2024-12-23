@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Systems.ServiceLocator;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -17,7 +18,10 @@ public class CharacterSpawner : NetworkBehaviour
             if (character != null)
             {
                 Vector3 spawnPos = new(Random.Range(-3f, 3f), 0f, Random.Range(-3f, 3f));
-                NetworkObject instance = Instantiate(character.PlayerRef.NetworkObject, spawnPos, Quaternion.identity);
+
+                ServiceLocator.For(character.PlayerServices).Get(out NetworkObject networkObject);
+
+                NetworkObject instance = Instantiate(networkObject, spawnPos, Quaternion.identity);
                 //character.PlayerRef.UpdateModel(character.ModelRoot);
                 instance.SpawnAsPlayerObject(client.Value.clientId);
             }

@@ -1,4 +1,5 @@
-public struct SGlobalSettings
+public struct SGlobalConfig
 {
-    public const string XmlFilePath = "settings.xml";
+    public const string XML_FILE_PATH = "settings.xml";
+    public const bool SCENE_BOOTSTRAPPER_ENABLED = false;
 }

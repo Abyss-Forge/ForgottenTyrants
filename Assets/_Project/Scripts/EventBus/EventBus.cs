@@ -3,20 +3,20 @@ using UnityEngine;
 
 namespace Systems.EventBus
 {
-    public static class EventBus<T> where T : IEvent
+    public static class EventBus<T> where T : IBusEvent
     {
-        static readonly HashSet<IEventBinding<T>> bindings = new();
+        static readonly HashSet<IEventBinding<T>> _bindings = new();
 
-        public static void Register(EventBinding<T> binding) => bindings.Add(binding);
-        public static void Deregister(EventBinding<T> binding) => bindings.Remove(binding);
+        public static void Register(EventBinding<T> binding) => _bindings.Add(binding);
+        public static void Deregister(EventBinding<T> binding) => _bindings.Remove(binding);
 
         public static void Raise(T @event)
         {
-            var snapshot = new HashSet<IEventBinding<T>>(bindings);
+            var snapshot = new HashSet<IEventBinding<T>>(_bindings);
 
             foreach (var binding in snapshot)
             {
-                if (bindings.Contains(binding))
+                if (_bindings.Contains(binding))
                 {
                     binding.OnEvent.Invoke(@event);
                     binding.OnEventNoArgs.Invoke();
@@ -27,7 +27,7 @@ namespace Systems.EventBus
         public static void Clear()
         {
             Debug.Log($"Clearing {typeof(T).Name} bindings");
-            bindings.Clear();
+            _bindings.Clear();
         }
 
     }

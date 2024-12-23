@@ -2,13 +2,13 @@
 
 namespace Systems.EventBus
 {
-    public interface IEvent { }
+    public interface IBusEvent { }
 
-    public struct TestEvent : IEvent { }
+    public struct TestEvent : IBusEvent { }
 
-    public struct PlayerDeathEvent : IEvent { }
+    public struct PlayerDeathEvent : IBusEvent { }
 
-    public struct SceneEvent : IEvent
+    public struct LoadSceneEvent : IBusEvent
     {
         public int SceneGroupToLoad;
         public bool IsIndeterminate;

@@ -22,20 +22,20 @@ namespace Systems.SceneManagement
 
         public readonly SceneGroupManager _manager = new();
 
-        EventBinding<SceneEvent> _sceneEventBinding;
+        EventBinding<LoadSceneEvent> _sceneEventBinding;
 
         void OnEnable()
         {
-            _sceneEventBinding = new EventBinding<SceneEvent>(HandleSceneEvent);
-            EventBus<SceneEvent>.Register(_sceneEventBinding);
+            _sceneEventBinding = new EventBinding<LoadSceneEvent>(HandleSceneEvent);
+            EventBus<LoadSceneEvent>.Register(_sceneEventBinding);
         }
 
         void OnDisable()
         {
-            EventBus<SceneEvent>.Deregister(_sceneEventBinding);
+            EventBus<LoadSceneEvent>.Deregister(_sceneEventBinding);
         }
 
-        async void HandleSceneEvent(SceneEvent playerEvent)
+        async void HandleSceneEvent(LoadSceneEvent playerEvent)
         {
             if (_sceneGroups.IsInRange(playerEvent.SceneGroupToLoad))
             {

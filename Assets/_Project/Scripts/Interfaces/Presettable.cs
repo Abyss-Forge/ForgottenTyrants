@@ -8,7 +8,7 @@ using System.Xml;
 public abstract class Presettable<T> : MonoBehaviour where T : class
 {
     protected List<T> _presets { get; private set; } = new();
-    protected string _xmlFilePath { get; set; } = SGlobalSettings.XmlFilePath;
+    protected string _xmlFilePath { get; set; } = SGlobalConfig.XML_FILE_PATH;
 
     private string _rootName, _parentName;
     private int _presetLimit;
