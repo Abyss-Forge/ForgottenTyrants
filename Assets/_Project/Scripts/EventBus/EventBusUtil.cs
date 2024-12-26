@@ -53,7 +53,7 @@ namespace Systems.EventBus
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Initialize()
         {
-            EventTypes = PredefinedAssemblyUtil.GetTypes(typeof(IEvent));
+            EventTypes = PredefinedAssemblyUtil.GetTypes(typeof(IBusEvent));
             EventBusTypes = InitializeAllBuses();
         }
 

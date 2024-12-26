@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Systems.ServiceLocator;
 using Unity.Netcode;
 using UnityEngine;
 
 public class CharacterSpawner : NetworkBehaviour
 {
     [SerializeField] private CharacterDatabase _characterDatabase;
+    [SerializeField] private NetworkObject _playerPrefab;
 
     public override void OnNetworkSpawn()
     {
@@ -17,7 +19,10 @@ public class CharacterSpawner : NetworkBehaviour
             if (character != null)
             {
                 Vector3 spawnPos = new(Random.Range(-3f, 3f), 0f, Random.Range(-3f, 3f));
-                NetworkObject instance = Instantiate(character.PlayerRef.NetworkObject, spawnPos, Quaternion.identity);
+
+                //ServiceLocator.For(_playerPrefab).Get(out NetworkObject networkObject);
+
+                NetworkObject instance = Instantiate(_playerPrefab, spawnPos, Quaternion.identity);
                 //character.PlayerRef.UpdateModel(character.ModelRoot);
                 instance.SpawnAsPlayerObject(client.Value.clientId);
             }

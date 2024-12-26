@@ -29,7 +29,7 @@ public class StartMenuController : MonoBehaviour
     {
         // MySceneManager.Instance.LoadSceneWithLoadingScreen(SceneUtils.Next);
         //SceneManager.LoadScene(SceneUtils.Next);
-        EventBus<SceneEvent>.Raise(new SceneEvent { SceneGroupToLoad = 1 });
+        EventBus<LoadSceneEvent>.Raise(new LoadSceneEvent { SceneGroupToLoad = 1 });
     }
 
     private void Quit()

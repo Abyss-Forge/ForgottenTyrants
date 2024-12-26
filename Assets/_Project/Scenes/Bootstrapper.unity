@@ -1176,7 +1176,7 @@ MonoBehaviour:
   _messageText: {fileID: 1415235994}
   _messagesTxt: {fileID: 4900000, guid: d0ff1e12fe61bd044a5e8da8a2dd561c, type: 3}
   _backgroundsFolder:
-    folderPath: Assets/2D/Sprites/Menus/Backgrounds
+    folderPath: Assets/_Project/2D/Sprites/Menus/Backgrounds
 --- !u!1001 &1829422656
 PrefabInstance:
   m_ObjectHideFlags: 0

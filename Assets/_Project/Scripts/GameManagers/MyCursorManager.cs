@@ -4,46 +4,11 @@ using UnityEngine;
 
 public class MyCursorManager : Singleton<MyCursorManager>
 {
-    [SerializeField] private CrosshairController _crosshairController;
-
-    public bool IsCaptured => GetCaptured();
-
-    void Start()
-    {
-        Release();
-        Capture();
-    }
-
-    private bool GetCaptured()
-    {
-        return Cursor.lockState == CursorLockMode.Locked;
-    }
-
-    public void Capture()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
-
-    public void Release()
-    {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
+    [SerializeField, RequiredField] private CrosshairController _crosshairController;
 
     public GameObject GetCrosshairTarget()
     {
         return _crosshairController.TargetObject;
-    }
-
-    public void EnableCrosshair()
-    {
-        _crosshairController.gameObject.SetActive(true);
-    }
-
-    public void DisableCrosshair()
-    {
-        _crosshairController.gameObject.SetActive(false);
     }
 
     public Vector3? GetCrosshairImpactPoint()

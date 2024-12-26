@@ -679,6 +679,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7670178137971895459}
   - component: {fileID: 7673370260004093441}
+  - component: {fileID: 3955985177232526119}
   m_Layer: 6
   m_Name: Model Root
   m_TagString: Untagged
@@ -724,6 +725,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3955985177232526119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109309290574590861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad8deae8091111f4eb30a56c1f4e0d3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList: []
+  m_Animator: {fileID: 7673370260004093441}
 --- !u!1 &1116383638763403345
 GameObject:
   m_ObjectHideFlags: 0
@@ -1646,6 +1661,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9963347311403842}
+  - component: {fileID: -7308268340686260783}
+  - component: {fileID: 6393651471854648655}
   - component: {fileID: 8011907564740039375}
   - component: {fileID: -7936775410058264635}
   - component: {fileID: -3100300571400905276}
@@ -1679,6 +1696,33 @@ Transform:
   - {fileID: 1484020662159581804}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-7308268340686260783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2471761912260363661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 836e6e27fbac2b04a9316903409eeb4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6393651471854648655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2471761912260363661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99f959048b0a03b489be2b1c97d20636, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _services:
+  - {fileID: -7936775410058264635}
+  - {fileID: 7673370260004093441}
 --- !u!114 &8011907564740039375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1709,8 +1753,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3823583325
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 1268628103
+  InScenePlacedSourceGlobalObjectIdHash: 3823583325
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -1734,12 +1778,12 @@ MonoBehaviour:
   SyncPositionX: 1
   SyncPositionY: 1
   SyncPositionZ: 1
-  SyncRotAngleX: 1
+  SyncRotAngleX: 0
   SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncRotAngleZ: 0
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
@@ -1788,6 +1832,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _camera: {fileID: 6565529493077237280}
+  IsOwner: 1
   _dashFovCurve:
     serializedVersion: 2
     m_Curve:
@@ -2935,6 +2980,7 @@ GameObject:
   - component: {fileID: 1337041124613737836}
   - component: {fileID: 363498963803035810}
   - component: {fileID: 6314373588797244775}
+  - component: {fileID: 2207145227977144062}
   m_Layer: 0
   m_Name: Camera Root
   m_TagString: Untagged
@@ -2996,6 +3042,18 @@ MonoBehaviour:
     m_Bits: 25
   _minimumDistanceFromObstacles: 0.1
   _smoothingFactor: 25
+--- !u!114 &2207145227977144062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4608059789406005466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09e2a01949e4a7f459dd905b96d10116, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4713006375128150126
 GameObject:
   m_ObjectHideFlags: 0
@@ -4047,6 +4105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d9cad122dd7b54a9723a335bd18fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentHp: 0
   _name: Player
   _baseStats:
     _hp: 0
@@ -4071,6 +4130,7 @@ MonoBehaviour:
   <Weapon>k__BackingField: {fileID: 0}
   <Armour>k__BackingField: {fileID: 0}
   <Trinket>k__BackingField: {fileID: 0}
+  bossController: {fileID: 0}
 --- !u!114 &4467009270388897121
 MonoBehaviour:
   m_ObjectHideFlags: 0
