@@ -12,6 +12,8 @@ public class PlayerController : NetworkBehaviour
     CharacterController _characterController;
     [SerializeField] private Camera _camera;
 
+    public new bool IsOwner = true;
+
     [Header("Aesthetic")]
     [SerializeField] private AnimationCurve _dashFovCurve;
     [SerializeField] private TrailRenderer _trail;
@@ -36,16 +38,26 @@ public class PlayerController : NetworkBehaviour
 
     private EventBinding<PlayerDeathEvent> _playerDeathEventBinding;
 
-    private void OnMove(InputAction.CallbackContext context) => _move = context.ReadValue<Vector2>();
-    private void OnLook(InputAction.CallbackContext context) => _look = context.ReadValue<Vector2>();
+    private void OnMove(InputAction.CallbackContext context)
+    {
+        if (!IsOwner) return;
+        _move = context.ReadValue<Vector2>();
+    }
+    private void OnLook(InputAction.CallbackContext context)
+    {
+        if (!IsOwner) return;
+        _look = context.ReadValue<Vector2>();
+    }
 
     private void OnJump(InputAction.CallbackContext context)
     {
+        if (!IsOwner) return;
         if (context.performed && CanJump && _isGrounded) Jump();
     }
 
     private void OnDash(InputAction.CallbackContext context)
     {
+        if (!IsOwner) return;
         if (context.performed && CanDash && !_isDashing && !_isDashOnCooldown) StartCoroutine(Dash());
     }
 
@@ -77,6 +89,7 @@ public class PlayerController : NetworkBehaviour
 
     void FixedUpdate()
     {
+        if (!IsOwner) return;
         //physics belong inside fixed update
         if (CanMove) Move();
         if (GravityEnabled) ApplyGravity();
@@ -86,11 +99,13 @@ public class PlayerController : NetworkBehaviour
 
     void Update()
     {
+        if (!IsOwner) return;
         //animation
     }
 
     void LateUpdate()
     {
+        if (!IsOwner) return;
         //we move the camera in late update so all the movement has finished before positioning it
         //Look();
     }

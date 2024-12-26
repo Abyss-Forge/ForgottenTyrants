@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Eflatun.SceneReference;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
@@ -23,7 +24,7 @@ public class HostManager : Singleton<HostManager>
     public Dictionary<ulong, ClientData> ClientData { get; private set; }
     public string JoinCode { get; private set; }
 
-    public async void StartHost(bool isPrivate = false)
+    public async Task StartHost(bool isPrivate = false, string lobbyName = null)
     {
         Allocation allocation;
 
@@ -51,7 +52,6 @@ public class HostManager : Singleton<HostManager>
         }
 
         var relayServerData = new RelayServerData(allocation, "dtls");
-
         NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
         try
@@ -68,7 +68,8 @@ public class HostManager : Singleton<HostManager>
                 }
             };
 
-            Lobby lobby = await Lobbies.Instance.CreateLobbyAsync($"Room {JoinCode}", _maxConnections, createLobbyOptions);
+            lobbyName ??= $"Room {JoinCode}";
+            Lobby lobby = await Lobbies.Instance.CreateLobbyAsync(lobbyName, _maxConnections, createLobbyOptions);
             _lobbyId = lobby.Id;
             StartCoroutine(HeartbeatLobbyCoroutine(15));
         }

@@ -7,6 +7,7 @@ using UnityEngine;
 public class CharacterSpawner : NetworkBehaviour
 {
     [SerializeField] private CharacterDatabase _characterDatabase;
+    [SerializeField] private NetworkObject _playerPrefab;
 
     public override void OnNetworkSpawn()
     {
@@ -19,9 +20,9 @@ public class CharacterSpawner : NetworkBehaviour
             {
                 Vector3 spawnPos = new(Random.Range(-3f, 3f), 0f, Random.Range(-3f, 3f));
 
-                ServiceLocator.For(character.PlayerServices).Get(out NetworkObject networkObject);
+                //ServiceLocator.For(_playerPrefab).Get(out NetworkObject networkObject);
 
-                NetworkObject instance = Instantiate(networkObject, spawnPos, Quaternion.identity);
+                NetworkObject instance = Instantiate(_playerPrefab, spawnPos, Quaternion.identity);
                 //character.PlayerRef.UpdateModel(character.ModelRoot);
                 instance.SpawnAsPlayerObject(client.Value.clientId);
             }

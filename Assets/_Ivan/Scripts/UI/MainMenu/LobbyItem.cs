@@ -1,18 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LobbyItem : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _lobbyNameText;
-    [SerializeField] private TMP_Text _lobbyPlayersText;
+    [SerializeField] private TMP_Text _lobbyNameText, _lobbyPlayersText;
+    [SerializeField] private Button _joinButton;
 
-    private LobbiesList _lobbiesList;
+    private LobbyListMenu _lobbiesList;
     private Lobby _lobby;
 
-    public void Initialise(LobbiesList lobbiesList, Lobby lobby)
+    void OnEnable()
+    {
+        _joinButton.onClick.AddListener(Join);
+    }
+
+    void OnDisable()
+    {
+        _joinButton.onClick.RemoveAllListeners();
+    }
+
+    public void Initialize(LobbyListMenu lobbiesList, Lobby lobby)
     {
         _lobbiesList = lobbiesList;
         _lobby = lobby;
@@ -21,7 +30,7 @@ public class LobbyItem : MonoBehaviour
         _lobbyPlayersText.text = $"{lobby.Players.Count}/{lobby.MaxPlayers}";
     }
 
-    public void Join()
+    private void Join()
     {
         _lobbiesList.JoinAsync(_lobby);
     }

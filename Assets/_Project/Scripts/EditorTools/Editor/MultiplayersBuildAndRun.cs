@@ -33,6 +33,9 @@ public class MultiplayersBuildAndRun : EditorWindow
         GUILayout.Space(10);
         _playerAmount = EditorGUILayout.IntField("Players:", _playerAmount);
 
+        if (_playerAmount < 1) _playerAmount = 1;
+        if (_playerAmount > 10) _playerAmount = 10;
+
         GUILayout.Space(10);
         if (GUILayout.Button("Build"))
         {

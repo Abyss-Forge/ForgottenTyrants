@@ -8,6 +8,5 @@ public class CharacterTemplate : ScriptableObject
     [field: SerializeField] public Sprite Icon { get; private set; }
     [field: SerializeField] public GameObject IntroPrefab { get; private set; }
     [field: SerializeField] public GameObject ModelRoot { get; private set; }
-    [field: SerializeField] public ServiceDatabase PlayerServices { get; private set; }
 
 }

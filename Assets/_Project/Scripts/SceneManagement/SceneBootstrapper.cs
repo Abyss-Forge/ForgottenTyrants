@@ -19,7 +19,7 @@ namespace Systems.SceneManagement
             // Set the bootstrapper scene to be the play mode start scene when running in the editor
             // This will cause the bootstrapper scene to be loaded first (and only once) when entering
             // play mode from the Unity Editor, regardless of which scene is currently active.
-            if (SGlobalConfig.SCENE_BOOTSTRAPPER_ENABLED)
+            if (GlobalConfig.SCENE_BOOTSTRAPPER_ENABLED)
                 EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(EditorBuildSettings.scenes[_sceneIndex].path);
 #endif
         }

@@ -24,7 +24,7 @@ public abstract class Configurable<T, U> : MonoBehaviour
     {
         _settings = new();
         _defaultSettings = new();
-        _xmlFilePath = SGlobalConfig.XML_FILE_PATH;
+        _xmlFilePath = GlobalConfig.XML_FILE_PATH;
         LoadFromXml();
         OnAwake();
     }

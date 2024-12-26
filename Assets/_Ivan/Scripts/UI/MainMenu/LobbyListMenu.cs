@@ -1,37 +1,34 @@
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LobbiesList : MonoBehaviour
+public class LobbyListMenu : MonoBehaviour
 {
+    [SerializeField] private Button _closeButton, _refreshButton;
     [SerializeField] private Transform _lobbyItemParent;
     [SerializeField] private LobbyItem _lobbyItemPrefab;
-    [SerializeField] private Button _refreshButton, _closeButton;
 
-    private bool _isRefreshing;
-    private bool _isJoining;
+    private bool _isRefreshing, _isJoining;
 
     void OnEnable()
     {
-        RefreshList();
-
-        _refreshButton.onClick.AddListener(RefreshList);
         _closeButton.onClick.AddListener(Close);
+        _refreshButton.onClick.AddListener(RefreshList);
+
+        RefreshList();
     }
 
     void OnDisable()
     {
-        _refreshButton.onClick.RemoveAllListeners();
         _closeButton.onClick.RemoveAllListeners();
+        _refreshButton.onClick.RemoveAllListeners();
     }
 
     public async void RefreshList()
     {
         if (_isRefreshing) return;
-
         _isRefreshing = true;
 
         try
@@ -61,7 +58,7 @@ public class LobbiesList : MonoBehaviour
             foreach (Lobby lobby in lobbies.Results)
             {
                 var lobbyInstance = Instantiate(_lobbyItemPrefab, _lobbyItemParent);
-                lobbyInstance.Initialise(this, lobby);
+                lobbyInstance.Initialize(this, lobby);
             }
         }
         catch (LobbyServiceException e)
