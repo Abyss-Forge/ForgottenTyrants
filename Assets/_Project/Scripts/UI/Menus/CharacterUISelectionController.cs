@@ -12,38 +12,34 @@ public class CharacterPresetXML
     public string Name { get; set; }
     public string Race { get; set; }
     public string Class { get; set; }
-    public string Weapon { get; set; }
-    public string Armour { get; set; }
+    public string Armor { get; set; }
     public string Trinket { get; set; }
 
     public CharacterPresetXML() { }
 
-    public CharacterPresetXML(string name, string race, string characterClass, string weapon, string armour, string trinket)
+    public CharacterPresetXML(string name, string race, string characterClass, string armour, string trinket)
     {
         Name = name;
         Race = race;
         Class = characterClass;
-        Weapon = weapon;
-        Armour = armour;
+        Armor = armour;
         Trinket = trinket;
     }
 }
 
 public class CharacterUISelectionController : Presettable<CharacterPresetXML>
 {
-    [SerializeField] private GameObject _playerPrefab;
     [SerializeField] private PresetSelectorController _presetSelectorController;
 
     [SerializeField] private List<RaceTemplate> _races;
     [SerializeField] private List<ClassTemplate> _classes;
     private List<WeaponTemplate> _weapons;//dependen de la calse
-    [SerializeField] private List<ArmourTemplate> _armours;
+    [SerializeField] private List<ArmorTemplate> _armours;
     [SerializeField] private List<TrinketTemplate> _trinkets;
 
     private int _currentRaceIndex = 0;
     private int _currentClassIndex = 0;
-    private int _currentWeaponIndex = 0;
-    private int _currentArmourIndex = 0;
+    private int _currentArmorIndex = 0;
     private int _currentTrinketIndex = 0;
 
     [SerializeField] private TMP_Text _raceNameText, _raceStatsText;
@@ -53,10 +49,8 @@ public class CharacterUISelectionController : Presettable<CharacterPresetXML>
     [SerializeField] private TMP_Text _trinketNameText, _trinketStatsText;
 
     [SerializeField] private Button _savePresetButton, _loadPresetButton;
-    [SerializeField] private Button _confirmButton, _cancelButton;
     [SerializeField] private Button _nextRaceButton, _prevRaceButton;
     [SerializeField] private Button _nextClassButton, _prevClassButton;
-    [SerializeField] private Button _nextWeaponButton, _prevWeaponButton;
     [SerializeField] private Button _nextArmourButton, _prevArmourButton;
     [SerializeField] private Button _nextTrinketButton, _prevTrinketButton;
 
@@ -64,8 +58,7 @@ public class CharacterUISelectionController : Presettable<CharacterPresetXML>
 
     public RaceTemplate SelectedRace => _races[_currentRaceIndex];
     public ClassTemplate SelectedClass => _classes[_currentClassIndex];
-    public WeaponTemplate SelectedWeapon => _weapons[_currentWeaponIndex];
-    public ArmourTemplate SelectedArmour => _armours[_currentArmourIndex];
+    public ArmorTemplate SelectedArmor => _armours[_currentArmorIndex];
     public TrinketTemplate SelectedTrinket => _trinkets[_currentTrinketIndex];
 
     private void Awake()
@@ -74,45 +67,25 @@ public class CharacterUISelectionController : Presettable<CharacterPresetXML>
 
         ShowRace(_currentRaceIndex);
         ShowClass(_currentClassIndex);
-        ShowWeapon(_currentWeaponIndex);
-        ShowArmour(_currentArmourIndex);
+        ShowArmor(_currentArmorIndex);
         ShowTrinket(_currentTrinketIndex);
 
         _nextRaceButton.onClick.AddListener(NextRace);
         _prevRaceButton.onClick.AddListener(PreviousRace);
         _nextClassButton.onClick.AddListener(NextClass);
         _prevClassButton.onClick.AddListener(PreviousClass);
-        _nextWeaponButton.onClick.AddListener(NextWeapon);
-        _prevWeaponButton.onClick.AddListener(PreviousWeapon);
-        _nextArmourButton.onClick.AddListener(NextArmour);
-        _prevArmourButton.onClick.AddListener(PreviousArmour);
+        _nextArmourButton.onClick.AddListener(NextArmor);
+        _prevArmourButton.onClick.AddListener(PreviousArmor);
         _nextTrinketButton.onClick.AddListener(NextTrinket);
         _prevTrinketButton.onClick.AddListener(PreviousTrinket);
-        _confirmButton.onClick.AddListener(ConfirmSelection);
-        _cancelButton.onClick.AddListener(Back);
         _loadPresetButton.onClick.AddListener(LoadPreset);
         _savePresetButton.onClick.AddListener(SavePreset);
     }
 
-    public void ConfirmSelection()
-    {
-        GameObject playerInstance = Instantiate(_playerPrefab, Vector3.zero, quaternion.identity);
-
-        Player playerScript = playerInstance.GetComponentInChildren<Player>();
-        playerScript?.BuildPlayer(SelectedRace, SelectedClass, SelectedWeapon, SelectedArmour, SelectedTrinket, "YOU YOU");
-
-        DontDestroyOnLoad(playerInstance);
-        SceneManager.LoadScene(ForgottenTyrants.Scene.PruebasDiego);
-    }
-
-    public void Back()
-    {
-
-    }
 
     public void SavePreset()
     {
-        CharacterPresetXML preset = new CharacterPresetXML("Name", SelectedRace.name, SelectedClass.name, SelectedWeapon.name, SelectedArmour.name, SelectedTrinket.name);
+        CharacterPresetXML preset = new CharacterPresetXML("Name", SelectedRace.name, SelectedClass.name, SelectedArmor.name, SelectedTrinket.name);
         CreatePreset(preset);
     }
 
@@ -131,11 +104,8 @@ public class CharacterUISelectionController : Presettable<CharacterPresetXML>
         _currentClassIndex = _classes.FindIndex(item => item.name == preset._presetModel.Class);
         ShowClass(_currentClassIndex);
 
-        _currentWeaponIndex = _weapons.FindIndex(item => item.name == preset._presetModel.Weapon);
-        ShowWeapon(_currentWeaponIndex);
-
-        _currentArmourIndex = _armours.FindIndex(item => item.name == preset._presetModel.Armour);
-        ShowArmour(_currentArmourIndex);
+        _currentArmorIndex = _armours.FindIndex(item => item.name == preset._presetModel.Armor);
+        ShowArmor(_currentArmorIndex);
 
         _currentTrinketIndex = _trinkets.FindIndex(item => item.name == preset._presetModel.Trinket);
         ShowTrinket(_currentTrinketIndex);
@@ -198,36 +168,24 @@ public class CharacterUISelectionController : Presettable<CharacterPresetXML>
         _weaponStatsText.text = FormatStats(selectedWeapon.Stats);
     }
 
-    private void NextWeapon()
+    private void ShowArmor(int index)
     {
-        _currentWeaponIndex = (_currentWeaponIndex + 1) % _weapons.Count;
-        ShowWeapon(_currentWeaponIndex);
-    }
-
-    private void PreviousWeapon()
-    {
-        _currentWeaponIndex = (_currentWeaponIndex - 1 + _weapons.Count) % _weapons.Count;
-        ShowWeapon(_currentWeaponIndex);
-    }
-
-    private void ShowArmour(int index)
-    {
-        ArmourTemplate selectedArmour = _armours[index];
+        ArmorTemplate selectedArmour = _armours[index];
 
         _armourNameText.text = selectedArmour.name;
         _armourStatsText.text = FormatStats(selectedArmour.Stats);
     }
 
-    private void NextArmour()
+    private void NextArmor()
     {
-        _currentArmourIndex = (_currentArmourIndex + 1) % _armours.Count;
-        ShowArmour(_currentArmourIndex);
+        _currentArmorIndex = (_currentArmorIndex + 1) % _armours.Count;
+        ShowArmor(_currentArmorIndex);
     }
 
-    private void PreviousArmour()
+    private void PreviousArmor()
     {
-        _currentArmourIndex = (_currentArmourIndex - 1 + _armours.Count) % _armours.Count;
-        ShowArmour(_currentArmourIndex);
+        _currentArmorIndex = (_currentArmorIndex - 1 + _armours.Count) % _armours.Count;
+        ShowArmor(_currentArmorIndex);
     }
 
     private void ShowTrinket(int index)

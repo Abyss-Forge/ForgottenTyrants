@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class CharacterPreset : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private Button _deleteButton;
-    public TextMeshProUGUI _raceText, _classText, _weaponText, _armourText, _trinketText;
+    public TextMeshProUGUI _raceText, _classText, _weaponText, _armorText, _trinketText;
     public CharacterPresetXML _presetModel;
 
     public event Action<CharacterPreset> OnDelete, OnSelect;

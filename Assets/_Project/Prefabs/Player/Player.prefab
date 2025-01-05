@@ -1661,7 +1661,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9963347311403842}
-  - component: {fileID: -7308268340686260783}
   - component: {fileID: 6393651471854648655}
   - component: {fileID: 8011907564740039375}
   - component: {fileID: -7936775410058264635}
@@ -1696,18 +1695,6 @@ Transform:
   - {fileID: 1484020662159581804}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-7308268340686260783
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2471761912260363661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 836e6e27fbac2b04a9316903409eeb4a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6393651471854648655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1723,6 +1710,7 @@ MonoBehaviour:
   _services:
   - {fileID: -7936775410058264635}
   - {fileID: 7673370260004093441}
+  - {fileID: 7469343458014759698}
 --- !u!114 &8011907564740039375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4127,8 +4115,7 @@ MonoBehaviour:
     _cooldownReduction: 0
   <Race>k__BackingField: {fileID: 0}
   <Class>k__BackingField: {fileID: 0}
-  <Weapon>k__BackingField: {fileID: 0}
-  <Armour>k__BackingField: {fileID: 0}
+  <Armor>k__BackingField: {fileID: 0}
   <Trinket>k__BackingField: {fileID: 0}
   bossController: {fileID: 0}
 --- !u!114 &4467009270388897121

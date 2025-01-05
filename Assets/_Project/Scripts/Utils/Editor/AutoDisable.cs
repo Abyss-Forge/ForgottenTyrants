@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public sealed class AutoDisable : MonoBehaviour
+public class AutoDisable : MonoBehaviour
 {
     void OnValidate()
     {

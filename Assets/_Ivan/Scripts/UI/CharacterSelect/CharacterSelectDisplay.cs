@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class CharacterSelectDisplay : NetworkBehaviour
 {
+    [SerializeField] private CharacterSelectionMenuController _buildController; // TODO: remove
+
     [SerializeField] private CharacterDatabase _characterDatabase;
     [SerializeField] private Transform _charactersHolder, _cardsHolder, _characterInfoPanel, _introSpawnPoint;
     [SerializeField] private CharacterSelectButton _selectButtonPrefab;
@@ -15,8 +17,8 @@ public class CharacterSelectDisplay : NetworkBehaviour
 
     private GameObject _introInstance;
     private List<CharacterSelectButton> _characterButtons = new();
-    private NetworkList<CharacterSelectState> _players;
     private List<PlayerCard> _playerCards;
+    private NetworkList<CharacterSelectState> _players;
 
     void Awake()
     {
@@ -132,7 +134,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
         {
             if (_players[i].ClientId != serverRpcParams.Receive.SenderClientId) { continue; }
 
-            if (!_characterDatabase.IsValidCharacterId(characterId)) { return; }
+            if (!_characterDatabase.IsValidId(characterId)) { return; }
 
             if (IsCharacterTaken(characterId, true)) { return; }
 
@@ -156,7 +158,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
         {
             if (_players[i].ClientId != serverRpcParams.Receive.SenderClientId) { continue; }
 
-            if (!_characterDatabase.IsValidCharacterId(_players[i].CharacterId)) { return; }
+            if (!_characterDatabase.IsValidId(_players[i].CharacterId)) { return; }
 
             if (IsCharacterTaken(_players[i].CharacterId, true)) { return; }
 
@@ -175,6 +177,8 @@ public class CharacterSelectDisplay : NetworkBehaviour
         foreach (var player in _players)
         {
             HostManager.Instance.SetCharacter(player.ClientId, player.CharacterId);
+
+            _buildController.Ready(player.ClientId);
         }
 
         HostManager.Instance.StartGame();

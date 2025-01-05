@@ -1,31 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
 
 public class Player : Entity
 {
-    [field: SerializeField] public RaceTemplate Race { get; set; }
-    [field: SerializeField] public ClassTemplate Class { get; set; }
-    [field: SerializeField] public WeaponTemplate Weapon { get; set; }
-    [field: SerializeField] public ArmourTemplate Armour { get; set; }
-    [field: SerializeField] public TrinketTemplate Trinket { get; set; }
-
     private List<StatusEffect> _statusEffects = new();
     public List<StatusEffect> StatusEffects => _statusEffects;
 
-    protected override void Start()
-    {
-        base.Start();
-        //BuildPlayer();
-        _currentHp = BaseStats.Hp;
+    ClientData _playerData;
 
+    void Awake()
+    {
+        foreach (var item in HostManager.Instance.ClientData)
+        {
+            if (item.Key == NetworkManager.Singleton.LocalClientId)
+            {
+                _playerData = item.Value;
+                break;
+            }
+        }
+
+        CalculateTotalStats();
     }
 
-    protected override void Update()
-    {
-
-    }
 
     public void AddStatusEffect(StatusEffect statusEffect)
     {
@@ -47,11 +46,10 @@ public class Player : Entity
 
     private void CalculateTotalStats()
     {
-        _baseStats.Add(Race.Stats);
-        _baseStats.Add(Class.Stats);
-        _baseStats.Add(Weapon.Stats);
-        _baseStats.Add(Armour.Stats);
-        _baseStats.Add(Trinket.Stats);
+        _baseStats.Add(_playerData.Race.Stats);
+        _baseStats.Add(_playerData.Class.Stats);
+        _baseStats.Add(_playerData.Armor.Stats);
+        _baseStats.Add(_playerData.Trinket.Stats);
 
         Debug.Log($"Total HP: {_baseStats.Hp}, Physical Damage: {_baseStats.PhysicalDamage}, " +
                  $"Magical Damage: {_baseStats.MagicalDamage}, Movement Speed: {_baseStats.MovementSpeed}, " +
@@ -59,23 +57,8 @@ public class Player : Entity
                  $"Magical Defense: {_baseStats.MagicalDefense}, Cooldown Reduction: {_baseStats.CooldownReduction}");
     }
 
-    public void BuildPlayer(RaceTemplate selectedRace, ClassTemplate selectedClass, WeaponTemplate selectedWeapon, ArmourTemplate selectedArmour, TrinketTemplate selectedTrinket, string selectedName)
-    {
-        _name = selectedName;
-        Race = selectedRace;
-        Class = selectedClass;
-        Weapon = selectedWeapon;
-        Armour = selectedArmour;
-        Trinket = selectedTrinket;
 
-        CalculateTotalStats();
-    }
-
-    public int GetCurrentHp()
-    {
-        return _currentHp;
-    }
-
+    //  Diego me cago en tu raza
 #if UNITY_EDITOR
 
     [SerializeField] BossController bossController;
@@ -107,5 +90,3 @@ public class Player : Entity
 #endif
 
 }
-
-

@@ -4,8 +4,8 @@ using Unity.Netcode;
 public struct CharacterSelectState : INetworkSerializable, IEquatable<CharacterSelectState>
 {
     public ulong ClientId;
-    public int CharacterId;
     public bool IsLockedIn;
+    public int CharacterId;
 
     public CharacterSelectState(ulong clientId, int characterId = -1, bool isLockedIn = false)
     {

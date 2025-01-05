@@ -4,10 +4,8 @@ using UnityEngine;
 
 public abstract class Entity : MonoBehaviour
 {
-    public int _currentHp = 0;
-    [SerializeField] protected string _name;
-    [SerializeField] protected Stats _baseStats = new(), _modifiedStats = new();
-    public string Name => _name;
+    [field: SerializeField] public string Name { get; protected set; }
+    protected Stats _baseStats = new(), _modifiedStats = new();
     public Stats BaseStats => _baseStats;
     public Stats ModifiedStats => _modifiedStats;
 
@@ -16,19 +14,10 @@ public abstract class Entity : MonoBehaviour
 
     }
 
-    protected virtual void Awake()
+    public int CurrentHp = 0;   // TODO: Remove this
+    void Start()
     {
-
-    }
-
-    protected virtual void Start()
-    {
-
-    }
-
-    protected virtual void Update()
-    {
-
+        CurrentHp = BaseStats.Hp;
     }
 
 }

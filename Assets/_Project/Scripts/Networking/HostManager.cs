@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Eflatun.SceneReference;
+using Unity.Multiplayer.Samples.Utilities;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
@@ -16,7 +17,6 @@ using UnityEngine.SceneManagement;
 public class HostManager : Singleton<HostManager>
 {
     [SerializeField] private int _maxConnections = 6;
-    [SerializeField] private SceneReference _characterSelectScene, _gameplayScene;
 
     private bool _isGameStarted;
     private string _lobbyId;
@@ -118,7 +118,7 @@ public class HostManager : Singleton<HostManager>
     {
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
 
-        NetworkManager.Singleton.SceneManager.LoadScene(_characterSelectScene.Name, LoadSceneMode.Single);
+        SceneLoaderWrapper.Instance.LoadScene(ForgottenTyrants.Scene.CharacterSelect, useNetworkSceneManager: true, LoadSceneMode.Single);
     }
 
     private void OnClientDisconnect(ulong clientId)
@@ -136,7 +136,18 @@ public class HostManager : Singleton<HostManager>
     {
         if (ClientData.TryGetValue(clientId, out ClientData data))
         {
-            data.characterId = characterId;
+            data.CharacterId = characterId;
+        }
+    }
+
+    public void SetCharacterBuild(ulong clientId, RaceTemplate characterRace, ClassTemplate characterClass, ArmorTemplate characterArmor, TrinketTemplate characterTrinket)
+    {
+        if (ClientData.TryGetValue(clientId, out ClientData data))
+        {
+            data.Race = characterRace;
+            data.Class = characterClass;
+            data.Armor = characterArmor;
+            data.Trinket = characterTrinket;
         }
     }
 
@@ -144,7 +155,7 @@ public class HostManager : Singleton<HostManager>
     {
         _isGameStarted = true;
 
-        NetworkManager.Singleton.SceneManager.LoadScene(_gameplayScene.Name, LoadSceneMode.Single);
+        SceneLoaderWrapper.Instance.LoadScene(ForgottenTyrants.Scene.GameplayMap, useNetworkSceneManager: true, LoadSceneMode.Single);
     }
 
 }

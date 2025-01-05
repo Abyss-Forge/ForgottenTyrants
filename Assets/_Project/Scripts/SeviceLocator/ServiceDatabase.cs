@@ -8,7 +8,7 @@ public class ServiceDatabase : MonoBehaviour
 
     void Awake()
     {
-        ServiceLocator sl = ServiceLocator.For(this);
+        ServiceLocator sl = ServiceLocator.Global;
         foreach (Object service in _services)
         {
             sl.Register(service.GetType(), service);

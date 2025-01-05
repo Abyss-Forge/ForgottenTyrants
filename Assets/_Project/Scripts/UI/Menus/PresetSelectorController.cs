@@ -35,8 +35,7 @@ public class PresetSelectorController : MonoBehaviour
 
             preset._raceText.text = $"Race: {item.Race}";
             preset._classText.text = $"Class: {item.Class}";
-            preset._weaponText.text = $"Weapon: {item.Weapon}";
-            preset._armourText.text = $"Armour: {item.Armour}";
+            preset._armorText.text = $"Armor: {item.Armor}";
             preset._trinketText.text = $"Trinket: {item.Trinket}";
 
             preset._presetModel = item;

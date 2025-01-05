@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cc740c9f4176f54d972be688201a999, type: 3}
+  m_Name: Armor Database
+  m_EditorClassIdentifier: 
+  _elements:
+  - {fileID: 11400000, guid: 5bf1db49d7e5ea742807a7f8fb2c6899, type: 2}
+  - {fileID: 11400000, guid: 0e63a639f7ad2f043bc53608694158a3, type: 2}
+  - {fileID: 11400000, guid: b8495c22c5eb35b41bac8ef58466a270, type: 2}

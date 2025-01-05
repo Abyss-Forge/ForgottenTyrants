@@ -20,11 +20,10 @@ public class BossController : Entity
     private Player _currentTarget = null;
 
 
-    protected override void Start()
+    void Start()
     {
-        base.Start();
         InitializeBehaviorTree();
-        _currentHp = BaseStats.Hp;
+        CurrentHp = BaseStats.Hp;
 
         GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
 
@@ -47,7 +46,7 @@ public class BossController : Entity
         }
     }
 
-    protected override void Update()
+    void Update()
     {
         _rootSequence.Execute();
 
@@ -80,7 +79,7 @@ public class BossController : Entity
             Player player = entry.Key;
             float aggro = entry.Value;
             float distance = Vector3.Distance(transform.position, player.transform.position);
-            int health = player.GetCurrentHp();
+            int health = player.CurrentHp;
 
             float normalizedDamage = aggro / 100;
             float normalizedDistance = 1 - (distance / 100);
@@ -127,10 +126,10 @@ public class BossController : Entity
 
     public void TakeDamage(Player player, int damage)
     {
-        _currentHp -= damage;
-        Debug.Log($"Boss recibe {damage} de daño. Vida restante: {_currentHp}");
+        CurrentHp -= damage;
+        Debug.Log($"Boss recibe {damage} de daño. Vida restante: {CurrentHp}");
         AddAggro(player, damage);
-        if (_currentHp <= 0) Die();
+        if (CurrentHp <= 0) Die();
     }
 
     public void AddAggro(Player player, float amount)
