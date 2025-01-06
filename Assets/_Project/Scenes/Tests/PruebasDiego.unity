@@ -849,17 +849,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d9cad122dd7b54a9723a335bd18fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentHp: 0
   _name: Ivan
-  _stats:
-    _hp: 100
+  _baseStats:
+    _hp: 0
     _physicalDamage: 0
     _magicalDamage: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
     _physicalDefense: 0
     _magicalDefense: 0
+    _movementSpeed: 0
+    _attackSpeed: 0
     _cooldownReduction: 0
-  _currentHp: 0
+  _modifiedStats:
+    _hp: 0
+    _physicalDamage: 0
+    _magicalDamage: 0
+    _physicalDefense: 0
+    _magicalDefense: 0
+    _movementSpeed: 0
+    _attackSpeed: 0
+    _cooldownReduction: 0
+  <Race>k__BackingField: {fileID: 0}
+  <Class>k__BackingField: {fileID: 0}
+  <Weapon>k__BackingField: {fileID: 0}
+  <Armour>k__BackingField: {fileID: 0}
+  <Trinket>k__BackingField: {fileID: 0}
   bossController: {fileID: 994074769}
 --- !u!54 &214472554
 Rigidbody:
@@ -1197,17 +1211,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d9cad122dd7b54a9723a335bd18fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentHp: 0
   _name: Juan
-  _stats:
-    _hp: 100
+  _baseStats:
+    _hp: 0
     _physicalDamage: 0
     _magicalDamage: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
     _physicalDefense: 0
     _magicalDefense: 0
+    _movementSpeed: 0
+    _attackSpeed: 0
     _cooldownReduction: 0
-  _currentHp: 0
+  _modifiedStats:
+    _hp: 0
+    _physicalDamage: 0
+    _magicalDamage: 0
+    _physicalDefense: 0
+    _magicalDefense: 0
+    _movementSpeed: 0
+    _attackSpeed: 0
+    _cooldownReduction: 0
+  <Race>k__BackingField: {fileID: 0}
+  <Class>k__BackingField: {fileID: 0}
+  <Weapon>k__BackingField: {fileID: 0}
+  <Armour>k__BackingField: {fileID: 0}
+  <Trinket>k__BackingField: {fileID: 0}
   bossController: {fileID: 994074769}
 --- !u!54 &343091140
 Rigidbody:
@@ -1597,17 +1625,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d9cad122dd7b54a9723a335bd18fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentHp: 0
   _name: 
-  _stats:
-    _hp: 100
+  _baseStats:
+    _hp: 0
     _physicalDamage: 0
     _magicalDamage: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
     _physicalDefense: 0
     _magicalDefense: 0
+    _movementSpeed: 0
+    _attackSpeed: 0
     _cooldownReduction: 0
-  _currentHp: 0
+  _modifiedStats:
+    _hp: 0
+    _physicalDamage: 0
+    _magicalDamage: 0
+    _physicalDefense: 0
+    _magicalDefense: 0
+    _movementSpeed: 0
+    _attackSpeed: 0
+    _cooldownReduction: 0
+  <Race>k__BackingField: {fileID: 0}
+  <Class>k__BackingField: {fileID: 0}
+  <Weapon>k__BackingField: {fileID: 0}
+  <Armour>k__BackingField: {fileID: 0}
+  <Trinket>k__BackingField: {fileID: 0}
   bossController: {fileID: 994074769}
 --- !u!4 &709906494 stripped
 Transform:
@@ -1727,6 +1769,8 @@ Transform:
   - {fileID: 420410893}
   - {fileID: 1361905390}
   - {fileID: 32358999}
+  - {fileID: 1304912197}
+  - {fileID: 1094206788}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &819637567 stripped
@@ -2013,17 +2057,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d9cad122dd7b54a9723a335bd18fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentHp: 0
   _name: Carlos
-  _stats:
-    _hp: 100
+  _baseStats:
+    _hp: 0
     _physicalDamage: 0
     _magicalDamage: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
     _physicalDefense: 0
     _magicalDefense: 0
+    _movementSpeed: 0
+    _attackSpeed: 0
     _cooldownReduction: 0
-  _currentHp: 0
+  _modifiedStats:
+    _hp: 0
+    _physicalDamage: 0
+    _magicalDamage: 0
+    _physicalDefense: 0
+    _magicalDefense: 0
+    _movementSpeed: 0
+    _attackSpeed: 0
+    _cooldownReduction: 0
+  <Race>k__BackingField: {fileID: 0}
+  <Class>k__BackingField: {fileID: 0}
+  <Weapon>k__BackingField: {fileID: 0}
+  <Armour>k__BackingField: {fileID: 0}
+  <Trinket>k__BackingField: {fileID: 0}
   bossController: {fileID: 994074769}
 --- !u!54 &950794371
 Rigidbody:
@@ -2143,17 +2201,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48705e41603aa66438d7e6d6580654dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentHp: 0
   _name: Demon
-  _stats:
-    _hp: 10000
+  _baseStats:
+    _hp: 0
     _physicalDamage: 0
     _magicalDamage: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
     _physicalDefense: 0
     _magicalDefense: 0
+    _movementSpeed: 0
+    _attackSpeed: 0
     _cooldownReduction: 0
-  _currentHp: 0
+  _modifiedStats:
+    _hp: 0
+    _physicalDamage: 0
+    _magicalDamage: 0
+    _physicalDefense: 0
+    _magicalDefense: 0
+    _movementSpeed: 0
+    _attackSpeed: 0
+    _cooldownReduction: 0
   _targetSelectionInterval: 6
   _attackInterval: 3
   _meleeRange: 5
@@ -2259,6 +2326,85 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1094206787
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 787437619}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 8e65dc24afe49c34886ea10a8b7259dd,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 35.615623
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8e65dc24afe49c34886ea10a8b7259dd,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -40.87
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8e65dc24afe49c34886ea10a8b7259dd,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -73.2784
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8e65dc24afe49c34886ea10a8b7259dd,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8e65dc24afe49c34886ea10a8b7259dd,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8e65dc24afe49c34886ea10a8b7259dd,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8e65dc24afe49c34886ea10a8b7259dd,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8e65dc24afe49c34886ea10a8b7259dd,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8e65dc24afe49c34886ea10a8b7259dd,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8e65dc24afe49c34886ea10a8b7259dd,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8e65dc24afe49c34886ea10a8b7259dd,
+        type: 3}
+      propertyPath: m_Name
+      value: shytrax
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8e65dc24afe49c34886ea10a8b7259dd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8e65dc24afe49c34886ea10a8b7259dd, type: 3}
+--- !u!4 &1094206788 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8e65dc24afe49c34886ea10a8b7259dd,
+    type: 3}
+  m_PrefabInstance: {fileID: 1094206787}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1131561868 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 01b9175c3de7dcf4e8f2d3bd3a8ef8c4,
@@ -2384,6 +2530,95 @@ MonoBehaviour:
   _serverButton: {fileID: 1391163711}
   _hostButton: {fileID: 1710823494}
   _clientButton: {fileID: 1814471002}
+--- !u!1001 &1304912196
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 787437619}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 200ec52fc8280fa4e92364d1aea2d51d,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.009999999
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 200ec52fc8280fa4e92364d1aea2d51d,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.009999999
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 200ec52fc8280fa4e92364d1aea2d51d,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 35.615623
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 200ec52fc8280fa4e92364d1aea2d51d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -41.77141
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 200ec52fc8280fa4e92364d1aea2d51d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -73.26
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 200ec52fc8280fa4e92364d1aea2d51d,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071067
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 200ec52fc8280fa4e92364d1aea2d51d,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 200ec52fc8280fa4e92364d1aea2d51d,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 200ec52fc8280fa4e92364d1aea2d51d,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 200ec52fc8280fa4e92364d1aea2d51d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 200ec52fc8280fa4e92364d1aea2d51d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 200ec52fc8280fa4e92364d1aea2d51d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 200ec52fc8280fa4e92364d1aea2d51d,
+        type: 3}
+      propertyPath: m_Name
+      value: human
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 200ec52fc8280fa4e92364d1aea2d51d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 200ec52fc8280fa4e92364d1aea2d51d, type: 3}
+--- !u!4 &1304912197 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 200ec52fc8280fa4e92364d1aea2d51d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1304912196}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1361905389
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2727,6 +2962,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1245159068}
     m_Modifications:
+    - target: {fileID: -7936775410058264635, guid: 5f77e369e2c445340866d55e2917973d,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 384086901
+      objectReference: {fileID: 0}
     - target: {fileID: 9963347311403842, guid: 5f77e369e2c445340866d55e2917973d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.52
@@ -3026,17 +3266,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d9cad122dd7b54a9723a335bd18fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentHp: 0
   _name: Diego
-  _stats:
-    _hp: 100
+  _baseStats:
+    _hp: 0
     _physicalDamage: 0
     _magicalDamage: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
     _physicalDefense: 0
     _magicalDefense: 0
+    _movementSpeed: 0
+    _attackSpeed: 0
     _cooldownReduction: 0
-  _currentHp: 0
+  _modifiedStats:
+    _hp: 0
+    _physicalDamage: 0
+    _magicalDamage: 0
+    _physicalDefense: 0
+    _magicalDefense: 0
+    _movementSpeed: 0
+    _attackSpeed: 0
+    _cooldownReduction: 0
+  <Race>k__BackingField: {fileID: 0}
+  <Class>k__BackingField: {fileID: 0}
+  <Weapon>k__BackingField: {fileID: 0}
+  <Armour>k__BackingField: {fileID: 0}
+  <Trinket>k__BackingField: {fileID: 0}
   bossController: {fileID: 994074769}
 --- !u!54 &1648803415
 Rigidbody:
@@ -3893,17 +4147,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d9cad122dd7b54a9723a335bd18fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentHp: 0
   _name: Sergio
-  _stats:
-    _hp: 100
+  _baseStats:
+    _hp: 0
     _physicalDamage: 0
     _magicalDamage: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
     _physicalDefense: 0
     _magicalDefense: 0
+    _movementSpeed: 0
+    _attackSpeed: 0
     _cooldownReduction: 0
-  _currentHp: 0
+  _modifiedStats:
+    _hp: 0
+    _physicalDamage: 0
+    _magicalDamage: 0
+    _physicalDefense: 0
+    _magicalDefense: 0
+    _movementSpeed: 0
+    _attackSpeed: 0
+    _cooldownReduction: 0
+  <Race>k__BackingField: {fileID: 0}
+  <Class>k__BackingField: {fileID: 0}
+  <Weapon>k__BackingField: {fileID: 0}
+  <Armour>k__BackingField: {fileID: 0}
+  <Trinket>k__BackingField: {fileID: 0}
   bossController: {fileID: 994074769}
 --- !u!54 &1937486394
 Rigidbody:

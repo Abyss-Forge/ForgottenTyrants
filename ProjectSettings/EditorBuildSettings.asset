@@ -29,6 +29,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project/Scenes/GameplayMap.unity
     guid: 1c123a5f2b6a65749b3b5346446be4c8
+  - enabled: 1
+    path: Assets/_Project/Scenes/Tests/GameplayMapTestDiego.unity
+    guid: 7e9f3954d9ce356419006cb77316abd4
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 7fad290d30951984aacf194c44092805,
       type: 2}
