@@ -6,9 +6,10 @@ using TMPro;
 
 public class AbilityIcon : MonoBehaviour
 {
+    [SerializeField] private Image _iconImage, _backgroundImage, _borderImage;
+    [SerializeField] private GameObject _activeOverlay, _cooldownOverlay, _lockedOverlay;
     [SerializeField] private Image _cooldownImage;
     [SerializeField] private TextMeshProUGUI _cooldownText;
-    [SerializeField] private GameObject _activeOverlay, _cooldownOverlay, _lockedOverlay;
 
     private EAbilityState _currentState;
     private AbilityStateMachine _abilityStateMachine;
@@ -17,6 +18,13 @@ public class AbilityIcon : MonoBehaviour
     {
         _abilityStateMachine = abilityStateMachine;
         _abilityStateMachine._fsm.SubscribeOnStateChange(Algo);
+    }
+
+    public void SetSprites(Sprite iconImage, Sprite backgroundImage, Sprite borderImage)
+    {
+        _iconImage.sprite = iconImage;
+        _backgroundImage.sprite = backgroundImage;
+        _borderImage.sprite = borderImage;
     }
 
     void Update()

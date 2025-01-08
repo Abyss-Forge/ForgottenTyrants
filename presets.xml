@@ -4,7 +4,7 @@
     <Race>Shytrax</Race>
     <Class>Elementalist</Class>
     <Weapon>Sword &amp; Shield</Weapon>
-    <Armour>Titanium Plates</Armour>
+    <Armor>Titanium Plates</Armor>
     <Trinket>Sage's Clock</Trinket>
   </Preset>
   <Preset>
@@ -12,7 +12,7 @@
     <Race>Human</Race>
     <Class>Catalyst</Class>
     <Weapon>Sword &amp; Shield</Weapon>
-    <Armour>Hunters Jacket</Armour>
+    <Armor>Hunters Jacket</Armor>
     <Trinket>Vital Rejuvenation</Trinket>
   </Preset>
 </CharacterTemplates>

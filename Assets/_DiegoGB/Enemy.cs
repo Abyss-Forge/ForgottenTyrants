@@ -5,13 +5,13 @@ using UnityEngine;
 public class Enemy : Entity
 {
     // Start is called before the first frame update
-    protected override void Start()
+    void Start()
     {
-        base.Start();
+
     }
 
     // Update is called once per frame
-    protected override void Update()
+    void Update()
     {
 
     }

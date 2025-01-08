@@ -33,11 +33,11 @@ public class CharacterSpawner : NetworkBehaviour
     {
         foreach (var clientEntry in HostManager.Instance.ClientData)
         {
-            ulong clientId = clientEntry.Value.clientId;
+            ulong clientId = clientEntry.Value.ClientId;
 
             AssignTeamToClient(clientId);
 
-            var character = _characterDatabase.GetCharacterById(clientEntry.Value.characterId);
+            var character = _characterDatabase.GetById(clientEntry.Value.CharacterId);
             if (character != null)
             {
                 Team playerTeam = _clientTeamDict[clientId];

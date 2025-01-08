@@ -12,7 +12,8 @@ public abstract class AbilityStateMachine : MonoBehaviour
 {
     #region Default logic
 
-    [field: SerializeField] public AbilityIcon AbilityIcon { get; private set; }
+    [SerializeField] private AbilityTemplate _abilityIconTemplate;
+    public AbilityIcon AbilityIcon { get; private set; }
 
     [field: SerializeField] public float ActiveDuration { get; private set; } = 5f;
     [field: SerializeField] public float CooldownDuration { get; private set; } = 5f;
@@ -51,6 +52,8 @@ public abstract class AbilityStateMachine : MonoBehaviour
     {
         ActiveTimer = ActiveDuration;
         CooldownTimer = CooldownDuration;
+
+        AbilityIcon = _abilityIconTemplate.IconPrefab;
     }
 
     void OnEnable()    //esto va en OnEnable en vez de Awake pq usamos el MyInputManager que es un singleton, pero hay que cambiarlo
