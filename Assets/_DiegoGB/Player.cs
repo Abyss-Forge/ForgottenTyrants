@@ -13,14 +13,7 @@ public class Player : Entity
 
     void Awake()
     {
-        foreach (var item in HostManager.Instance.ClientData)
-        {
-            if (item.Key == NetworkManager.Singleton.LocalClientId)
-            {
-                _playerData = item.Value;
-                break;
-            }
-        }
+        _playerData = HostManager.Instance.GetMyClientData();
 
         CalculateTotalStats();
     }

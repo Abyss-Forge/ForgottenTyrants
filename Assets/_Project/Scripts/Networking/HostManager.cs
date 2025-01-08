@@ -158,4 +158,16 @@ public class HostManager : Singleton<HostManager>
         SceneLoaderWrapper.Instance.LoadScene(ForgottenTyrants.Scene.GameplayMap, useNetworkSceneManager: true, LoadSceneMode.Single);
     }
 
+    public ClientData GetMyClientData()
+    {
+        foreach (var data in ClientData)
+        {
+            if (data.Key == NetworkManager.Singleton.LocalClientId)
+            {
+                return data.Value;
+            }
+        }
+        return null;
+    }
+
 }
