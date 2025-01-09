@@ -17,7 +17,7 @@ public class AbilityIcon : MonoBehaviour
     public void Initialize(AbilityStateMachine abilityStateMachine)
     {
         _abilityStateMachine = abilityStateMachine;
-        _abilityStateMachine._fsm.SubscribeOnStateChange(Algo);
+        _abilityStateMachine._fsm.SubscribeOnStateChange(OnStateChange);
     }
 
     public void SetSprites(Sprite iconImage, Sprite backgroundImage, Sprite borderImage)
@@ -35,7 +35,7 @@ public class AbilityIcon : MonoBehaviour
         }
     }
 
-    private void Algo(EAbilityState oldState, EAbilityState newState)
+    private void OnStateChange(EAbilityState oldState, EAbilityState newState)
     {
         _currentState = _abilityStateMachine._fsm.CurrentState.ID;
 

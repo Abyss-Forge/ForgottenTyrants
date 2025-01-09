@@ -8,12 +8,9 @@ public enum EAbilityState
     READY, ACTIVE, COOLDOWN, LOCKED
 }
 
-public abstract class AbilityStateMachine : MonoBehaviour
+public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
 {
     #region Default logic
-
-    [SerializeField] private AbilityTemplate _abilityIconTemplate;
-    public AbilityIcon AbilityIcon { get; private set; }
 
     [field: SerializeField] public float ActiveDuration { get; private set; } = 5f;
     [field: SerializeField] public float CooldownDuration { get; private set; } = 5f;
@@ -43,6 +40,11 @@ public abstract class AbilityStateMachine : MonoBehaviour
         yield return null;
     }
 
+    public void Trigger()
+    {
+
+    }
+
     #endregion
     #region Setup
 
@@ -50,19 +52,12 @@ public abstract class AbilityStateMachine : MonoBehaviour
 
     void Awake()
     {
-        ActiveTimer = ActiveDuration;
-        CooldownTimer = CooldownDuration;
-
-        AbilityIcon = _abilityIconTemplate.IconPrefab;
-    }
-
-    void OnEnable()    //esto va en OnEnable en vez de Awake pq usamos el MyInputManager que es un singleton, pero hay que cambiarlo
-    {
         _fsm = new();
         InitializeStates();
         _fsm.TransitionTo(EAbilityState.READY);
 
-        AbilityIcon?.Initialize(this);
+        ActiveTimer = ActiveDuration;
+        CooldownTimer = CooldownDuration;
     }
 
     void Update() => _fsm.Update();
@@ -71,10 +66,10 @@ public abstract class AbilityStateMachine : MonoBehaviour
 
     protected virtual void InitializeStates()
     {
-        // _fsm.Add(new AbilityReadyState(this));
-        // _fsm.Add(new AbilityActiveState(this));
-        // _fsm.Add(new AbilityCooldownState(this));
-        // _fsm.Add(new AbilityLockedState(this));
+        // _fsm.Add(new AbilityDefaultReadyState(this, EAbilityState.READY));
+        // _fsm.Add(new AbilityDefaultActiveState(this, EAbilityState.ACTIVE));
+        // _fsm.Add(new AbilityDefaultCooldownState(this, EAbilityState.COOLDOWN));
+        // _fsm.Add(new AbilityDefaultLockedState(this, EAbilityState.LOCKED));
     }
 
     #endregion

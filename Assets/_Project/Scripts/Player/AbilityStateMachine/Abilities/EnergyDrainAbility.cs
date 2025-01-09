@@ -1,72 +1,47 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using ForgottenTyrants;
-using Systems.FSM;
-using Systems.GameManagers;
 
-public class EnergyDrainAbility : AbilityStateMachine
+public class EnergyDrainAbility : AbilityStateMachine, IAbilityWithTarget
 {
     #region Specific ability properties
 
     [SerializeField] private float _dotThreshold = 5f, _dotDamage = 3f;
 
-    [SerializeField] private CrosshairController _crosshair;
-
-    private GameObject _target;
-
-    void OnDrawGizmos()
-    {
-        if (_fsm != null && _fsm.CurrentState.ID == EAbilityState.ACTIVE)
-        {
-            Gizmos.color = new(0, 1, 0, 0.3f);
-            Gizmos.DrawSphere(transform.position, 30);
-        }
-    }
-
     #endregion
-    #region Setup
+    #region Interface implementation
 
-    protected override void InitializeStates()
-    {
-        _fsm.Add(new AbilityReadyState(this));  // estados especificos de esta habilidad
-        _fsm.Add(new AbilityActiveState(this));
-        _fsm.Add(new AbilityCooldownState(this));   // estados predeterminados
-        _fsm.Add(new AbilityLockedState(this));
-    }
+    [SerializeField] GameObject _target;
+    GameObject IAbilityWithTarget.Target => _target;
 
     #endregion
     #region States
 
-    public class AbilityReadyState : State<EAbilityState>
+    protected override void InitializeStates()
     {
-        EnergyDrainAbility _ability;
-        public AbilityReadyState(EnergyDrainAbility ability) : base(EAbilityState.READY)
-        {
-            _ability = ability;
-        }
+        _fsm.Add(new AbilityReadyState(this, EAbilityState.READY));
+        _fsm.Add(new AbilityActiveState(this, EAbilityState.ACTIVE));
+        _fsm.Add(new AbilityCooldownBaseState<EnergyDrainAbility>(this, EAbilityState.COOLDOWN));
+        _fsm.Add(new AbilityLockedBaseState<EnergyDrainAbility>(this, EAbilityState.LOCKED));
+    }
 
-        private void OnCast(InputAction.CallbackContext context)
+    public class AbilityReadyState : AbilityState<EnergyDrainAbility>
+    {
+        public AbilityReadyState(EnergyDrainAbility ability, EAbilityState id) : base(ability, id)
         {
-            if (context.performed) TargetEnemy();
         }
 
         public override void Enter()
         {
             base.Enter();
-            MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_2, OnCast, true);
+
+            TryGetTarget();
         }
 
-        public override void Exit()
+        private void TryGetTarget()
         {
-            base.Exit();
-            MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_2, OnCast, false);
-        }
-
-        private void TargetEnemy()
-        {
-            _ability._target = _ability._crosshair.TargetObject;
+            _ability._target = MyCursorManager.Instance.GetCrosshairImpactObject();
             if (_ability._target.CompareTag(Tag.Enemy))
             {
                 _ability._fsm.TransitionTo(EAbilityState.ACTIVE);
@@ -74,12 +49,10 @@ public class EnergyDrainAbility : AbilityStateMachine
         }
     }
 
-    public class AbilityActiveState : State<EAbilityState>
+    public class AbilityActiveState : AbilityState<EnergyDrainAbility>
     {
-        EnergyDrainAbility _ability;
-        public AbilityActiveState(EnergyDrainAbility ability) : base(EAbilityState.ACTIVE)
+        public AbilityActiveState(EnergyDrainAbility ability, EAbilityState id) : base(ability, id)
         {
-            _ability = ability;
         }
 
         private GhostStatusEffect ghostStatusEffect;

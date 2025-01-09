@@ -1,21 +1,23 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using ForgottenTyrants;
-using Systems.FSM;
-using Systems.GameManagers;
 using Utils.Extensions;
 
-public class LivingChainsAbility : AbilityStateMachine
+public class LivingChainsAbility : AbilityStateMachine, IAbilityWithRange
 {
     #region Specific ability properties
 
-    [SerializeField] private float _range = 10;
     [SerializeField] private LineRenderer _lineRendererTemplate;
 
-    private Dictionary<GameObject, GameObject> _playerChains = new();
+    Dictionary<GameObject, GameObject> _playerChains = new();
 
+    #endregion
+    #region Interface implementation
+
+    [SerializeField] float _range;
+    float IAbilityWithRange.Range => _range;
+
+    void IAbilityWithRange.OnDrawGizmos() => OnDrawGizmos();
     void OnDrawGizmos()
     {
         if (_fsm != null && _fsm.CurrentState.ID == EAbilityState.ACTIVE)
@@ -26,42 +28,27 @@ public class LivingChainsAbility : AbilityStateMachine
     }
 
     #endregion
-    #region Setup
+    #region States
 
     protected override void InitializeStates()
     {
-        _fsm.Add(new AbilityReadyState(this));  // estados especificos de esta habilidad
-        _fsm.Add(new AbilityActiveState(this));
-        _fsm.Add(new AbilityCooldownState(this));   // estados predeterminados
-        _fsm.Add(new AbilityLockedState(this));
+        _fsm.Add(new AbilityReadyState(this, EAbilityState.READY));
+        _fsm.Add(new AbilityActiveState(this, EAbilityState.ACTIVE));
+        _fsm.Add(new AbilityCooldownBaseState<LivingChainsAbility>(this, EAbilityState.COOLDOWN));
+        _fsm.Add(new AbilityLockedBaseState<LivingChainsAbility>(this, EAbilityState.LOCKED));
     }
 
-    #endregion
-    #region States
-
-    public class AbilityReadyState : State<EAbilityState>
+    public class AbilityReadyState : AbilityState<LivingChainsAbility>
     {
-        LivingChainsAbility _ability;
-        public AbilityReadyState(LivingChainsAbility ability) : base(EAbilityState.READY)
+        public AbilityReadyState(LivingChainsAbility ability, EAbilityState id) : base(ability, id)
         {
-            _ability = ability;
-        }
-
-        private void OnCast(InputAction.CallbackContext context)
-        {
-            if (context.performed) DetectPlayersInRange();
         }
 
         public override void Enter()
         {
             base.Enter();
-            MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_1, OnCast, true);
-        }
 
-        public override void Exit()
-        {
-            base.Exit();
-            MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_1, OnCast, false);
+            DetectPlayersInRange();
         }
 
         private void DetectPlayersInRange()
@@ -95,10 +82,9 @@ public class LivingChainsAbility : AbilityStateMachine
         {
             if (!_ability._playerChains.ContainsKey(enemy))
             {
-                GameObject chain = new();
+                GameObject chain = new("Chain");
                 chain.transform.SetParent(_ability.transform);
                 LineRenderer lr = chain.CopyComponent(_ability._lineRendererTemplate);
-                chain.name = "Chain";
 
                 lr.SetPosition(0, _ability.transform.position);
                 lr.SetPosition(1, enemy.transform.position);
@@ -109,12 +95,10 @@ public class LivingChainsAbility : AbilityStateMachine
         }
     }
 
-    public class AbilityActiveState : State<EAbilityState>
+    public class AbilityActiveState : AbilityActiveBaseState<LivingChainsAbility>
     {
-        LivingChainsAbility _ability;
-        public AbilityActiveState(LivingChainsAbility ability) : base(EAbilityState.ACTIVE)
+        public AbilityActiveState(LivingChainsAbility ability, EAbilityState id) : base(ability, id)
         {
-            _ability = ability;
         }
 
         public override void Enter()

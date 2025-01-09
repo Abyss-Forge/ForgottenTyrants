@@ -24,11 +24,11 @@ MonoBehaviour:
     _attackSpeed: 0
     _cooldownReduction: 0
   <Abilities>k__BackingField:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: ed474ad2b6910da47a29f875974d0a98, type: 2}
+  - {fileID: 11400000, guid: 25037da348722904e84b3254829db20c, type: 2}
+  - {fileID: 11400000, guid: 24f84cbf925572a45b6656daac21b089, type: 2}
+  - {fileID: 11400000, guid: 3d00ab443eed92e4d9df2e61b2de635c, type: 2}
   <Weapons>k__BackingField:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 6d43809d2500a67408f3b9ba51282672, type: 2}
+  - {fileID: 11400000, guid: fc79f38122cf3c7439d31c6dd21dfc99, type: 2}
+  - {fileID: 11400000, guid: 950af82fd1f90744b9d80e2f2f9d9b7b, type: 2}

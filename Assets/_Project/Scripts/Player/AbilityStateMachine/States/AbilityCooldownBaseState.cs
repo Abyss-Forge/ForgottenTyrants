@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using Systems.FSM;
 using UnityEngine;
 
-public class AbilityCooldownState : State<EAbilityState>
+public class AbilityCooldownBaseState<T> : AbilityState<T> where T : AbilityStateMachine
 {
-    AbilityStateMachine _ability;
-    public AbilityCooldownState(AbilityStateMachine ability) : base(EAbilityState.COOLDOWN)
+    public AbilityCooldownBaseState(T ability, EAbilityState id) : base(ability, id)
     {
-        _ability = ability;
     }
 
     public override void Enter()
