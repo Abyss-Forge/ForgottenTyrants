@@ -13,45 +13,106 @@ public class BossController : Entity
     [SerializeField] float _meleeRange = 10f;
     [SerializeField] float _decayValue = 5f;
     [SerializeField] float _decayInterval = 3f;
-    [SerializeField] List<GameObject> _players = null;
+    //[SerializeField] List<GameObject> _players = new List<GameObject>();
     [SerializeField] float _gravityEventEffectDuration = 10f;
+    [SerializeField] float _damageBoostEffectDuration = 5f;
+    [SerializeField] float _disappearEffectDuration = 3f;
+
+    [Header("Power Up settings")]
+    [SerializeField] GameObject _powerUpPrefab;
+    [SerializeField] float _spawnRadius = 100f;
+    [SerializeField] int _spawnCount = 3;
+    [SerializeField] float _heightOffset = 2f;
+
+    private Terrain _terrain;
+    private Dictionary<GameObject, float> _originalJumpForces = new Dictionary<GameObject, float>();
+
 
     Dictionary<Player, float> _playerAggroList = new Dictionary<Player, float>();
     private Player _currentTarget = null;
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        if (IsServer)
+        {
+            // Solo el servidor (o el host, si eres host) inicializa la lógica
+            // si quieres que sea autoritativa. Si NO, puedes ponerlo en Start() normal.
+            //InitializeBehaviorTree();
+            CurrentHp = BaseStats.Hp;
+
+            GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
+            foreach (GameObject obj in playerObjects)
+            {
+                Player player = obj.GetComponent<Player>();
+                if (player != null && !_playerAggroList.ContainsKey(player))
+                {
+                    _playerAggroList[player] = 0;
+                }
+                // if (!_players.Contains(obj))
+                // {
+                //     _players.Add(obj);
+                // }
+            }
+            _terrain = Terrain.activeTerrain;
+        }
+    }
 
     void Start()
     {
         InitializeBehaviorTree();
         CurrentHp = BaseStats.Hp;
 
-        GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
+        // GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
 
-        foreach (GameObject obj in playerObjects)
-        {
-            Player player = obj.GetComponent<Player>();
-            if (player != null && !_playerAggroList.ContainsKey(player))
-            {
-                _playerAggroList[player] = 0;
-            }
-        }
+        // foreach (GameObject obj in playerObjects)
+        // {
+        //     Player player = obj.GetComponent<Player>();
+        //     if (player != null && !_playerAggroList.ContainsKey(player))
+        //     {
+        //         _playerAggroList[player] = 0;
+        //     }
+        // }
 
-        foreach (GameObject obj in playerObjects)
-        {
-            GameObject player = obj;
-            if (player != null)
-            {
-                _players.Add(player);
-            }
-        }
+        // foreach (GameObject obj in playerObjects)
+        // {
+        //     GameObject player = obj;
+        //     if (player != null)
+        //     {
+        //         _players.Add(player);
+        //     }
+        // }
     }
 
     void Update()
     {
         _rootSequence.Execute();
 
-        if (Input.GetKeyDown(KeyCode.P)) SwapPositionsRandomly();
-        if (Input.GetKeyDown(KeyCode.T)) StartCoroutine(EventLowGravity());
+        //if (Input.GetKeyDown(KeyCode.P)) SwapPositionsRandomly();
+        //if (Input.GetKeyDown(KeyCode.T)) StartCoroutine(EventLowGravity());
+        if (IsClient)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                RequestPowerUpsServerRpc(); // El cliente pide al servidor que spawnee power-ups
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                TriggerDamageBoostServerRpc();
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                TriggerLowGravityServerRpc();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                TriggerSwapPositionsServerRpc();
+            }
+
+        }
     }
 
     void InitializeBehaviorTree()
@@ -66,6 +127,19 @@ public class BossController : Entity
         _rootSequence.AddNode(decayAggroNode);
         _rootSequence.AddNode(selectTargetNode);
         _rootSequence.AddNode(attackTargetNode);
+    }
+
+    private List<GameObject> GetAllPlayers()
+    {
+        var players = new List<GameObject>();
+        foreach (var client in NetworkManager.Singleton.ConnectedClients)
+        {
+            if (client.Value.PlayerObject != null)
+            {
+                players.Add(client.Value.PlayerObject.gameObject);
+            }
+        }
+        return players;
     }
 
     public void SelectBestTarget()
@@ -170,46 +244,266 @@ public class BossController : Entity
             if (_playerAggroList[player] < 0) _playerAggroList[player] = 0;
         }
     }
-
-    IEnumerator EventLowGravity()
+    private void Shuffle<T>(List<T> list)
     {
-        float defaultJumpForce = 0;
-
-        Physics.gravity = new Vector3(0, -2f, 0);
-        foreach (GameObject player in _players)
+        for (int i = 0; i < list.Count; i++)
         {
-            defaultJumpForce = player.GetComponent<PlayerController>().JumpForce;
-
-            player.GetComponent<PlayerController>().SetJumpForce(defaultJumpForce * 5);
+            int randomIndex = Random.Range(0, list.Count);
+            T temp = list[i];
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
         }
+    }
+
+    void Die()
+    {
+        Destroy(this.gameObject);
+    }
+
+    #region 1- DAMAGE BOOST EVENT
+
+    [ServerRpc(RequireOwnership = false)]
+    public void TriggerDamageBoostServerRpc()
+    {
+        Debug.Log("Evento de boosteo de damage activado por un cliente.");
+        TriggerDamageBoostClientRpc();
+    }
+
+    [ClientRpc]
+    private void TriggerDamageBoostClientRpc()
+    {
+        StartCoroutine(EventDamageBoost());
+    }
+
+    IEnumerator EventDamageBoost()
+    {
+        _modifiedStats.ChangePhysicalDamage(_baseStats.PhysicalDamage * 2);
+        _modifiedStats.ChangePhysicalDamage(_baseStats.MagicalDamage * 2);
+
+
+        yield return new WaitForSeconds(_damageBoostEffectDuration);
+
+        _modifiedStats.ChangePhysicalDamage(_baseStats.PhysicalDamage);
+        _modifiedStats.ChangePhysicalDamage(_baseStats.MagicalDamage);
+    }
+
+    #endregion
+
+    #region 2- DISAPPEAR EVENT
+
+    [ServerRpc(RequireOwnership = false)]
+
+    public void TriggerDissapearServerRpc()
+    {
+        Debug.Log("Evento de invisibilidad activado por un cliente.");
+        TriggerDisappearClientRpc();
+    }
+
+    [ClientRpc]
+    private void TriggerDisappearClientRpc()
+    {
+        StartCoroutine(EventDissapear());
+    }
+
+    IEnumerator EventDissapear()
+    {
+        this.gameObject.SetActive(false);
+
+        yield return new WaitForSeconds(_disappearEffectDuration);
+
+        this.gameObject.SetActive(false);
+
+    }
+
+    #endregion
+
+    #region 3- POWER UPS EVENT
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestPowerUpsServerRpc()
+    {
+        Debug.Log("Solicitud de power-ups recibida desde un cliente.");
+        EventPowerUps();
+    }
+
+    private void EventPowerUps()
+    {
+        if (!IsServer) return;
+
+        for (int i = 0; i < _spawnCount; i++)
+        {
+            // Generar una posición aleatoria dentro del radio
+            Vector3 randomPosition = GetRandomPositionAroundBoss();
+
+            // Instanciar el potenciador en la posición calculada
+            GameObject powerUp = Instantiate(_powerUpPrefab, randomPosition, Quaternion.identity);
+
+            NetworkObject networkObject = powerUp.GetComponent<NetworkObject>();
+            if (networkObject != null)
+            {
+                // Spawnear el objeto en la red
+                networkObject.Spawn();
+            }
+            else
+            {
+                Debug.LogError("El prefab del power-up no tiene un componente NetworkObject.");
+            }
+        }
+    }
+
+    #endregion
+
+    #region 6- LOW GRAVITY EVENT
+
+    [ServerRpc(RequireOwnership = false)]
+    public void TriggerLowGravityServerRpc()
+    {
+        Debug.Log("Evento de baja gravedad activado por un cliente.");
+        Vector3 lowGravity = new Vector3(0, -2f, 0);
+
+        SetGravityClientRpc(lowGravity);
+
+        foreach (GameObject player in GetAllPlayers())
+        {
+            SetPlayerJumpForce(player, 5f); // Multiplica JumpForce por 5
+        }
+
+        StartCoroutine(RestoreGravityAfterDuration());
+    }
+
+
+    [ClientRpc]
+    private void SetGravityClientRpc(Vector3 newGravity)
+    {
+        Physics.gravity = newGravity;
+    }
+
+    [ClientRpc]
+    private void SetPlayerJumpForceClientRpc(float newJumpForce, ClientRpcParams clientRpcParams = default)
+    {
+        var playerController = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerController>();
+        if (playerController != null)
+        {
+            playerController.SetJumpForce(newJumpForce);
+        }
+    }
+
+
+    private IEnumerator RestoreGravityAfterDuration()
+    {
         yield return new WaitForSeconds(_gravityEventEffectDuration);
 
-        Physics.gravity = new Vector3(0, -9.81f, 0);
-        foreach (GameObject player in _players)
+        Vector3 defaultGravity = new Vector3(0, -9.81f, 0);
+        SetGravityClientRpc(defaultGravity); // Restaura la gravedad para todos los clientes
+
+        foreach (GameObject player in GetAllPlayers())
         {
-            player.GetComponent<PlayerController>().SetJumpForce(defaultJumpForce);
+            RestorePlayerJumpForce(player); // Restaura el JumpForce original
         }
+    }
+
+    private void SetPlayerJumpForce(GameObject player, float multiplier)
+    {
+        PlayerController pc = player.GetComponent<PlayerController>();
+        if (pc != null)
+        {
+            if (!_originalJumpForces.ContainsKey(player))
+            {
+                _originalJumpForces[player] = pc.JumpForce; // Guarda el valor original
+            }
+
+            float newJumpForce = _originalJumpForces[player] * multiplier;
+            //pc.SetJumpForce(newJumpForce); // Cambia localmente en el servidor
+
+            // Notifica al cliente
+            var networkObject = player.GetComponent<NetworkObject>();
+            if (networkObject != null)
+            {
+                var clientRpcParams = new ClientRpcParams
+                {
+                    Send = new ClientRpcSendParams { TargetClientIds = new[] { networkObject.OwnerClientId } }
+                };
+                SetPlayerJumpForceClientRpc(newJumpForce, clientRpcParams);
+            }
+        }
+    }
+
+    private void RestorePlayerJumpForce(GameObject player)
+    {
+        PlayerController pc = player.GetComponent<PlayerController>();
+        if (pc != null && _originalJumpForces.ContainsKey(player))
+        {
+            float originalJumpForce = _originalJumpForces[player];
+            //pc.SetJumpForce(originalJumpForce); // Cambia localmente en el servidor
+
+            // Notifica al cliente
+            var networkObject = player.GetComponent<NetworkObject>();
+            if (networkObject != null)
+            {
+                var clientRpcParams = new ClientRpcParams
+                {
+                    Send = new ClientRpcSendParams { TargetClientIds = new[] { networkObject.OwnerClientId } }
+                };
+                SetPlayerJumpForceClientRpc(originalJumpForce, clientRpcParams);
+            }
+        }
+    }
+
+    // IEnumerator EventLowGravity()
+    //     {
+    //         Physics.gravity = new Vector3(0, -2f, 0);
+
+    //         foreach (GameObject player in GetAllPlayers())
+    //         {
+    //             SetPlayerJumpForce(player, 5f); // Multiplica JumpForce por 5
+    //         }
+
+    //         yield return new WaitForSeconds(_gravityEventEffectDuration);
+
+    //         Physics.gravity = new Vector3(0, -9.81f, 0);
+
+    //         foreach (GameObject player in GetAllPlayers())
+    //         {
+    //             RestorePlayerJumpForce(player);
+    //         }
+    //     }
+
+    #endregion
+
+    #region 7- SWAP POSITIONS EVENT
+
+    [ServerRpc(RequireOwnership = false)]
+    public void TriggerSwapPositionsServerRpc()
+    {
+        Debug.Log("Evento de intercambio de posiciones activado por un cliente.");
+        TriggerSwapPositionsClientRpc();
+    }
+
+    [ClientRpc]
+    private void TriggerSwapPositionsClientRpc()
+    {
+        SwapPositionsRandomly();
     }
 
     public void SwapPositionsRandomly()
     {
-        if (_players == null || _players.Count < 2)
+        if (GetAllPlayers() == null || GetAllPlayers().Count < 2)
         {
             Debug.LogWarning("No hay suficientes jugadores para intercambiar posiciones.");
             return;
         }
 
         List<(Vector3 position, Quaternion rotation)> positionRotationPairs = new List<(Vector3, Quaternion)>();
-        foreach (GameObject player in _players)
+        foreach (GameObject player in GetAllPlayers())
         {
             positionRotationPairs.Add((player.transform.position, player.transform.rotation));
             //Debug.Log($"{player.name} Player position after shuffle: {player.transform.position}");
         }
         Shuffle(positionRotationPairs);
 
-        for (int i = 0; i < _players.Count; i++)
+        for (int i = 0; i < GetAllPlayers().Count; i++)
         {
-            GameObject player = _players[i];
+            GameObject player = GetAllPlayers()[i];
             var characterController = player.GetComponent<CharacterController>();
             Animator animator = player.GetComponentInChildren<Animator>();
 
@@ -232,20 +526,26 @@ public class BossController : Entity
         }
     }
 
-    private void Shuffle<T>(List<T> list)
+    private Vector3 GetRandomPositionAroundBoss()
     {
-        for (int i = 0; i < list.Count; i++)
-        {
-            int randomIndex = Random.Range(0, list.Count);
-            T temp = list[i];
-            list[i] = list[randomIndex];
-            list[randomIndex] = temp;
-        }
+        // Generar un punto aleatorio dentro de un círculo
+        Vector2 randomCircle = Random.insideUnitCircle * _spawnRadius;
+        float x = transform.position.x + randomCircle.x;
+        float z = transform.position.z + randomCircle.y;
+
+        // Obtener la altura del terreno en la posición (x, z)
+        float y = _terrain.SampleHeight(new Vector3(x, 0, z));
+
+        // Devolver la posición con el offset de altura
+        return new Vector3(x, y + _heightOffset, z);
     }
 
-    void Die()
+    #endregion
+
+    private void OnDrawGizmos()
     {
-        Destroy(this.gameObject);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, _spawnRadius);
     }
 }
 
@@ -365,4 +665,3 @@ namespace Systems.BehaviourTree
         }
     }
 }
-

@@ -155,7 +155,7 @@ public class HostManager : Singleton<HostManager>
     {
         _isGameStarted = true;
 
-        SceneLoaderWrapper.Instance.LoadScene(ForgottenTyrants.Scene.GameplayMap, useNetworkSceneManager: true, LoadSceneMode.Single);
+        SceneLoaderWrapper.Instance.LoadScene(ForgottenTyrants.Scene.GameplayMapTestDiego, useNetworkSceneManager: true, LoadSceneMode.Single);
     }
 
     public ClientData GetMyClientData()
