@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableObject/Abilities/Ability")]
+[CreateAssetMenu(menuName = "ScriptableObject/Ability")]
 public class AbilityTemplate : ScriptableObject
 {
     [SerializeField, Tooltip("In principle, same prefab for every ability, edit the sprites below")] AbilityIcon _iconPrefab;
@@ -14,5 +14,10 @@ public class AbilityTemplate : ScriptableObject
     public void InitializeSprites()
     {
         _iconPrefab.SetSprites(_iconSprite, _backgroundSprite, _borderSprite);
+    }
+
+    public void InitializeAbility()
+    {
+        IconPrefab.Initialize(_abilityPrefab);
     }
 }

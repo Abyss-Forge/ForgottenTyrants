@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using Systems.FSM;
 using UnityEngine;
 
-public class AbilityLockedState : State<EAbilityState>
+public class AbilityLockedBaseState<T> : AbilityState<T> where T : AbilityStateMachine
 {
-    AbilityStateMachine _ability;
-    public AbilityLockedState(AbilityStateMachine ability) : base(EAbilityState.LOCKED)
+    public AbilityLockedBaseState(T ability, EAbilityState id) : base(ability, id)
     {
-        _ability = ability;
     }
 
     public override void Update()
