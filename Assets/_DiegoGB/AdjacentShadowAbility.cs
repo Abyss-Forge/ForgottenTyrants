@@ -95,4 +95,6 @@ public class AdjacentShadowAbility : MonoBehaviour
         Gizmos.color = new(2, 1, 1, 0.3f);
         Gizmos.DrawSphere(transform.position, _range);
     }
+
+    //Github org access test
 }
