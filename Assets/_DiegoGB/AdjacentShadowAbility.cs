@@ -28,6 +28,10 @@ public class AdjacentShadowAbility : MonoBehaviour
     void Update()
     {
         UpdateCooldownTimer();
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Cast();
+        }
     }
 
     private void OnCast(InputAction.CallbackContext context)
@@ -35,7 +39,7 @@ public class AdjacentShadowAbility : MonoBehaviour
         if (context.performed) Cast();
     }
 
-    private void Cast()
+    public void Cast()
     {
         if (_cooldownTimer <= 0f && !_isAbilityActive)
         {

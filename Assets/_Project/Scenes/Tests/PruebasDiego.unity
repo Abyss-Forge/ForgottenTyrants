@@ -849,31 +849,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d9cad122dd7b54a9723a335bd18fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentHp: 0
-  _name: Ivan
-  _baseStats:
-    _hp: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
-  _modifiedStats:
-    _hp: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
-  <Race>k__BackingField: {fileID: 0}
-  <Class>k__BackingField: {fileID: 0}
-  <Weapon>k__BackingField: {fileID: 0}
-  <Armour>k__BackingField: {fileID: 0}
-  <Trinket>k__BackingField: {fileID: 0}
+  <Name>k__BackingField: 
+  CurrentHp: 0
   bossController: {fileID: 994074769}
 --- !u!54 &214472554
 Rigidbody:
@@ -1211,31 +1188,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d9cad122dd7b54a9723a335bd18fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentHp: 0
-  _name: Juan
-  _baseStats:
-    _hp: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
-  _modifiedStats:
-    _hp: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
-  <Race>k__BackingField: {fileID: 0}
-  <Class>k__BackingField: {fileID: 0}
-  <Weapon>k__BackingField: {fileID: 0}
-  <Armour>k__BackingField: {fileID: 0}
-  <Trinket>k__BackingField: {fileID: 0}
+  <Name>k__BackingField: 
+  CurrentHp: 0
   bossController: {fileID: 994074769}
 --- !u!54 &343091140
 Rigidbody:
@@ -1497,6 +1451,25 @@ LightingSettings:
   m_PVRTiledBaking: 0
   m_NumRaysToShootPerTexel: -1
   m_RespectSceneVisibilityWhenBakingGI: 0
+--- !u!1 &513777397 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4673455167116524923, guid: b028d9fd039d92e488636a3c84591be1,
+    type: 3}
+  m_PrefabInstance: {fileID: 1985293415}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &513777401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 513777397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34a138bf244b8b145a0762bde3bf71ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _crosshairController: {fileID: 1981993078}
 --- !u!4 &584648084 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b68339f29a57da046af6051fbde311a8,
@@ -1625,31 +1598,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d9cad122dd7b54a9723a335bd18fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentHp: 0
-  _name: 
-  _baseStats:
-    _hp: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
-  _modifiedStats:
-    _hp: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
-  <Race>k__BackingField: {fileID: 0}
-  <Class>k__BackingField: {fileID: 0}
-  <Weapon>k__BackingField: {fileID: 0}
-  <Armour>k__BackingField: {fileID: 0}
-  <Trinket>k__BackingField: {fileID: 0}
+  <Name>k__BackingField: 
+  CurrentHp: 0
   bossController: {fileID: 994074769}
 --- !u!4 &709906494 stripped
 Transform:
@@ -2038,13 +1988,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 950794368}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.35787907, z: 0, w: 0.933768}
   m_LocalPosition: {x: -22, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1245159068}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 41.94, z: 0}
 --- !u!114 &950794370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2057,31 +2007,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d9cad122dd7b54a9723a335bd18fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentHp: 0
-  _name: Carlos
-  _baseStats:
-    _hp: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
-  _modifiedStats:
-    _hp: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
-  <Race>k__BackingField: {fileID: 0}
-  <Class>k__BackingField: {fileID: 0}
-  <Weapon>k__BackingField: {fileID: 0}
-  <Armour>k__BackingField: {fileID: 0}
-  <Trinket>k__BackingField: {fileID: 0}
+  <Name>k__BackingField: 
+  CurrentHp: 0
   bossController: {fileID: 994074769}
 --- !u!54 &950794371
 Rigidbody:
@@ -2201,26 +2128,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48705e41603aa66438d7e6d6580654dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentHp: 0
-  _name: Demon
-  _baseStats:
-    _hp: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
-  _modifiedStats:
-    _hp: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
+  <Name>k__BackingField: 
+  CurrentHp: 0
   _targetSelectionInterval: 6
   _attackInterval: 3
   _meleeRange: 5
@@ -3017,6 +2926,11 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5358312612419074516, guid: 5f77e369e2c445340866d55e2917973d,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3266,31 +3180,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d9cad122dd7b54a9723a335bd18fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentHp: 0
-  _name: Diego
-  _baseStats:
-    _hp: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
-  _modifiedStats:
-    _hp: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
-  <Race>k__BackingField: {fileID: 0}
-  <Class>k__BackingField: {fileID: 0}
-  <Weapon>k__BackingField: {fileID: 0}
-  <Armour>k__BackingField: {fileID: 0}
-  <Trinket>k__BackingField: {fileID: 0}
+  <Name>k__BackingField: 
+  CurrentHp: 0
   bossController: {fileID: 994074769}
 --- !u!54 &1648803415
 Rigidbody:
@@ -4147,31 +4038,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d9cad122dd7b54a9723a335bd18fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentHp: 0
-  _name: Sergio
-  _baseStats:
-    _hp: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
-  _modifiedStats:
-    _hp: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
-  <Race>k__BackingField: {fileID: 0}
-  <Class>k__BackingField: {fileID: 0}
-  <Weapon>k__BackingField: {fileID: 0}
-  <Armour>k__BackingField: {fileID: 0}
-  <Trinket>k__BackingField: {fileID: 0}
+  <Name>k__BackingField: 
+  CurrentHp: 0
   bossController: {fileID: 994074769}
 --- !u!54 &1937486394
 Rigidbody:
@@ -4356,7 +4224,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4673455167116524923, guid: b028d9fd039d92e488636a3c84591be1,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 513777401}
   m_SourcePrefab: {fileID: 100100000, guid: b028d9fd039d92e488636a3c84591be1, type: 3}
 --- !u!1001 &2012795318
 PrefabInstance:
