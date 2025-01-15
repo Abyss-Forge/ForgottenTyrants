@@ -91,7 +91,7 @@ public class BossController : Entity
 
             float score = (normalizedDamage * weightDamage + normalizedDistance * weightDistance + normalizedHealth * weightHealth) / (weightDamage + weightDistance + weightHealth);
 
-            Debug.Log($"Player: {player.name}, Aggro: {aggro}, Distance: {distance}, Health: {health}, Score: {score}");
+            //Debug.Log($"Player: {player.name}, Aggro: {aggro}, Distance: {distance}, Health: {health}, Score: {score}");
 
             if (score > highestScore)
             {
@@ -116,12 +116,12 @@ public class BossController : Entity
 
     void PerformMeleeAttack()
     {
-        Debug.Log($"Performing melee attack on {_currentTarget.name}");
+        //Debug.Log($"Performing melee attack on {_currentTarget.name}");
     }
 
     void PerformRangedAttack()
     {
-        Debug.Log($"Performing ranged attack on {_currentTarget.name}");
+        //Debug.Log($"Performing ranged attack on {_currentTarget.name}");
     }
 
     public void TakeDamage(Player player, int damage)
@@ -199,28 +199,35 @@ public class BossController : Entity
             return;
         }
 
-        List<Vector3> positions = new List<Vector3>();
+        List<(Vector3 position, Quaternion rotation)> positionRotationPairs = new List<(Vector3, Quaternion)>();
         foreach (GameObject player in _players)
         {
-            positions.Add(player.transform.position);
+            positionRotationPairs.Add((player.transform.position, player.transform.rotation));
+            //Debug.Log($"{player.name} Player position after shuffle: {player.transform.position}");
         }
-        Shuffle(positions);
+        Shuffle(positionRotationPairs);
 
         for (int i = 0; i < _players.Count; i++)
         {
             GameObject player = _players[i];
             var characterController = player.GetComponent<CharacterController>();
+            Animator animator = player.GetComponentInChildren<Animator>();
 
             if (characterController != null)
             {
                 characterController.enabled = false;
+                animator.enabled = false;
             }
 
-            player.transform.position = positions[i];
+            //Debug.Log($"{player.name} - Old Rotation: {player.transform.rotation.eulerAngles} New Rotation: {positionRotationPairs[i].rotation.eulerAngles}");
+            player.transform.position = positionRotationPairs[i].position;
+            player.transform.localRotation = positionRotationPairs[i].rotation;
+            //Debug.Log($"{player.name} - Updated Rotation: {player.transform.rotation.eulerAngles}");
 
             if (characterController != null)
             {
                 characterController.enabled = true;
+                animator.enabled = true;
             }
         }
     }
