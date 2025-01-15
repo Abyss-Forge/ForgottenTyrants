@@ -14,6 +14,11 @@ namespace Systems.EventBus
         public bool IsIndeterminate;
     }
 
+    public struct AbilityStateChangedEvent : IBusEvent
+    {
+        public AbilityStateMachine ability;
+    }
+
 }
 /*
 public class ExampleWithTestEvent : MonoBehaviour

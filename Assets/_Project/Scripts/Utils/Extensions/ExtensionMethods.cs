@@ -6,6 +6,14 @@ namespace Utils.Extensions
 {
     public static class ExtensionMethods
     {
+
+        public static T GetInstantiate<T>(GameObject prefab, Transform parent) where T : MonoBehaviour
+        {
+            GameObject instance = MonoBehaviour.Instantiate(prefab, parent);
+            return instance?.GetComponent<T>() ?? null;
+        }
+
+
         public static bool IsInRange<T>(this T[] array, int index) => index >= 0 && index < array.Length;
 
         public static T CopyComponent<T>(this GameObject destination, T originalComponent) where T : Component

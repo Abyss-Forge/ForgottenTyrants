@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Systems.FSM;
 using Systems.GameManagers;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,52 +11,20 @@ public class TotalDarknessAbility : AbilityStateMachine
     //TODO
 
     #endregion
-    #region Setup
+    #region States
 
     protected override void InitializeStates()
     {
-        _fsm.Add(new AbilityReadyState(this));  // estados especificos de esta habilidad
-        _fsm.Add(new AbilityActiveState(this));
-        _fsm.Add(new AbilityCooldownState(this));   // estados predeterminados
-        _fsm.Add(new AbilityLockedState(this));
+        _fsm.Add(new AbilityReadyBaseState<TotalDarknessAbility>(this, EAbilityState.READY));
+        _fsm.Add(new AbilityActiveState(this, EAbilityState.ACTIVE));
+        _fsm.Add(new AbilityCooldownBaseState<TotalDarknessAbility>(this, EAbilityState.COOLDOWN));
+        _fsm.Add(new AbilityLockedBaseState<TotalDarknessAbility>(this, EAbilityState.LOCKED));
     }
 
-    #endregion
-    #region States
-
-    public class AbilityReadyState : State<EAbilityState>
+    public class AbilityActiveState : AbilityState<TotalDarknessAbility>
     {
-        TotalDarknessAbility _ability;
-        public AbilityReadyState(TotalDarknessAbility ability) : base(EAbilityState.READY)
+        public AbilityActiveState(TotalDarknessAbility ability, EAbilityState id) : base(ability, id)
         {
-            _ability = ability;
-        }
-
-        private void OnCast(InputAction.CallbackContext context)
-        {
-            if (context.performed) _ability._fsm.TransitionTo(EAbilityState.ACTIVE);
-        }
-
-        public override void Enter()
-        {
-            base.Enter();
-
-            MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_3, OnCast, true);
-        }
-
-        public override void Exit()
-        {
-            base.Exit();
-            MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_3, OnCast, false);
-        }
-    }
-
-    public class AbilityActiveState : State<EAbilityState>
-    {
-        TotalDarknessAbility _ability;
-        public AbilityActiveState(TotalDarknessAbility ability) : base(EAbilityState.ACTIVE)
-        {
-            _ability = ability;
         }
 
         private GhostStatusEffect ghostStatusEffect;

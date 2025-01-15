@@ -15,26 +15,26 @@ public interface IAbilityBase
 
 public interface IAbilityWithRange : IAbilityBase
 {
-    public float Range { get; }
+    float Range { get; }
 
     void OnDrawGizmos();
 }
 
 public interface IAbilityWithProjectile : IAbilityBase
 {
-    public GameObject ProjectilePrefab { get; }
-    public int ProjectileAmount { get; }
-    public float ProjectileInterval { get; }
+    GameObject ProjectilePrefab { get; }
+    int ProjectileAmount { get; }
+    float ProjectileInterval { get; }
 }
 
 public interface IAbilityWithTarget : IAbilityBase
 {
-    public GameObject Target { get; }
+    GameObject Target { get; }
 }
 
 public interface IAbilityWithBuff : IAbilityBase
 {
-    public Stats StatModifier { get; }
+    Stats StatModifier { get; }
 }
 
 
