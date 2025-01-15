@@ -39,8 +39,8 @@ public class NaturalBarrierAbility : MonoBehaviour
 
     private void Cast()
     {
-        _impactObject = MyCursorManager.Instance.GetCrosshairImpactObject();
-        _spawnPosition = MyCursorManager.Instance.GetCrosshairImpactPoint();
+        _impactObject = CrosshairRaycaster.GetImpactObject();
+        _spawnPosition = CrosshairRaycaster.GetImpactPosition();
 
         if (_impactObject == null || _spawnPosition == null) return;
 

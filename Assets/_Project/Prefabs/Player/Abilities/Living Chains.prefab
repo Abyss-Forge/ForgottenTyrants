@@ -30,7 +30,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5009599126511797233}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &68375178970408375
@@ -45,11 +46,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7748cc9a3d8e52b4ba6ea0390c7d42e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <AbilityIcon>k__BackingField: {fileID: 0}
+  <SpawnPoint>k__BackingField: {fileID: 5009599126511797233}
+  <CanBeCanceled>k__BackingField: 0
   <ActiveDuration>k__BackingField: 5
   <CooldownDuration>k__BackingField: 5
-  _range: 10
   _lineRendererTemplate: {fileID: 8032442414121410288}
+  _range: 10
 --- !u!120 &8032442414121410288
 LineRenderer:
   serializedVersion: 2
@@ -154,3 +156,34 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!1 &4974464827943899839
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5009599126511797233}
+  m_Layer: 0
+  m_Name: SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5009599126511797233
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4974464827943899839}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8092485915832746981}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

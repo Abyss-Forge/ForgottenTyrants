@@ -24,7 +24,7 @@ public interface IAbilityWithProjectile : IAbilityBase
 {
     GameObject ProjectilePrefab { get; }
     int ProjectileAmount { get; }
-    float ProjectileInterval { get; }
+    float ProjectileThreshold { get; }
 }
 
 public interface IAbilityWithTarget : IAbilityBase

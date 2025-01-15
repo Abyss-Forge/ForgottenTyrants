@@ -52,16 +52,17 @@ public class CameraController : MonoBehaviour
         _fsm.Add(new CameraFree(this));
     }
 
+    void Update() => _fsm.Update();
     void FixedUpdate() => _fsm.FixedUpdate();
-    void LateUpdate() => _fsm.LateUpdate();
-    #endregion
-    void Update()
+    void LateUpdate()
     {
-        _fsm.Update();
-
         CalculateRotation(_look.x * _horizontalSensitivity, -_look.y * _verticalSensitivity);
         CalculateMovement(_move.x * _horizontalSensitivity, -_move.y * _verticalSensitivity);
+
+        if (CursorUtils.IsCaptured) _fsm.LateUpdate();
     }
+
+    #endregion
 
     void OnEnable()
     {
@@ -70,6 +71,9 @@ public class CameraController : MonoBehaviour
 
         MyInputManager.Instance.Subscribe(EInputAction.LOOK, OnLook);
         MyInputManager.Instance.Subscribe(EInputAction.MOVE, OnMove);
+
+        MyInputManager.Instance.Subscribe(EInputAction.PAUSE, OnFocusLost);
+        MyInputManager.Instance.Subscribe(EInputAction.ANY, OnFocusRegained);
     }
 
     void OnDisable()
@@ -78,6 +82,9 @@ public class CameraController : MonoBehaviour
 
         MyInputManager.Instance.Unsubscribe(EInputAction.LOOK, OnLook);
         MyInputManager.Instance.Unsubscribe(EInputAction.MOVE, OnMove);
+
+        MyInputManager.Instance.Unsubscribe(EInputAction.PAUSE, OnFocusLost);
+        MyInputManager.Instance.Unsubscribe(EInputAction.ANY, OnFocusRegained);
     }
 
     private void HandlePlayerDeath()
@@ -87,6 +94,15 @@ public class CameraController : MonoBehaviour
 
     private void OnLook(InputAction.CallbackContext context) => _look = context.ReadValue<Vector2>();
     private void OnMove(InputAction.CallbackContext context) => _move = context.ReadValue<Vector2>();
+
+    private void OnFocusLost(InputAction.CallbackContext context)
+    {
+        if (context.performed) CursorUtils.Toggle();
+    }
+    private void OnFocusRegained(InputAction.CallbackContext context)
+    {
+        if (context.performed && !CursorUtils.IsCaptured) CursorUtils.Capture();
+    }
 
     private void CalculateRotation(float horizontalInput, float verticalInput)
     {

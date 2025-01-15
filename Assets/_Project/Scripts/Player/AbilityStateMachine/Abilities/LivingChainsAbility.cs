@@ -32,15 +32,15 @@ public class LivingChainsAbility : AbilityStateMachine, IAbilityWithRange
 
     protected override void InitializeStates()
     {
-        _fsm.Add(new AbilityReadyState(this, EAbilityState.READY));
+        _fsm.Add(new AbilityReadyBaseState<LivingChainsAbility>(this, EAbilityState.READY));
         _fsm.Add(new AbilityActiveState(this, EAbilityState.ACTIVE));
         _fsm.Add(new AbilityCooldownBaseState<LivingChainsAbility>(this, EAbilityState.COOLDOWN));
         _fsm.Add(new AbilityLockedBaseState<LivingChainsAbility>(this, EAbilityState.LOCKED));
     }
 
-    public class AbilityReadyState : AbilityState<LivingChainsAbility>
+    private class AbilityActiveState : AbilityActiveBaseState<LivingChainsAbility>
     {
-        public AbilityReadyState(LivingChainsAbility ability, EAbilityState id) : base(ability, id)
+        public AbilityActiveState(LivingChainsAbility ability, EAbilityState id) : base(ability, id)
         {
         }
 
@@ -48,10 +48,24 @@ public class LivingChainsAbility : AbilityStateMachine, IAbilityWithRange
         {
             base.Enter();
 
-            DetectPlayersInRange();
+            TryDetectPlayersInRange();
         }
 
-        private void DetectPlayersInRange()
+        public override void Update()
+        {
+            base.Update();
+
+            UpdateChainsPositions();
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+
+            ResetChains();
+        }
+
+        private void TryDetectPlayersInRange()
         {
             Collider[] hitColliders = Physics.OverlapSphere(_ability.transform.position, _ability._range, Layer.Player);
             bool hasHit = false;
@@ -70,7 +84,7 @@ public class LivingChainsAbility : AbilityStateMachine, IAbilityWithRange
                 }
             }
 
-            _ability._fsm.TransitionTo(hasHit ? EAbilityState.ACTIVE : EAbilityState.COOLDOWN);
+            if (!hasHit) _ability._fsm.TransitionTo(EAbilityState.COOLDOWN);
         }
 
         private void ApplyAllyEffect(GameObject ally)
@@ -91,49 +105,6 @@ public class LivingChainsAbility : AbilityStateMachine, IAbilityWithRange
                 //StartCoroutine(AnimateChain(lr, enemy.transform.position));
 
                 _ability._playerChains.Add(enemy, chain);
-            }
-        }
-    }
-
-    public class AbilityActiveState : AbilityActiveBaseState<LivingChainsAbility>
-    {
-        public AbilityActiveState(LivingChainsAbility ability, EAbilityState id) : base(ability, id)
-        {
-        }
-
-        public override void Enter()
-        {
-            base.Enter();
-
-            _ability.ActiveTimer = _ability.ActiveDuration;
-
-            //_ability.AbilityIcon.OnEnterActive();
-        }
-
-        public override void Update()
-        {
-            base.Update();
-
-            UpdateActiveTimer();
-            UpdateChainsPositions();
-        }
-
-        public override void Exit()
-        {
-            base.Exit();
-
-            ResetChains();
-        }
-
-        private void UpdateActiveTimer()
-        {
-            if (_ability.ActiveTimer > 0)
-            {
-                _ability.ActiveTimer -= Time.deltaTime;
-            }
-            else
-            {
-                _ability._fsm.TransitionTo(EAbilityState.COOLDOWN);
             }
         }
 

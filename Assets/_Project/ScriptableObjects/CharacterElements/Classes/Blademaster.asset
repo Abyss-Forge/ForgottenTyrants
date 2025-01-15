@@ -25,7 +25,7 @@ MonoBehaviour:
     _cooldownReduction: 0
   <Abilities>k__BackingField:
   - {fileID: 11400000, guid: ed474ad2b6910da47a29f875974d0a98, type: 2}
-  - {fileID: 11400000, guid: 25037da348722904e84b3254829db20c, type: 2}
+  - {fileID: 11400000, guid: 6f2d5a0b802feec49ae071b1a8478343, type: 2}
   - {fileID: 11400000, guid: 24f84cbf925572a45b6656daac21b089, type: 2}
   - {fileID: 11400000, guid: 3d00ab443eed92e4d9df2e61b2de635c, type: 2}
   <Weapons>k__BackingField:

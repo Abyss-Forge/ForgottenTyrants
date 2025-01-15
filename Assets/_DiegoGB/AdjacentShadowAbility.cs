@@ -46,7 +46,7 @@ public class AdjacentShadowAbility : MonoBehaviour
 
     private IEnumerator CastAdjacentShadow()
     {
-        enemy = MyCursorManager.Instance.GetCrosshairTarget();
+        enemy = CrosshairRaycaster.GetImpactObject();
         if (enemy.CompareTag(Tag.Enemy) && CalculateIsInRange())
         {
             _isAbilityActive = true;

@@ -8,6 +8,7 @@ namespace Systems.GameManagers
 {
     public enum EInputAction
     {
+        ANY,
         MOVE, LOOK,
         JUMP, DASH,
         WEAPON_BASIC_ATTACK, WEAPON_ABILITY,
@@ -54,8 +55,6 @@ namespace Systems.GameManagers
 
         private void CallSubscribedFunction(EInputAction action, InputAction.CallbackContext context)
         {
-            if (!CursorUtils.IsCaptured) return;
-
             if (_actionDelegates.TryGetValue(action, out var actionTuple))
             {
                 var (actionDelegate, enabled) = actionTuple;
@@ -63,6 +62,17 @@ namespace Systems.GameManagers
                 if (enabled)
                 {
                     actionDelegate?.Invoke(context);
+                }
+            }
+
+            // Always call ANY if enabled.
+            if (_actionDelegates.TryGetValue(EInputAction.ANY, out var anyActionTuple))
+            {
+                var (anyDelegate, anyEnabled) = anyActionTuple;
+
+                if (anyEnabled)
+                {
+                    anyDelegate?.Invoke(context);
                 }
             }
         }

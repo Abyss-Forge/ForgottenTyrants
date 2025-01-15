@@ -13,7 +13,7 @@ public class AbilityLockedBaseState<T> : AbilityState<T> where T : AbilityStateM
     {
         base.Update();
 
-        UpdateCooldownTimer();  //importante hacer que si se lockea al entrar en cooldown, el cooldown siga rulandp, si se lockea en ready no pase nada especial, y que si se lockea en active, el active se reinicie igual (no se deberia poder cortar una habilidad en mi opinion)
+        UpdateCooldownTimer();  //importante hacer que si se lockea al entrar en cooldown, el cooldown siga rulando, si se lockea en ready no pase nada especial, y que si se lockea en active, el active se reinicie igual (no se deberia poder cortar una habilidad en mi opinion)
     }
 
     public override void Enter()

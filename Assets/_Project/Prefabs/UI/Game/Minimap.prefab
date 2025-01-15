@@ -635,7 +635,7 @@ MonoBehaviour:
   _objectToFollow: {fileID: 0}
   _minimapCamera: {fileID: 7010958904476244333}
   _minimapIconsCamera: {fileID: 875146869387034013}
-  _defaultPositionRespectTarget: {x: 0, y: 50, z: 0}
+  _defaultPositionRespectTarget: {x: 0, y: 100, z: 0}
   _rotationEnabled: 1
   _zoomOutLerpSpeed: 1
   _maxSpeedForZoomOut: 30

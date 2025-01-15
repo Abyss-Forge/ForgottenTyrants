@@ -22,6 +22,7 @@ public class AbilitiesController : MonoBehaviour
         {
             var ability = ExtensionMethods.GetInstantiate<AbilityStateMachine>(template.AbilityPrefab.gameObject, _abilitiesHolder);
             _abilities.Add(ability);
+
             var icon = ExtensionMethods.GetInstantiate<AbilityIcon>(template.IconPrefab.gameObject, _abilitiesIconsHolder);
             template.InitializeSprites();
             icon.Initialize(ability);
@@ -44,25 +45,10 @@ public class AbilitiesController : MonoBehaviour
         MyInputManager.Instance.Unsubscribe(EInputAction.CLASS_ABILITY_4, OnClassAbility4);
     }
 
-    private void OnClassAbility1(InputAction.CallbackContext context)
-    {
-        if (context.performed) _abilities[0].Trigger();
-    }
-
-    private void OnClassAbility2(InputAction.CallbackContext context)
-    {
-        if (context.performed) _abilities[1].Trigger();
-    }
-
-    private void OnClassAbility3(InputAction.CallbackContext context)
-    {
-        if (context.performed) _abilities[2].Trigger();
-    }
-
-    private void OnClassAbility4(InputAction.CallbackContext context)
-    {
-        if (context.performed) _abilities[3].Trigger();
-    }
+    private void OnClassAbility1(InputAction.CallbackContext context) { if (context.performed) _abilities[0].Trigger(); }
+    private void OnClassAbility2(InputAction.CallbackContext context) { if (context.performed) _abilities[1].Trigger(); }
+    private void OnClassAbility3(InputAction.CallbackContext context) { if (context.performed) _abilities[2].Trigger(); }
+    private void OnClassAbility4(InputAction.CallbackContext context) { if (context.performed) _abilities[3].Trigger(); }
 
     void Start()
     {

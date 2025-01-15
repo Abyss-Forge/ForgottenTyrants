@@ -14,19 +14,16 @@ public class CharacterSpawner : NetworkBehaviour
 {
     [SerializeField] private CharacterDatabase _characterDatabase;
     [SerializeField] private NetworkObject _playerPrefab;
-    [SerializeField] private Transform[] spawnPointsTeamA;
-    [SerializeField] private Transform[] spawnPointsTeamB;
-    private Dictionary<ulong, Team> _clientTeamDict = new Dictionary<ulong, Team>();
+    [SerializeField] private Transform[] _spawnPointsTeamA, _spawnPointsTeamB;
 
-    private int _teamACount = 0;
-    private int _teamBCount = 0;
+    private Dictionary<ulong, Team> _clientTeamDictionary = new();
+    private int _teamACount = 0, _teamBCount = 0;
 
     public override void OnNetworkSpawn()
     {
         if (!IsServer) return;
 
         SpawnAllPlayers();
-
     }
 
     private void SpawnAllPlayers()
@@ -40,7 +37,7 @@ public class CharacterSpawner : NetworkBehaviour
             var character = _characterDatabase.GetById(clientEntry.Value.CharacterId);
             if (character != null)
             {
-                Team playerTeam = _clientTeamDict[clientId];
+                Team playerTeam = _clientTeamDictionary[clientId];
                 Transform spawnTransform = GetSpawnTransformForTeam(playerTeam);
 
                 NetworkObject instance = Instantiate(_playerPrefab, spawnTransform.position, spawnTransform.rotation);
@@ -51,10 +48,10 @@ public class CharacterSpawner : NetworkBehaviour
 
     private void AssignTeamToClient(ulong clientId)
     {
-        if (_clientTeamDict.ContainsKey(clientId)) return;
+        if (_clientTeamDictionary.ContainsKey(clientId)) return;
 
         Team assignedTeam = (_teamACount <= _teamBCount) ? Team.A : Team.B;
-        _clientTeamDict.Add(clientId, assignedTeam);
+        _clientTeamDictionary.Add(clientId, assignedTeam);
 
         if (assignedTeam == Team.A)
             _teamACount++;
@@ -66,13 +63,13 @@ public class CharacterSpawner : NetworkBehaviour
     {
         if (team == Team.A)
         {
-            int spawnIndex = (_teamACount - 1) % spawnPointsTeamA.Length;
-            return spawnPointsTeamA[spawnIndex];
+            int spawnIndex = (_teamACount - 1) % _spawnPointsTeamA.Length;
+            return _spawnPointsTeamA[spawnIndex];
         }
         else
         {
-            int spawnIndex = (_teamBCount - 1) % spawnPointsTeamB.Length;
-            return spawnPointsTeamB[spawnIndex];
+            int spawnIndex = (_teamBCount - 1) % _spawnPointsTeamB.Length;
+            return _spawnPointsTeamB[spawnIndex];
         }
     }
 }

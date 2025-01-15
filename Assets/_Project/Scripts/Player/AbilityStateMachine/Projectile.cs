@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ForgottenTyrants;
+using Unity.Netcode;
 
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
-public abstract class Projectile : MonoBehaviour
+public abstract class Projectile : NetworkBehaviour
 {
     protected Rigidbody _rigidbody;
     protected CapsuleCollider _collider;
