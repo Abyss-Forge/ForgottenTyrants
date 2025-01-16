@@ -60,4 +60,13 @@ public class Stats
         _attackSpeed += other._attackSpeed;
         _cooldownReduction += other._cooldownReduction;
     }
+
+    public void ChangePhysicalDamage(int newPhysicalDamage)
+    {
+        _physicalDamage = newPhysicalDamage;
+    }
+    public void ChangeMagicalDamage(int newMagicalDamage)
+    {
+        _magicalDamage = newMagicalDamage;
+    }
 }
