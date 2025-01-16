@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using ForgottenTyrants;
+using Unity.Netcode;
 using UnityEngine;
 
-public class LightningBehaviour : MonoBehaviour
+public class LightningBehaviour : NetworkBehaviour
 {
     [SerializeField] private float _fadeDuration = 2f;
     [SerializeField] private float _groundDuration = 1f;
@@ -21,7 +22,7 @@ public class LightningBehaviour : MonoBehaviour
     private float _time;
     private Vector3 _targetPosition;
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
         _terrain = Terrain.activeTerrain;
         _targetPosition = ShowRandomPointOnTerrain();
@@ -116,15 +117,6 @@ public class LightningBehaviour : MonoBehaviour
         return Random.insideUnitSphere.normalized * Random.Range(0, _spread);
     }
 
-    private void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.layer == Layer.Terrain)
-        {
-            _shouldMove = false;
-            StartCoroutine(FadeOut());
-        }
-    }
-
     private IEnumerator FadeOut()
     {
         yield return new WaitForSeconds(_groundDuration);
@@ -176,4 +168,15 @@ public class LightningBehaviour : MonoBehaviour
         Color emissionColor = _lineMaterial.GetColor("_EmissionColor");
         _lineMaterial.SetColor("_EmissionColor", emissionColor * intensity);
     }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.layer == Layer.Terrain)
+        {
+            _shouldMove = false;
+            StartCoroutine(FadeOut());
+        }
+    }
+
+
 }

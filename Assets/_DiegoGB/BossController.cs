@@ -119,13 +119,13 @@ public class BossController : Entity
                 TriggerSwapPositionsServerRpc();
             }
 
-
+            if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                TriggerStormServerRpc();
+            }
 
         }
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            StartCoroutine(EventStorm());
-        }
+
     }
 
     void InitializeBehaviorTree()
@@ -366,7 +366,23 @@ public class BossController : Entity
 
     #endregion
 
-    #region 4- CLIMATE CHANGES EVENT
+    #region 4- CLIMATE CHANGES (STORM) EVENT
+
+    [ServerRpc(RequireOwnership = false)]
+    public void TriggerStormServerRpc()
+    {
+        Debug.Log("Evento de tormenta activado por un cliente.");
+        StartCoroutine(EventStorm());
+    }
+
+    [ClientRpc]
+    private void SpawnLightningAtPositionClientRpc(Vector3 position)
+    {
+        if (_lightningPrefab != null)
+        {
+            Instantiate(_lightningPrefab, position, Quaternion.identity);
+        }
+    }
 
     private IEnumerator EventStorm()
     {
@@ -383,7 +399,7 @@ public class BossController : Entity
             );
 
             // Llamar a un método para generar el rayo (puedes ajustar la lógica)
-            SpawnLightningAtPosition(spawnPosition);
+            SpawnLightningAtPositionClientRpc(spawnPosition);
 
             // Esperar el tiempo entre rayos
             yield return new WaitForSeconds(_lightningInterval);
