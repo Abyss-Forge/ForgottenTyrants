@@ -6,7 +6,6 @@ using Systems.BehaviourTree;
 
 public class BossController : Entity
 {
-    private BehaviorSequence _rootSequence;
 
     [SerializeField] private float _targetSelectionInterval = 6f;
     [SerializeField] private float _attackInterval = 3f;
@@ -24,6 +23,14 @@ public class BossController : Entity
     [SerializeField] int _spawnCount = 3;
     [SerializeField] float _heightOffset = 2f;
 
+    [Header("Storm settings")]
+    [SerializeField] GameObject _lightningPrefab;
+    [SerializeField] Transform _thunderSpawner;
+    [SerializeField] float _stormRadius;
+    [SerializeField] float _stormDuration = 10;
+    [SerializeField] float _lightningInterval = .5f;
+
+    private BehaviorSequence _rootSequence;
     private Terrain _terrain;
     private Dictionary<GameObject, float> _originalJumpForces = new Dictionary<GameObject, float>();
 
@@ -112,6 +119,12 @@ public class BossController : Entity
                 TriggerSwapPositionsServerRpc();
             }
 
+
+
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            StartCoroutine(EventStorm());
         }
     }
 
@@ -353,7 +366,40 @@ public class BossController : Entity
 
     #endregion
 
-    #region 6- LOW GRAVITY EVENT
+    #region 4- CLIMATE CHANGES EVENT
+
+    private IEnumerator EventStorm()
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < _stormDuration)
+        {
+            // Generar una posición aleatoria dentro del radio alrededor del spawner
+            Vector2 randomCircle = Random.insideUnitCircle * _stormRadius;
+            Vector3 spawnPosition = new Vector3(
+                _thunderSpawner.position.x + randomCircle.x,
+                _thunderSpawner.position.y,
+                _thunderSpawner.position.z + randomCircle.y
+            );
+
+            // Llamar a un método para generar el rayo (puedes ajustar la lógica)
+            SpawnLightningAtPosition(spawnPosition);
+
+            // Esperar el tiempo entre rayos
+            yield return new WaitForSeconds(_lightningInterval);
+
+            elapsedTime += _lightningInterval;
+        }
+    }
+
+    private void SpawnLightningAtPosition(Vector3 position)
+    {
+        Instantiate(_lightningPrefab, position, Quaternion.identity);
+    }
+
+    #endregion
+
+    #region 5- LOW GRAVITY EVENT
 
     [ServerRpc(RequireOwnership = false)]
     public void TriggerLowGravityServerRpc()
@@ -470,7 +516,7 @@ public class BossController : Entity
 
     #endregion
 
-    #region 7- SWAP POSITIONS EVENT
+    #region 6- SWAP POSITIONS EVENT
 
     [ServerRpc(RequireOwnership = false)]
     public void TriggerSwapPositionsServerRpc()
