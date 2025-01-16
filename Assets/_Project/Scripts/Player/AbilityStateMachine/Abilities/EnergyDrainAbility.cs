@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using ForgottenTyrants;
 
-public class EnergyDrainAbility : AbilityStateMachine, IAbilityWithTarget
+public class EnergyDrainAbility : AbilityStateMachine, IAbilityWithTarget, IAbilityWithDotTick
 {
     #region Specific ability properties
 
-    [SerializeField] private float _dotThreshold = 5f, _dotDamage = 3f;
 
     #endregion
     #region Interface implementation
 
     private GameObject _target;
     GameObject IAbilityWithTarget.Target => _target;
+
+    [SerializeField] private float _dotThreshold = 5f;
+    float IAbilityWithDotTick.DotThreshold => _dotThreshold;
 
     #endregion
     #region States
@@ -42,7 +44,7 @@ public class EnergyDrainAbility : AbilityStateMachine, IAbilityWithTarget
             base.Enter();
 
             _ghostStatusEffect = new();
-            _ghostStatusEffect.ApplyEffect(_ability.gameObject.GetComponent<Player>());
+            _ghostStatusEffect.ApplyEffect(_ability.GetComponentInParent<Player>()); //TODO with service locator
             _timer = 0;
         }
 
@@ -57,13 +59,13 @@ public class EnergyDrainAbility : AbilityStateMachine, IAbilityWithTarget
         {
             base.Exit();
 
-            _ghostStatusEffect.RemoveEffect(_ability.gameObject.GetComponent<Player>());
+            _ghostStatusEffect.RemoveEffect(_ability.GetComponentInParent<Player>());
         }
 
         private void TryGetTarget()
         {
             _ability._target = CrosshairRaycaster.GetImpactObject();
-            if (_ability._target != null && _ability._target.CompareTag(Tag.Enemy))
+            if (_ability._target == null || !_ability._target.CompareTag(Tag.Enemy))
             {
                 _ability._fsm.TransitionTo(EAbilityState.COOLDOWN);
             }
@@ -74,7 +76,7 @@ public class EnergyDrainAbility : AbilityStateMachine, IAbilityWithTarget
             _timer -= Time.deltaTime;
             if (_timer <= 0)
             {
-                Debug.Log($"Absorbing {_ability._dotDamage} dmg from {_ability._target.name} at {System.DateTime.Now}");
+                Debug.Log($"Absorbing {_ability.Stats.MagicalDamage} dmg from {_ability._target.name} at {System.DateTime.Now}");
                 _timer = _ability._dotThreshold;
             }
         }

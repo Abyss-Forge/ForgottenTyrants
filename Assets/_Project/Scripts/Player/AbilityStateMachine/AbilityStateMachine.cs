@@ -13,6 +13,8 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
 {
     #region Default logic
 
+    [field: SerializeField] public Stats Stats { get; private set; }
+
     [field: SerializeField] public Transform SpawnPoint { get; private set; }
     [field: SerializeField] public bool CanBeCanceled { get; private set; } = false;
 

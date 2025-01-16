@@ -7,7 +7,7 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
 {
     #region Specific ability properties
 
-    [SerializeField] private float _force;
+
 
     #endregion
     #region Interface implementation
@@ -20,6 +20,9 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
 
     [SerializeField] private float _projectileThreshold = 0f;
     public float ProjectileThreshold => _projectileThreshold;
+
+    [SerializeField] private float _launchForce = 10f;
+    public float LaunchForce => _launchForce;
 
     #endregion
     #region States
@@ -57,7 +60,7 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
             _timer -= Time.deltaTime;
             if (_timer <= 0f)
             {
-                SpawnBomb();
+                SpawnProjectile();
                 _timer = _ability.ProjectileThreshold;
                 _cycles++;
                 if (_cycles >= _ability.ProjectileAmount)
@@ -67,12 +70,14 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
             }
         }
 
-        private void SpawnBomb()
+        private void SpawnProjectile()
         {
             Vector3 position = _ability.SpawnPoint.position;
             Quaternion rotation = _ability.SpawnPoint.rotation;
+            Vector3 scale = _ability.SpawnPoint.localScale;
 
             GameObject instance = Instantiate(_ability.ProjectilePrefab, position, rotation, _ability.transform);
+            instance.transform.localScale = scale;
             instance.transform.SetParent(null); // esto es para que spawnee en la misma escena si hay aditivas
             instance.GetComponent<NetworkObject>().Spawn();
 
@@ -82,7 +87,10 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
             adjustedDirection.y += 0.5f;
 
             Rigidbody rb = instance.GetComponent<Rigidbody>();
-            rb.AddForce(adjustedDirection * _ability._force * rb.mass, ForceMode.Impulse);
+            Vector3 playerVelocity = _ability.GetComponentInParent<PlayerController>()?.Velocity ?? Vector3.zero; //TODO hacer con service locator
+            playerVelocity.y = 0;
+            Vector3 launchVelocity = adjustedDirection * _ability._launchForce + playerVelocity;
+            rb.AddForce(launchVelocity * rb.mass, ForceMode.Impulse);
         }
 
     }

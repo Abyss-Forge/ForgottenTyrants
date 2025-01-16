@@ -25,6 +25,7 @@ public interface IAbilityWithProjectile : IAbilityBase
     GameObject ProjectilePrefab { get; }
     int ProjectileAmount { get; }
     float ProjectileThreshold { get; }
+    float LaunchForce { get; }
 }
 
 public interface IAbilityWithTarget : IAbilityBase
@@ -37,4 +38,7 @@ public interface IAbilityWithBuff : IAbilityBase
     Stats StatModifier { get; }
 }
 
-
+public interface IAbilityWithDotTick : IAbilityBase
+{
+    float DotThreshold { get; }
+}

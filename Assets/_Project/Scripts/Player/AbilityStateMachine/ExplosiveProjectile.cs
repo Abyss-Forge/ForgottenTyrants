@@ -10,7 +10,7 @@ public abstract class ExplosiveProjectile : Projectile, IDamageable
     [Header("Explosive")]
     [SerializeField] protected AnimationCurve _explosionAreaCurve;
     [SerializeField] protected float _explosionRadius = 5;
-    [SerializeField] protected string[] _explosionAffectedTags; //[Tag]
+    [SerializeField] protected string[] _explosionAffectedTags; //TODO [Tag]
     [SerializeField] protected bool _explodeOnLifetimeEnd;
 
     [Header("Proximity")]

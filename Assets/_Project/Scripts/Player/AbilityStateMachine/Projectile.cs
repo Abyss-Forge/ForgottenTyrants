@@ -11,6 +11,11 @@ public abstract class Projectile : NetworkBehaviour
     protected Rigidbody _rigidbody;
     protected CapsuleCollider _collider;
 
+    public enum EProjectileState
+    {
+        LIVE, HIT, DESTROYED
+    }
+
     [SerializeField] protected float _lifetime = 5, _gravityMultiplier = 1;
 
     [Header("Knockback")]
@@ -28,7 +33,6 @@ public abstract class Projectile : NetworkBehaviour
 
     protected float _lifetimeTimer;
     protected int _remainingRicochets;
-
 
     protected virtual void Awake()
     {

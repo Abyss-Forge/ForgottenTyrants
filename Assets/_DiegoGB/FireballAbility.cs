@@ -1,79 +1,94 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using Systems.GameManagers;
-using Unity.Mathematics;
+using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class FireballAbility : MonoBehaviour
+public class FireballAbility : AbilityStateMachine, IAbilityWithProjectile
 {
-    [Header("Ability Settings")]
-    [SerializeField] private float _cooldownDuration = 5, _effectDuration = 5, _animationDuration = 2;
-    [SerializeField] private GameObject _fireballPrefab;
+    #region Specific ability properties
 
-    [Header("Effect Modifiers")]
-    //[SerializeField] private float percentageMovementReduction = 25f;
-    [SerializeField] private float _damage = 30f;
-    [SerializeField] private float _speed = 1000f;
-    [SerializeField] private float _radius = 5f;
-    [SerializeField] private float _lifetime = 30f;
 
-    private float _cooldownTimer = 0f;
-    private bool _isAbilityActive = false;
-    private float timer;
 
-    // Start is called before the first frame update
-    void Start()
+    #endregion
+    #region Interface implementation
+
+    [SerializeField] private GameObject _projectilePrefab;
+    public GameObject ProjectilePrefab => _projectilePrefab;
+
+    [SerializeField] private int _projectileAmount = 1;
+    public int ProjectileAmount => _projectileAmount;
+
+    [SerializeField] private float _projectileThreshold = 0f;
+    public float ProjectileThreshold => _projectileThreshold;
+
+    [SerializeField] private float _launchForce = 10f;
+    public float LaunchForce => _launchForce;
+
+    #endregion
+    #region States
+
+    protected override void InitializeStates()
     {
-        MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_1, OnCast, true);
-        timer = _lifetime;
+        _fsm.Add(new AbilityReadyBaseState<FireballAbility>(this, EAbilityState.READY));
+        _fsm.Add(new AbilityActiveState(this, EAbilityState.ACTIVE));
+        _fsm.Add(new AbilityCooldownBaseState<FireballAbility>(this, EAbilityState.COOLDOWN));
+        _fsm.Add(new AbilityLockedBaseState<FireballAbility>(this, EAbilityState.LOCKED));
     }
 
-    // Update is called once per frame
-    void Update()
+    private class AbilityActiveState : AbilityActiveBaseState<FireballAbility>
     {
-        UpdateCooldownTimer();
-    }
-
-    private void Cast()
-    {
-        if (_cooldownTimer <= 0f && !_isAbilityActive)
+        public AbilityActiveState(FireballAbility ability, EAbilityState id) : base(ability, id)
         {
-            CastFireball();
-            _cooldownTimer = _cooldownDuration;
+        }
+
+        private float _timer;
+        private int _cycles;
+
+        public override void Enter()
+        {
+            _timer = 0;
+            _cycles = 0;
+        }
+
+        public override void Update()
+        {
+            PerformBurst();
+        }
+
+        private void PerformBurst()
+        {
+            _timer -= Time.deltaTime;
+            if (_timer <= 0f)
+            {
+                SpawnProjectile();
+                _timer = _ability.ProjectileThreshold;
+                _cycles++;
+                if (_cycles >= _ability.ProjectileAmount)
+                {
+                    _ability._fsm.TransitionTo(EAbilityState.COOLDOWN);
+                }
+            }
+        }
+
+        private void SpawnProjectile()
+        {
+            Vector3 position = _ability.SpawnPoint.position;
+            Vector3 scale = _ability.SpawnPoint.localScale;
+
+            Transform camera = Camera.main.transform;
+            Vector3 targetPoint = camera.position + camera.forward * 100f;
+            Vector3 adjustedDirection = (targetPoint - position).normalized;
+            Quaternion rotation = Quaternion.LookRotation(adjustedDirection);
+
+            GameObject instance = Instantiate(_ability.ProjectilePrefab, position, rotation, _ability.transform);
+            instance.transform.localScale = scale;
+            instance.transform.SetParent(null);
+            instance.GetComponent<NetworkObject>().Spawn();
+
+            Rigidbody rb = instance.GetComponent<Rigidbody>();
+            Vector3 launchVelocity = adjustedDirection * _ability._launchForce;
+            rb.AddForce(launchVelocity * rb.mass, ForceMode.Impulse);
         }
     }
-
-    private void OnCast(InputAction.CallbackContext context)
-    {
-        if (context.performed) Cast();
-    }
-
-    void CastFireball()
-    {
-        GameObject fireball = Instantiate(_fireballPrefab, this.transform.position, quaternion.identity);
-
-        fireball.transform.localScale = Vector3.Scale(transform.localScale, new Vector3(_radius, _radius, _radius));
-        // Agregar fuerza para dispararla hacia adelante.
-        Rigidbody rb = fireball.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.AddForce(transform.forward * _speed);
-        }
-        StartCoroutine(DeleteFireball(fireball));
-        //transform.Translate(Vector3.forward * _speed * Time.deltaTime);
-    }
-
-    IEnumerator DeleteFireball(GameObject fireball)
-    {
-        yield return new WaitForSeconds(_lifetime);
-        Destroy(fireball);
-
-    }
-
-    private void UpdateCooldownTimer()
-    {
-        if (_cooldownTimer > 0 && !_isAbilityActive) _cooldownTimer -= Time.deltaTime;
-    }
+    #endregion
 }
