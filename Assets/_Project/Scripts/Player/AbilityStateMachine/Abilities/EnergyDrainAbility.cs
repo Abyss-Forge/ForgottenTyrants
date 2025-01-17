@@ -3,96 +3,70 @@ using System.Collections.Generic;
 using UnityEngine;
 using ForgottenTyrants;
 
-public class EnergyDrainAbility : AbilityStateMachine, IAbilityWithTarget
+public class EnergyDrainAbility : AbilityStateMachine, IAbilityWithTarget, IAbilityWithDotTick
 {
     #region Specific ability properties
 
-    [SerializeField] private float _dotThreshold = 5f, _dotDamage = 3f;
 
     #endregion
     #region Interface implementation
 
-    [SerializeField] GameObject _target;
-    GameObject IAbilityWithTarget.Target => _target;
+    private GameObject _target;
+    public GameObject Target => _target;
+
+    [SerializeField] private float _dotThreshold = 5f;
+    public float DotThreshold => _dotThreshold;
 
     #endregion
     #region States
 
     protected override void InitializeStates()
     {
-        _fsm.Add(new AbilityReadyState(this, EAbilityState.READY));
+        _fsm.Add(new AbilityReadyBaseState<EnergyDrainAbility>(this, EAbilityState.READY));
+        _fsm.Add(new AbilityPreviewBaseState<EnergyDrainAbility>(this, EAbilityState.PREVIEW));
         _fsm.Add(new AbilityActiveState(this, EAbilityState.ACTIVE));
         _fsm.Add(new AbilityCooldownBaseState<EnergyDrainAbility>(this, EAbilityState.COOLDOWN));
         _fsm.Add(new AbilityLockedBaseState<EnergyDrainAbility>(this, EAbilityState.LOCKED));
     }
 
-    public class AbilityReadyState : AbilityState<EnergyDrainAbility>
-    {
-        public AbilityReadyState(EnergyDrainAbility ability, EAbilityState id) : base(ability, id)
-        {
-        }
-
-        public override void Enter()
-        {
-            base.Enter();
-
-            TryGetTarget();
-        }
-
-        private void TryGetTarget()
-        {
-            _ability._target = MyCursorManager.Instance.GetCrosshairImpactObject();
-            if (_ability._target.CompareTag(Tag.Enemy))
-            {
-                _ability._fsm.TransitionTo(EAbilityState.ACTIVE);
-            }
-        }
-    }
-
-    public class AbilityActiveState : AbilityState<EnergyDrainAbility>
+    private class AbilityActiveState : AbilityActiveBaseState<EnergyDrainAbility>
     {
         public AbilityActiveState(EnergyDrainAbility ability, EAbilityState id) : base(ability, id)
         {
         }
 
-        private GhostStatusEffect ghostStatusEffect;
-        private float timer;
+        private GhostStatusEffect _ghostStatusEffect;
+        private float _timer;
 
         public override void Enter()
         {
+            TryGetTarget();
+
             base.Enter();
 
-            _ability.ActiveTimer = _ability.ActiveDuration;
-
-            //_ability.AbilityIcon.OnEnterActive();
-
-            ghostStatusEffect = new();
-            ghostStatusEffect.ApplyEffect(_ability.gameObject.GetComponent<Player>());
-            timer = 0;
-        }
-
-        public override void Exit()
-        {
-            base.Exit();
-
-            ghostStatusEffect.RemoveEffect(_ability.gameObject.GetComponent<Player>());
+            _ghostStatusEffect = new();
+            _ghostStatusEffect.ApplyEffect(_ability.GetComponentInParent<Player>()); //TODO with service locator
+            _timer = 0;
         }
 
         public override void Update()
         {
             base.Update();
 
-            UpdateActiveTimer();
             ApplyDamageAbsorptionEffect();
         }
 
-        private void UpdateActiveTimer()
+        public override void Exit()
         {
-            if (_ability.ActiveTimer > 0)
-            {
-                _ability.ActiveTimer -= Time.deltaTime;
-            }
-            else
+            base.Exit();
+
+            _ghostStatusEffect.RemoveEffect(_ability.GetComponentInParent<Player>());
+        }
+
+        private void TryGetTarget()
+        {
+            _ability._target = CrosshairRaycaster.GetImpactObject();
+            if (_ability._target == null || !_ability._target.CompareTag(Tag.Enemy))
             {
                 _ability._fsm.TransitionTo(EAbilityState.COOLDOWN);
             }
@@ -100,11 +74,11 @@ public class EnergyDrainAbility : AbilityStateMachine, IAbilityWithTarget
 
         private void ApplyDamageAbsorptionEffect()
         {
-            timer -= Time.deltaTime;
-            if (timer <= 0)
+            _timer -= Time.deltaTime;
+            if (_timer <= 0)
             {
-                Debug.Log($"Absorbing {_ability._dotDamage} dmg from {_ability._target.name} at {System.DateTime.Now}");
-                timer = _ability._dotThreshold;
+                Debug.Log($"Absorbing {_ability.Stats.MagicalDamage} dmg from {_ability._target.name} at {System.DateTime.Now}");
+                _timer = _ability._dotThreshold;
             }
         }
     }

@@ -1,22 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using Systems.FSM;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum EAbilityState
 {
-    READY, ACTIVE, COOLDOWN, LOCKED
+    READY, PREVIEW, ACTIVE, COOLDOWN, LOCKED
 }
 
 public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
 {
     #region Default logic
 
+    [field: SerializeField] public Stats Stats { get; private set; }
+
+    [field: SerializeField] public Transform SpawnPoint { get; private set; }
+    [field: SerializeField] public bool CanBeCanceled { get; private set; } = false;
+
     [field: SerializeField] public float ActiveDuration { get; private set; } = 5f;
     [field: SerializeField] public float CooldownDuration { get; private set; } = 5f;
 
-    public float ActiveTimer { get; set; }
-    public float CooldownTimer { get; set; }
+    public float ActiveTimer { get; set; } = 0;
+    public float CooldownTimer { get; set; } = 0;
 
     public void Lock(float time = -1) => StartCoroutine(ApplyLock(time));
     public void Unlock() => _fsm.TransitionTo(EAbilityState.COOLDOWN);   //si el cooldown es 0, automaticamente transicionara a READY
@@ -40,24 +47,34 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
         yield return null;
     }
 
-    public void Trigger()
+    public virtual void OnTriggered(InputAction.CallbackContext context)
     {
+        if (context.performed) UpdateState();
+    }
 
+    protected virtual void UpdateState()
+    {
+        if (_fsm.CurrentState.ID == EAbilityState.READY)
+        {
+            _fsm.TransitionTo(EAbilityState.ACTIVE);
+        }
+        else if (_fsm.CurrentState.ID == EAbilityState.ACTIVE)
+        {
+            if (CanBeCanceled) ActiveTimer = 0;
+        }
     }
 
     #endregion
     #region Setup
 
-    public FiniteStateMachine<EAbilityState> _fsm { get; private set; }
+    protected FiniteStateMachine<EAbilityState> _fsm;
+    public FiniteStateMachine<EAbilityState> FSM => _fsm;
 
     void Awake()
     {
         _fsm = new();
         InitializeStates();
         _fsm.TransitionTo(EAbilityState.READY);
-
-        ActiveTimer = ActiveDuration;
-        CooldownTimer = CooldownDuration;
     }
 
     void Update() => _fsm.Update();

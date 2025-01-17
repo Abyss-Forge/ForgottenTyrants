@@ -11,6 +11,7 @@ namespace Utils
             return Cursor.lockState == CursorLockMode.Locked;
         }
 
+        public static void Toggle() => Capture(!IsCaptured);
         public static void Release() => Capture(false);
         public static void Capture(bool locked = true)
         {

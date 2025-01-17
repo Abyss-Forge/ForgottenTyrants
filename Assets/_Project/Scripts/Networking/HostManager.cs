@@ -18,6 +18,8 @@ public class HostManager : Singleton<HostManager>
 {
     [SerializeField] private int _maxConnections = 6;
 
+    [SerializeField] private SceneReference _gameplayScene; //TODO remove test
+
     private bool _isGameStarted;
     private string _lobbyId;
 
@@ -155,7 +157,7 @@ public class HostManager : Singleton<HostManager>
     {
         _isGameStarted = true;
 
-        SceneLoaderWrapper.Instance.LoadScene(ForgottenTyrants.Scene.GameplayMapTestDiego, useNetworkSceneManager: true, LoadSceneMode.Single);
+        SceneLoaderWrapper.Instance.LoadScene(_gameplayScene.Name, useNetworkSceneManager: true, LoadSceneMode.Single);
     }
 
     public ClientData GetMyClientData()

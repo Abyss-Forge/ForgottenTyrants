@@ -1,7 +1,12 @@
 fileFormatVersion: 2
-guid: 97e3c1e61c6965647a5029d2db3ebd79
+<<<<<<<< HEAD:Assets/_DiegoGB/Race models/Data/Kalthari.meta
+guid: 7fc6d9de1e65b1a429fe3b930e2a3b01
 folderAsset: yes
 DefaultImporter:
+========
+guid: 5ce402ab5d3bb7c4cb29e1fd5465191f
+PrefabImporter:
+>>>>>>>> Ivan-SeguimosConElMulti:Assets/_Project/Prefabs/Player/Abilities/Bomb Ability.prefab.meta
   externalObjects: {}
   userData: 
   assetBundleName: 

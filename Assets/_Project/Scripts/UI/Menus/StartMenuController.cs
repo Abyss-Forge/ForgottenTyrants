@@ -27,8 +27,6 @@ public class StartMenuController : MonoBehaviour
 
     private void Play()
     {
-        // MySceneManager.Instance.LoadSceneWithLoadingScreen(SceneUtils.Next);
-        //SceneManager.LoadScene(SceneUtils.Next);
         EventBus<LoadSceneEvent>.Raise(new LoadSceneEvent { SceneGroupToLoad = 1 });
     }
 

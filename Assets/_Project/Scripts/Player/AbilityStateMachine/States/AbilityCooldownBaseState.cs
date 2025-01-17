@@ -15,11 +15,9 @@ public class AbilityCooldownBaseState<T> : AbilityState<T> where T : AbilityStat
 
         //_ability.AbilityIcon.OnEnterCooldown();
 
-        Debug.Log(_ability._fsm.PreviousState.ID + " " + _ability._fsm.CurrentState.ID + " " + _ability.CooldownTimer);
-        if (_ability._fsm.PreviousState.ID == EAbilityState.ACTIVE)
+        if (_ability.FSM.PreviousState.ID == EAbilityState.ACTIVE)
         {
             _ability.CooldownTimer = _ability.CooldownDuration;
-            Debug.Log("me ejecuto y no deberia");
         }
     }
 
@@ -28,17 +26,6 @@ public class AbilityCooldownBaseState<T> : AbilityState<T> where T : AbilityStat
         base.Update();
 
         UpdateCooldownTimer();
-    }
-
-    public override void Exit()
-    {
-        base.Exit();
-
-        if (_ability._fsm.CurrentState.ID == EAbilityState.READY)
-        {
-            _ability.CooldownTimer = _ability.CooldownDuration;
-            //_ability.AbilityIcon.OnExitCooldown();
-        }
     }
 
     private void UpdateCooldownTimer()
@@ -51,7 +38,7 @@ public class AbilityCooldownBaseState<T> : AbilityState<T> where T : AbilityStat
         }
         else
         {
-            _ability._fsm.TransitionTo(EAbilityState.READY);
+            _ability.FSM.TransitionTo(EAbilityState.READY);
         }
     }
 }

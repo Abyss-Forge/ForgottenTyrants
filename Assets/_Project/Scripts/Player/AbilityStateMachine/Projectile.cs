@@ -3,12 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ForgottenTyrants;
+using Unity.Netcode;
 
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
-public abstract class Projectile : MonoBehaviour
+public abstract class Projectile : NetworkBehaviour
 {
     protected Rigidbody _rigidbody;
     protected CapsuleCollider _collider;
+
+    public enum EProjectileState
+    {
+        LIVE, HIT, DESTROYED
+    }
 
     [SerializeField] protected float _lifetime = 5, _gravityMultiplier = 1;
 
@@ -27,7 +33,6 @@ public abstract class Projectile : MonoBehaviour
 
     protected float _lifetimeTimer;
     protected int _remainingRicochets;
-
 
     protected virtual void Awake()
     {

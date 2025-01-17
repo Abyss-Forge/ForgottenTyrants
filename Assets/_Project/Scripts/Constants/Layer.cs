@@ -31,7 +31,7 @@ namespace ForgottenTyrants
         public const int UI = 5;
         public const int Player = 6;
         public const int MinimapOnly = 7;
-        public const int Lighting = 8;
+        public const int VFX = 8;
         /// <summary>
         /// Use this type in place of layer or layer mask values in code / scripts.
         /// </summary>
@@ -52,7 +52,7 @@ namespace ForgottenTyrants
             public const int UI = 32;
             public const int Player = 64;
             public const int MinimapOnly = 128;
-            public const int Lighting = 256;
+            public const int VFX = 256;
         }
     }
 }

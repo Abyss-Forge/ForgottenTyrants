@@ -8,10 +8,4 @@ public class AbilityReadyBaseState<T> : AbilityState<T> where T : AbilityStateMa
     {
     }
 
-    public override void Enter()
-    {
-        base.Enter();
-
-        _ability._fsm.TransitionTo(EAbilityState.ACTIVE);
-    }
 }

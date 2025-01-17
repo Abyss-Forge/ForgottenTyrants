@@ -1,30 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using ForgottenTyrants;
 using Systems.FSM;
 
 public class BombBehaviour : ExplosiveProjectile
 {
-
-    public enum EProjectileState
-    {
-        LIVE, HIT, DESTROYED
-    }
-
     #region Setup
 
     public FiniteStateMachine<EProjectileState> _fsm { get; private set; }
 
-    /*void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         _fsm = new();
         InitializeStates();
-        _fsm.SetCurrentState(EProjectileState.LIVE);
+        _fsm.TransitionTo(EProjectileState.LIVE);
     }
 
-    void Update() => _fsm.Update();
-    void FixedUpdate() => _fsm.FixedUpdate();
+    protected override void Update()
+    {
+        base.Update();
+        _fsm.Update();
+    }
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+        _fsm.FixedUpdate();
+    }
     void LateUpdate() => _fsm.LateUpdate();
 
     protected virtual void InitializeStates()
@@ -32,11 +35,11 @@ public class BombBehaviour : ExplosiveProjectile
         _fsm.Add(new BombLiveState(this));
         _fsm.Add(new BombExplodingState(this));
         _fsm.Add(new BombDestroyedState(this));
-    }*/
+    }
 
     #endregion
 
-    public class BombLiveState : State<EProjectileState>
+    private class BombLiveState : State<EProjectileState>
     {
         readonly BombBehaviour _bomb;
         public BombLiveState(BombBehaviour bomb) : base(EProjectileState.LIVE) => _bomb = bomb;
@@ -47,12 +50,9 @@ public class BombBehaviour : ExplosiveProjectile
 
             _bomb.gameObject.SetActive(true);
         }
-
-
     }
 
-
-    public class BombExplodingState : State<EProjectileState>
+    private class BombExplodingState : State<EProjectileState>
     {
         readonly BombBehaviour _bomb;
         public BombExplodingState(BombBehaviour bomb) : base(EProjectileState.HIT) => _bomb = bomb;
@@ -66,7 +66,7 @@ public class BombBehaviour : ExplosiveProjectile
 
     }
 
-    public class BombDestroyedState : State<EProjectileState>
+    private class BombDestroyedState : State<EProjectileState>
     {
         readonly BombBehaviour _bomb;
         public BombDestroyedState(BombBehaviour bomb) : base(EProjectileState.DESTROYED) => _bomb = bomb;

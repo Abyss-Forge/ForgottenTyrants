@@ -53,6 +53,7 @@ namespace Systems.EventBus
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Initialize()
         {
+            Debug.Log("Initializing all buses...");
             EventTypes = PredefinedAssemblyUtil.GetTypes(typeof(IBusEvent));
             EventBusTypes = InitializeAllBuses();
         }
@@ -66,7 +67,7 @@ namespace Systems.EventBus
             {
                 var busType = typedef.MakeGenericType(eventType);
                 eventBusTypes.Add(busType);
-                Debug.Log($"Initialized EventBus<{eventType.Name}>");
+                //Debug.Log($"Initialized EventBus<{eventType.Name}>");
             }
 
             return eventBusTypes;

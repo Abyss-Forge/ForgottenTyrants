@@ -38,7 +38,7 @@ public class AbilityActiveBaseState<T> : AbilityState<T> where T : AbilityStateM
         }
         else
         {
-            _ability._fsm.TransitionTo(EAbilityState.COOLDOWN);
+            _ability.FSM.TransitionTo(EAbilityState.COOLDOWN);
         }
     }
 

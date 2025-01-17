@@ -5,10 +5,10 @@ using ForgottenTyrants;
 using Systems.EventBus;
 using UnityEngine;
 
-[RequireComponent(typeof(HealthBehaviour))]
+[RequireComponent(typeof(DamageableBehaviour))]
 public class BodyPartDamager : MonoBehaviour
 {
-    HealthBehaviour _health;
+    DamageableBehaviour _damageable;
 
     [System.Serializable]
     private struct BodyPartData
@@ -30,7 +30,7 @@ public class BodyPartDamager : MonoBehaviour
 
     void Awake()
     {
-        _health = GetComponentInParent<HealthBehaviour>();
+        _damageable = GetComponentInParent<DamageableBehaviour>();
 
         foreach (BodyPartData data in _bodyPartsData)
         {
@@ -40,7 +40,7 @@ public class BodyPartDamager : MonoBehaviour
 
     private void OnEnable()
     {
-        _health.OnDeath += HandleDeath;
+        _damageable.OnDeath += HandleDeath;
 
         foreach (BodyPartData data in _bodyPartsData)
         {
@@ -53,7 +53,7 @@ public class BodyPartDamager : MonoBehaviour
 
     private void OnDisable()
     {
-        _health.OnDeath -= HandleDeath;
+        _damageable.OnDeath -= HandleDeath;
 
         foreach (BodyPartData data in _bodyPartsData)
         {
@@ -123,7 +123,7 @@ public class BodyPartDamager : MonoBehaviour
         if (_bodyPartsDictionary.TryGetValue(bodyPart, out var bodyPartData))
         {
             baseDamage *= bodyPartData.Item2;
-            _health.Damage((int)baseDamage);
+            _damageable.Damage((int)baseDamage);
             Debug.Log("Recibiste " + baseDamage + " de daño en " + bodyPart);
         }
     }

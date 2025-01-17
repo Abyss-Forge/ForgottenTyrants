@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Systems.FSM
 {
@@ -15,12 +12,7 @@ namespace Systems.FSM
         }
 
         public delegate void DelegateNoArg();
-
-        public DelegateNoArg OnEnter;
-        public DelegateNoArg OnExit;
-        public DelegateNoArg OnUpdate;
-        public DelegateNoArg OnFixedUpdate;
-        public DelegateNoArg OnLateUpdate;
+        public DelegateNoArg OnEnter, OnExit, OnUpdate, OnFixedUpdate, OnLateUpdate;
 
         public State(EState id,
             DelegateNoArg onEnter,
@@ -36,30 +28,10 @@ namespace Systems.FSM
             OnLateUpdate = onLateUpdate;
         }
 
-        virtual public void Enter()
-        {
-            OnEnter?.Invoke();
-        }
-
-        virtual public void Exit()
-        {
-            OnExit?.Invoke();
-        }
-
-        virtual public void Update()
-        {
-            OnUpdate?.Invoke();
-        }
-
-        virtual public void FixedUpdate()
-        {
-            OnFixedUpdate?.Invoke();
-        }
-
-        virtual public void LateUpdate()
-        {
-            OnLateUpdate?.Invoke();
-        }
-
+        virtual public void Enter() => OnEnter?.Invoke();
+        virtual public void Exit() => OnExit?.Invoke();
+        virtual public void Update() => OnUpdate?.Invoke();
+        virtual public void FixedUpdate() => OnFixedUpdate?.Invoke();
+        virtual public void LateUpdate() => OnLateUpdate?.Invoke();
     }
 }

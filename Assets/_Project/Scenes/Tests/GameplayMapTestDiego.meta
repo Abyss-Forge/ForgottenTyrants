@@ -1,5 +1,9 @@
 fileFormatVersion: 2
-guid: 463bde9ee45a3bc4fad171ab0f75f118
+<<<<<<<< HEAD:Assets/_Project/Scenes/Tests/GameplayMapTestDiego.meta
+guid: b32ed163a8cb9bc428f65ef490687afe
+========
+guid: 7dd95de4106f1374c9487e9143d31f3f
+>>>>>>>> Ivan-SeguimosConElMulti:Assets/_Project/Prefabs/Player/Abilities/Props.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

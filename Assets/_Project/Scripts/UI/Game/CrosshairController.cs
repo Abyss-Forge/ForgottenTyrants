@@ -14,8 +14,6 @@ public class CrosshairController : Configurable<string, string>
     [SerializeField] private Crosshair[] _crosshairs;
     [SerializeField] private Color _defaultColor;
 
-    public GameObject TargetObject { get; private set; }
-
     public CrosshairController() : base("CrosshairSettings", "Crosshair", "Target", "Color") { }
 
     protected override void InitializeDefaults()
@@ -45,8 +43,6 @@ public class CrosshairController : Configurable<string, string>
         {
             if (hitInfo.collider != null)
             {
-                TargetObject = hitInfo.collider.gameObject;
-
                 string tag = hitInfo.collider.gameObject.tag;
                 foreach (var item in _settings)
                 {
