@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8746637386432288891}
   - component: {fileID: 8085954044815004206}
   - component: {fileID: 2647948582407606936}
+  - component: {fileID: -9022642004609456823}
   m_Layer: 0
   m_Name: Barrier Preview
   m_TagString: Untagged
@@ -51,9 +52,9 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
-  m_MotionVectors: 1
+  m_MotionVectors: 2
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
@@ -83,3 +84,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-9022642004609456823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4545921766542476528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e778ec0c4dfe0794eac08c773f1aff73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _validColor: {r: 0, g: 0.5294118, b: 1, a: 0.78431374}
+  _invalidColor: {r: 1, g: 0, b: 0, a: 0.78431374}

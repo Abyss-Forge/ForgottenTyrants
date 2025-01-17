@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using ForgottenTyrants;
 using Unity.Netcode;
 using UnityEngine;
+using Utils.Extensions;
 
 public class NaturalBarrierAbility : AbilityStateMachine, IAbilityWithRange, IAbilityWithTarget
 {
     #region Specific ability properties
 
-    [SerializeField] private GameObject _barrierPrefab, _previewBarrierPrefab;
-    private GameObject _barrierInstance, _impactObject;
+    [SerializeField] private PlaceablePreview _previewBarrierPrefab;
+    [SerializeField] private GameObject _barrierPrefab;
+
+    private PlaceablePreview _previewBarrierInstance;
+    private GameObject _barrierInstance;
     private Vector3? _propSpawnPosition;
 
     #endregion
@@ -32,7 +36,14 @@ public class NaturalBarrierAbility : AbilityStateMachine, IAbilityWithRange, IAb
         }
         else if (_fsm.CurrentState.ID == EAbilityState.PREVIEW)
         {
-            _fsm.TransitionTo(EAbilityState.ACTIVE);
+            if (_previewBarrierInstance != null && _previewBarrierInstance.IsValid)
+            {
+                _fsm.TransitionTo(EAbilityState.ACTIVE);
+            }
+            else
+            {
+                _fsm.TransitionTo(EAbilityState.READY);
+            }
         }
         else if (_fsm.CurrentState.ID == EAbilityState.ACTIVE)
         {
@@ -48,7 +59,7 @@ public class NaturalBarrierAbility : AbilityStateMachine, IAbilityWithRange, IAb
         _fsm.Add(new AbilityCooldownBaseState<NaturalBarrierAbility>(this, EAbilityState.COOLDOWN));
         _fsm.Add(new AbilityLockedBaseState<NaturalBarrierAbility>(this, EAbilityState.LOCKED));
     }
-
+    //TODO limpiar la guarrada que hay aqui montada
     private class AbilityPreviewState : AbilityPreviewBaseState<NaturalBarrierAbility>
     {
         public AbilityPreviewState(NaturalBarrierAbility ability, EAbilityState id) : base(ability, id)
@@ -76,55 +87,53 @@ public class NaturalBarrierAbility : AbilityStateMachine, IAbilityWithRange, IAb
 
         private void SpawnProp()
         {
-            Vector3 position = _ability._propSpawnPosition ?? Vector3.zero;
-            Quaternion rotation = _ability.SpawnPoint.transform.rotation;
-
-            _ability._barrierInstance = Instantiate(_ability._previewBarrierPrefab, position, rotation, _ability.transform);
-            _ability._barrierInstance.transform.SetParent(null);
+            //_ability._previewBarrierInstance = Instantiate(_ability._previewBarrierPrefab.gameObject, _ability.transform, false);
+            _ability._previewBarrierInstance = ExtensionMethods.GetInstantiate<PlaceablePreview>(_ability._previewBarrierPrefab.gameObject, _ability.transform);
+            _ability._previewBarrierInstance.transform.SetParent(null);
+            _ability._previewBarrierInstance.gameObject.Disable();
         }
 
         private void TryGetTarget()
         {
-            _ability._impactObject = CrosshairRaycaster.GetImpactObject();
-            _ability._propSpawnPosition = CrosshairRaycaster.GetImpactPosition();
+            _ability._propSpawnPosition = CrosshairRaycaster.GetImpactPosition(Layer.Mask.Terrain);
 
-            if (_ability._impactObject == null || _ability._propSpawnPosition == null)
+            if (_ability._propSpawnPosition == null)
             {
-                _ability._barrierInstance.SetActive(false);
+                _ability._previewBarrierInstance.gameObject.Disable();
                 return;
             }
 
-            if (_ability._impactObject.layer == Layer.Terrain && CheckIfInRange())
-            {
-                if (!_ability._barrierInstance.activeSelf) _ability._barrierInstance.SetActive(true);
-                UpdatePropPosition();
-            }
-            else
-            {
-                _ability._barrierInstance.SetActive(false);
-            }
-        }
+            if (!_ability._previewBarrierInstance.gameObject.activeSelf) _ability._previewBarrierInstance.gameObject.Enable();
 
-        private bool CheckIfInRange()
-        {
-            float distance = Vector3.Distance(_ability.transform.position, _ability._propSpawnPosition.Value);
-            return _ability.Range <= distance;
+            bool isInRange = _ability.transform.position.InRangeOf(_ability._propSpawnPosition.Value, _ability.Range);
+            _ability._previewBarrierInstance.SetValid(isInRange);
+
+            UpdatePropPosition();
         }
 
         private void UpdatePropPosition()
         {
-            Vector3 position = _ability._propSpawnPosition ?? Vector3.zero;
+            Vector3 position = GetTargetPosition();
             Quaternion rotation = _ability.SpawnPoint.transform.rotation;
 
-            _ability._barrierInstance.transform.position = position;
-            _ability._barrierInstance.transform.rotation = rotation;
+            _ability._previewBarrierInstance.transform.position = position;
+            _ability._previewBarrierInstance.transform.rotation = rotation;
         }
+
+        private Vector3 GetTargetPosition()
+        {
+            Vector3 targetPosition = _ability._propSpawnPosition.Value;
+            Transform barrierTransform = _ability._barrierPrefab.transform;
+            float halfHeight = barrierTransform.localScale.y / 2;
+            targetPosition.y += halfHeight;
+            return targetPosition;
+        }
+
 
         private void DespawnProp()
         {
-            if (_ability._barrierInstance != null) Destroy(_ability._barrierInstance);
+            if (_ability._previewBarrierInstance.gameObject != null) Destroy(_ability._previewBarrierInstance.gameObject);
         }
-
     }
 
     private class AbilityActiveState : AbilityActiveBaseState<NaturalBarrierAbility>
@@ -137,40 +146,19 @@ public class NaturalBarrierAbility : AbilityStateMachine, IAbilityWithRange, IAb
         {
             base.Enter();
 
-            TryGetTarget();
+            SpawnProp();
         }
 
         public override void Exit()
         {
             base.Exit();
 
-            _ability.StartCoroutine(AnimateBarrier(true));
-        }
-
-        private void TryGetTarget()
-        {
-            _ability._impactObject = CrosshairRaycaster.GetImpactObject();
-            _ability._propSpawnPosition = CrosshairRaycaster.GetImpactPosition();
-
-            if (_ability._impactObject == null || _ability._propSpawnPosition == null)
-            {
-                _ability.FSM.TransitionTo(EAbilityState.COOLDOWN);
-                return;
-            }
-
-            if (_ability._impactObject.layer == Layer.Terrain && CheckIfInRange()) SpawnProp();
-            //  if (_ability._impactObject.layer != Layer.Terrain && CheckIfInRange()) SpawnProp();
-        }
-
-        private bool CheckIfInRange()
-        {
-            float distance = Vector3.Distance(_ability.transform.position, _ability._propSpawnPosition.Value);
-            return _ability.Range <= distance;
+            _ability.StartCoroutine(AnimateBarrier(backwards: true));
         }
 
         private void SpawnProp()
         {
-            Vector3 position = _ability._propSpawnPosition ?? Vector3.zero;
+            Vector3 position = GetTargetPosition(true);
             Quaternion rotation = _ability.SpawnPoint.transform.rotation; //Quaternion.LookRotation(_propSpawnPosition.Value - position, Vector3.up);
 
             _ability._barrierInstance = Instantiate(_ability._barrierPrefab, position, rotation, _ability.transform);
