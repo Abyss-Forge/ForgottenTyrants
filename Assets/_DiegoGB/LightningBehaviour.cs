@@ -45,6 +45,14 @@ public class LightningBehaviour : NetworkBehaviour
         }
     }
 
+    [ClientRpc]
+    private void UpdateLineRendererClientRpc(Vector3[] points)
+    {
+        if (_line == null) return;
+
+        _line.positionCount = points.Length;
+        _line.SetPositions(points);
+    }
 
     private Vector3 GetRandomPointOnTerrain()
     {
@@ -113,11 +121,14 @@ public class LightningBehaviour : NetworkBehaviour
 
     private void UpdatePoints()
     {
-        if (_line == null) return;
+        if (!IsServer || _line == null) return;
 
         List<Vector3> points = InterpolatePoints(_lightingModelStart.localPosition, _lightingModelEnd.localPosition, _keyPointsQuantity);
         _line.positionCount = points.Count;
         _line.SetPositions(points.ToArray());
+
+        // Envía los puntos a los clientes
+        UpdateLineRendererClientRpc(points.ToArray());
     }
 
     private List<Vector3> InterpolatePoints(Vector3 start, Vector3 end, int totalPoints)
