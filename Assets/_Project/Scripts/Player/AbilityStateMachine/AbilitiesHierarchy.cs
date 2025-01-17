@@ -16,8 +16,6 @@ public interface IAbilityBase
 public interface IAbilityWithRange : IAbilityBase
 {
     float Range { get; }
-
-    void OnDrawGizmos();
 }
 
 public interface IAbilityWithProjectile : IAbilityBase

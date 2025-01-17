@@ -12,10 +12,10 @@ public class EnergyDrainAbility : AbilityStateMachine, IAbilityWithTarget, IAbil
     #region Interface implementation
 
     private GameObject _target;
-    GameObject IAbilityWithTarget.Target => _target;
+    public GameObject Target => _target;
 
     [SerializeField] private float _dotThreshold = 5f;
-    float IAbilityWithDotTick.DotThreshold => _dotThreshold;
+    public float DotThreshold => _dotThreshold;
 
     #endregion
     #region States
@@ -23,6 +23,7 @@ public class EnergyDrainAbility : AbilityStateMachine, IAbilityWithTarget, IAbil
     protected override void InitializeStates()
     {
         _fsm.Add(new AbilityReadyBaseState<EnergyDrainAbility>(this, EAbilityState.READY));
+        _fsm.Add(new AbilityPreviewBaseState<EnergyDrainAbility>(this, EAbilityState.PREVIEW));
         _fsm.Add(new AbilityActiveState(this, EAbilityState.ACTIVE));
         _fsm.Add(new AbilityCooldownBaseState<EnergyDrainAbility>(this, EAbilityState.COOLDOWN));
         _fsm.Add(new AbilityLockedBaseState<EnergyDrainAbility>(this, EAbilityState.LOCKED));

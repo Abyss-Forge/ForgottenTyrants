@@ -14,6 +14,7 @@ public class TotalDarknessAbility : AbilityStateMachine
     protected override void InitializeStates()
     {
         _fsm.Add(new AbilityReadyBaseState<TotalDarknessAbility>(this, EAbilityState.READY));
+        _fsm.Add(new AbilityPreviewBaseState<TotalDarknessAbility>(this, EAbilityState.PREVIEW));
         _fsm.Add(new AbilityActiveState(this, EAbilityState.ACTIVE));
         _fsm.Add(new AbilityCooldownBaseState<TotalDarknessAbility>(this, EAbilityState.COOLDOWN));
         _fsm.Add(new AbilityLockedBaseState<TotalDarknessAbility>(this, EAbilityState.LOCKED));

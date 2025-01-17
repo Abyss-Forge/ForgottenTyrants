@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class HealthBehaviour : MonoBehaviour, IDamageable
+public class DamageableBehaviour : MonoBehaviour, IDamageable
 {
     [field: SerializeField] public int Health { get; private set; }
 

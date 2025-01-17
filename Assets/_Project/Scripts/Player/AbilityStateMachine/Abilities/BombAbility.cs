@@ -30,6 +30,7 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
     protected override void InitializeStates()
     {
         _fsm.Add(new AbilityReadyBaseState<BombAbility>(this, EAbilityState.READY));
+        _fsm.Add(new AbilityPreviewBaseState<BombAbility>(this, EAbilityState.PREVIEW));
         _fsm.Add(new AbilityActiveState(this, EAbilityState.ACTIVE));
         _fsm.Add(new AbilityCooldownBaseState<BombAbility>(this, EAbilityState.COOLDOWN));
         _fsm.Add(new AbilityLockedBaseState<BombAbility>(this, EAbilityState.LOCKED));

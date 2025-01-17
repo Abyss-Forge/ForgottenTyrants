@@ -27,7 +27,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6f2d5a0b802feec49ae071b1a8478343, type: 2}
   - {fileID: 11400000, guid: fc4b5b9a4aa7e7d409a19a5ac1505234, type: 2}
   - {fileID: 11400000, guid: ed474ad2b6910da47a29f875974d0a98, type: 2}
-  - {fileID: 11400000, guid: 24f84cbf925572a45b6656daac21b089, type: 2}
+  - {fileID: 11400000, guid: ea4cb1d3ed7410d469c5a1d1b55a4f04, type: 2}
   <Weapons>k__BackingField:
   - {fileID: 11400000, guid: 6d43809d2500a67408f3b9ba51282672, type: 2}
   - {fileID: 11400000, guid: fc79f38122cf3c7439d31c6dd21dfc99, type: 2}

@@ -12,13 +12,13 @@ public class DeadlyPoisonAbility : AbilityStateMachine, IAbilityWithTarget, IAbi
     #region Interface implementation
 
     private GameObject _target;
-    GameObject IAbilityWithTarget.Target => _target;
+    public GameObject Target => _target;
 
     [SerializeField] private float _dotThreshold = 5f;
-    float IAbilityWithDotTick.DotThreshold => _dotThreshold;
+    public float DotThreshold => _dotThreshold;
 
     [SerializeField] private Stats _statModifier;
-    Stats IAbilityWithBuff.StatModifier => _statModifier;
+    public Stats StatModifier => _statModifier;
 
     #endregion
     #region States
@@ -26,6 +26,7 @@ public class DeadlyPoisonAbility : AbilityStateMachine, IAbilityWithTarget, IAbi
     protected override void InitializeStates()
     {
         _fsm.Add(new AbilityReadyBaseState<DeadlyPoisonAbility>(this, EAbilityState.READY));
+        _fsm.Add(new AbilityPreviewBaseState<DeadlyPoisonAbility>(this, EAbilityState.PREVIEW));
         _fsm.Add(new AbilityActiveState(this, EAbilityState.ACTIVE));
         _fsm.Add(new AbilityCooldownBaseState<DeadlyPoisonAbility>(this, EAbilityState.COOLDOWN));
         _fsm.Add(new AbilityLockedBaseState<DeadlyPoisonAbility>(this, EAbilityState.LOCKED));
@@ -65,9 +66,9 @@ public class DeadlyPoisonAbility : AbilityStateMachine, IAbilityWithTarget, IAbi
         private void TryGetTarget()
         {
             _ability._target = CrosshairRaycaster.GetImpactObject();
-            if (_ability._target == null || !_ability._target.CompareTag(Tag.Enemy))
+            if (_ability.Target == null || !_ability.Target.CompareTag(Tag.Enemy))
             {
-                _ability._fsm.TransitionTo(EAbilityState.COOLDOWN);
+                _ability.FSM.TransitionTo(EAbilityState.COOLDOWN);
             }
         }
 

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using Systems.FSM;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum EAbilityState
 {
-    READY, ACTIVE, COOLDOWN, LOCKED
+    READY, PREVIEW, ACTIVE, COOLDOWN, LOCKED
 }
 
 public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
@@ -46,7 +47,12 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
         yield return null;
     }
 
-    public void Trigger()
+    public virtual void OnTriggered(InputAction.CallbackContext context)
+    {
+        if (context.performed) UpdateState();
+    }
+
+    protected virtual void UpdateState()
     {
         if (_fsm.CurrentState.ID == EAbilityState.READY)
         {
@@ -61,7 +67,8 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
     #endregion
     #region Setup
 
-    public FiniteStateMachine<EAbilityState> _fsm { get; private set; }
+    protected FiniteStateMachine<EAbilityState> _fsm;
+    public FiniteStateMachine<EAbilityState> FSM => _fsm;
 
     void Awake()
     {

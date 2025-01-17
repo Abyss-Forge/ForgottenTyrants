@@ -30,6 +30,7 @@ public class FireballAbility : AbilityStateMachine, IAbilityWithProjectile
     protected override void InitializeStates()
     {
         _fsm.Add(new AbilityReadyBaseState<FireballAbility>(this, EAbilityState.READY));
+        _fsm.Add(new AbilityPreviewBaseState<FireballAbility>(this, EAbilityState.PREVIEW));
         _fsm.Add(new AbilityActiveState(this, EAbilityState.ACTIVE));
         _fsm.Add(new AbilityCooldownBaseState<FireballAbility>(this, EAbilityState.COOLDOWN));
         _fsm.Add(new AbilityLockedBaseState<FireballAbility>(this, EAbilityState.LOCKED));

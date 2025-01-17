@@ -15,9 +15,8 @@ public class LivingChainsAbility : AbilityStateMachine, IAbilityWithRange
     #region Interface implementation
 
     [SerializeField] float _range;
-    float IAbilityWithRange.Range => _range;
+    public float Range => _range;
 
-    void IAbilityWithRange.OnDrawGizmos() => OnDrawGizmos();
     void OnDrawGizmos()
     {
         if (_fsm != null && _fsm.CurrentState.ID == EAbilityState.ACTIVE)
@@ -33,6 +32,7 @@ public class LivingChainsAbility : AbilityStateMachine, IAbilityWithRange
     protected override void InitializeStates()
     {
         _fsm.Add(new AbilityReadyBaseState<LivingChainsAbility>(this, EAbilityState.READY));
+        _fsm.Add(new AbilityPreviewBaseState<LivingChainsAbility>(this, EAbilityState.PREVIEW));
         _fsm.Add(new AbilityActiveState(this, EAbilityState.ACTIVE));
         _fsm.Add(new AbilityCooldownBaseState<LivingChainsAbility>(this, EAbilityState.COOLDOWN));
         _fsm.Add(new AbilityLockedBaseState<LivingChainsAbility>(this, EAbilityState.LOCKED));
@@ -102,7 +102,7 @@ public class LivingChainsAbility : AbilityStateMachine, IAbilityWithRange
 
                 lr.SetPosition(0, _ability.transform.position);
                 lr.SetPosition(1, enemy.transform.position);
-                //StartCoroutine(AnimateChain(lr, enemy.transform.position));
+                //_ability.StartCoroutine(AnimateChain(lr, enemy.transform.position));
 
                 _ability._playerChains.Add(enemy, chain);
             }

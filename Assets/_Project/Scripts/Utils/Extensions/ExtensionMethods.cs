@@ -13,6 +13,17 @@ namespace Utils.Extensions
             return instance?.GetComponent<T>() ?? null;
         }
 
+        //TODO
+        /* public static void Enable<T>(GameObject gameObject)
+         {
+             gameObject.SetActive(true);
+         }
+
+         public static void Disable<T>(GameObject gameObject)
+         {
+             gameObject.SetActive(false);
+         }*/
+
 
         public static bool IsInRange<T>(this T[] array, int index) => index >= 0 && index < array.Length;
 
