@@ -11,17 +11,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 6e62cab4ad0fd474a87a0482b1cab226,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.6143761
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6e62cab4ad0fd474a87a0482b1cab226,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -50.138596
+      value: -1.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6e62cab4ad0fd474a87a0482b1cab226,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -73.26
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6e62cab4ad0fd474a87a0482b1cab226,
         type: 3}
@@ -31,7 +31,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 6e62cab4ad0fd474a87a0482b1cab226,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6e62cab4ad0fd474a87a0482b1cab226,
         type: 3}
@@ -41,7 +41,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 6e62cab4ad0fd474a87a0482b1cab226,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -1
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6e62cab4ad0fd474a87a0482b1cab226,
         type: 3}
@@ -51,7 +51,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 6e62cab4ad0fd474a87a0482b1cab226,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6e62cab4ad0fd474a87a0482b1cab226,
         type: 3}
@@ -102,11 +102,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6e62cab4ad0fd474a87a0482b1cab226,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2888966388231242505}
+      addedObject: {fileID: 6283978769914227990}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6e62cab4ad0fd474a87a0482b1cab226,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8836386827191840120}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6e62cab4ad0fd474a87a0482b1cab226,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7564319589830502171}
   m_SourcePrefab: {fileID: 100100000, guid: 6e62cab4ad0fd474a87a0482b1cab226, type: 3}
 --- !u!1 &4906291354553880261 stripped
 GameObject:
@@ -114,7 +118,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 5248888396931937172}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2888966388231242505
+--- !u!114 &6283978769914227990
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -126,7 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1399270187
+  GlobalObjectIdHash: 2291907005
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -147,12 +151,82 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48705e41603aa66438d7e6d6580654dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: 
-  CurrentHp: 0
+  <Name>k__BackingField: Locomotronix
+  CurrentHp: 10000
   _targetSelectionInterval: 6
   _attackInterval: 3
   _meleeRange: 5
   _decayValue: 10
   _decayInterval: 3
-  _players: []
   _gravityEventEffectDuration: 20
+  _damageBoostEffectDuration: 5
+  _disappearEffectDuration: 3
+  _powerUpPrefab: {fileID: 5376002299934453711, guid: caf9c7b6563d0d24c8ce25594fe20ffe,
+    type: 3}
+  _spawnRadius: 100
+  _spawnCount: 3
+  _heightOffset: 2
+  _lightningPrefab: {fileID: 3111726071380480791, guid: d41ea08849282db45b94154bbc24103f,
+    type: 3}
+  _thunderSpawner: {fileID: 0}
+  _stormRadius: 100
+  _stormDuration: 5
+  _lightningInterval: 0.2
+  _hidePosition: {fileID: 0}
+  _bossPosition: {fileID: 0}
+  _moveDuration: 5
+  _movementCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &7564319589830502171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4906291354553880261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 1
+  SlerpPosition: 0

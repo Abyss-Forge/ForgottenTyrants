@@ -30,6 +30,13 @@ public class BossController : Entity
     [SerializeField] float _stormDuration = 10;
     [SerializeField] float _lightningInterval = .5f;
 
+    [Header("Disappear settings")]
+
+    [SerializeField] Transform _hidePosition;
+    [SerializeField] Transform _bossPosition;
+    [SerializeField] private float _moveDuration = 5f;
+    [SerializeField] private AnimationCurve _movementCurve;
+
     private BehaviorSequence _rootSequence;
     private Terrain _terrain;
     private Dictionary<GameObject, float> _originalJumpForces = new Dictionary<GameObject, float>();
@@ -102,26 +109,31 @@ public class BossController : Entity
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                RequestPowerUpsServerRpc(); // El cliente pide al servidor que spawnee power-ups
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
                 TriggerDamageBoostServerRpc();
             }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                TriggerDissapearServerRpc();
+            }
+
             if (Input.GetKeyDown(KeyCode.Alpha3))
             {
-                TriggerLowGravityServerRpc();
+                RequestPowerUpsServerRpc(); // El cliente pide al servidor que spawnee power-ups
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha4))
             {
-                TriggerSwapPositionsServerRpc();
+                TriggerStormServerRpc();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha5))
             {
-                TriggerStormServerRpc();
+                TriggerLowGravityServerRpc();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha6))
+            {
+                TriggerSwapPositionsServerRpc();
             }
 
         }
@@ -318,14 +330,41 @@ public class BossController : Entity
         StartCoroutine(EventDissapear());
     }
 
+
     IEnumerator EventDissapear()
     {
-        this.gameObject.SetActive(false);
+        yield return StartCoroutine(MoveTo(_hidePosition.position, _moveDuration));
 
         yield return new WaitForSeconds(_disappearEffectDuration);
 
-        this.gameObject.SetActive(false);
+        yield return StartCoroutine(MoveTo(_bossPosition.position, _moveDuration));
 
+    }
+
+    private IEnumerator MoveTo(Vector3 destination, float duration)
+    {
+        float elapsedTime = 0f;
+        Vector3 startPosition = transform.position;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / duration);
+
+            // Si usas una curva de movimiento, aplica su valor
+            if (_movementCurve != null)
+            {
+                t = _movementCurve.Evaluate(t);
+            }
+
+            // Interpolar entre la posición inicial y la final
+            transform.position = Vector3.Lerp(startPosition, destination, t);
+
+            yield return null;
+        }
+
+        // Asegúrate de llegar exactamente al destino
+        transform.position = destination;
     }
 
     #endregion
@@ -399,7 +438,7 @@ public class BossController : Entity
             );
 
             // Llamar a un método para generar el rayo (puedes ajustar la lógica)
-            SpawnLightningAtPositionClientRpc(spawnPosition);
+            SpawnLightningAtPosition(spawnPosition);
 
             // Esperar el tiempo entre rayos
             yield return new WaitForSeconds(_lightningInterval);
@@ -410,7 +449,9 @@ public class BossController : Entity
 
     private void SpawnLightningAtPosition(Vector3 position)
     {
-        Instantiate(_lightningPrefab, position, Quaternion.identity);
+        var lightning = Instantiate(_lightningPrefab, position, Quaternion.identity);
+        var netObj = lightning.GetComponent<NetworkObject>();
+        netObj.Spawn(); // El servidor lo spawnea y lo controla
     }
 
     #endregion

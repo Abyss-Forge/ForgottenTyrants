@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class LightningBehaviour : NetworkBehaviour
 {
+    [SerializeField] private GameObject _markerPrefab;
     [SerializeField] private float _fadeDuration = 2f;
     [SerializeField] private float _groundDuration = 1f;
     [SerializeField] private float _speed = 30f;
@@ -24,9 +25,13 @@ public class LightningBehaviour : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        _terrain = Terrain.activeTerrain;
-        _targetPosition = ShowRandomPointOnTerrain();
-        transform.LookAt(_targetPosition);
+        if (IsServer)
+        {
+            _terrain = Terrain.activeTerrain;
+            _targetPosition = ShowRandomPointOnTerrain();
+            transform.LookAt(_targetPosition);
+        }
+
         // Vector3 direction = (_targetPosition - _lightingModelStart.position).normalized;
         // _lightingModelStart.rotation = Quaternion.LookRotation(direction);
 
@@ -39,6 +44,7 @@ public class LightningBehaviour : NetworkBehaviour
             _lineMaterial = _line.material;
         }
     }
+
 
     private Vector3 GetRandomPointOnTerrain()
     {
@@ -55,30 +61,42 @@ public class LightningBehaviour : NetworkBehaviour
         return new Vector3(x + terrainPosition.x, y + terrainPosition.y, z + terrainPosition.z);
     }
 
+    [ServerRpc]
+    private void SpawnMarkerOnTerrainServerRpc(Vector3 position)
+    {
+        // Solo el servidor spawnea las esferas
+        if (!IsServer) return;
+
+        // Instancia la esfera en el servidor
+        GameObject marker = Instantiate(_markerPrefab, position, Quaternion.identity);
+
+        // Asegúrate de que el prefab tiene un NetworkObject
+        NetworkObject networkObject = marker.GetComponent<NetworkObject>();
+        if (networkObject != null)
+        {
+            networkObject.Spawn(); // Esto sincroniza la esfera en los clientes
+        }
+        else
+        {
+            Debug.LogError("El prefab de la esfera no tiene un componente NetworkObject.");
+        }
+    }
+
     private Vector3 ShowRandomPointOnTerrain()
     {
-        // Obtiene un punto aleatorio en el terreno
+        // Genera un punto aleatorio en el terreno
         Vector3 randomPoint = GetRandomPointOnTerrain();
 
-        // Crea un marcador visual en la escena, como una esfera o un cubo
-        GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        marker.transform.position = randomPoint;
+        // Llama al ServerRpc para spawnear la esfera roja en el servidor
+        SpawnMarkerOnTerrainServerRpc(randomPoint);
 
-        // Ajusta el tamaño del marcador para que sea más visible
-        marker.transform.localScale = Vector3.one * 0.5f;
-
-        // Opcional: Cambiar el color del marcador
-        Renderer markerRenderer = marker.GetComponent<Renderer>();
-        markerRenderer.material.color = Color.red;
-
-        // Opcional: Agregar una etiqueta para identificarlo en la jerarquía
-        marker.name = "Random Point Marker";
-
+        // Retorna la posición para cualquier otra lógica que lo necesite
         return randomPoint;
     }
 
     private void Update()
     {
+        if (!IsServer) return;
         _time += Time.deltaTime;
         if (_time > _frequency)
         {
@@ -149,7 +167,25 @@ public class LightningBehaviour : NetworkBehaviour
         SetEmissionIntensity(0.0f);
         _line.widthCurve = new AnimationCurve();
 
-        Destroy(gameObject);
+        DestroyServerRpc();
+    }
+
+    [ServerRpc]
+    private void DestroyServerRpc()
+    {
+        if (IsServer)
+        {
+            // Despawning en Netcode for GameObjects
+            NetworkObject networkObj = GetComponent<NetworkObject>();
+            if (networkObj != null && networkObj.IsSpawned)
+            {
+                networkObj.Despawn(true); // destruye la réplica en todos
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 
     private void SetTransparency(float alpha)
@@ -169,14 +205,19 @@ public class LightningBehaviour : NetworkBehaviour
         _lineMaterial.SetColor("_EmissionColor", emissionColor * intensity);
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
+        if (!IsServer) return;
+
+        if (other.gameObject.layer == Layer.Player)
+        {
+            Debug.Log("Me estas tocando truhan");
+        }
         if (other.gameObject.layer == Layer.Terrain)
         {
             _shouldMove = false;
-            StartCoroutine(FadeOut());
+            //StartCoroutine(FadeOut());
         }
     }
-
 
 }
