@@ -323,6 +323,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8836386827191840120, guid: daca9bdbefb7e2147850e69b3e574b03,
         type: 3}
+      propertyPath: _windCount
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8836386827191840120, guid: daca9bdbefb7e2147850e69b3e574b03,
+        type: 3}
+      propertyPath: _windPrefab
+      value: 
+      objectReference: {fileID: 1621765521811023906, guid: 2cc224c52b6fb894d8f7b81d02749218,
+        type: 3}
+    - target: {fileID: 8836386827191840120, guid: daca9bdbefb7e2147850e69b3e574b03,
+        type: 3}
+      propertyPath: _spawnRadius
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8836386827191840120, guid: daca9bdbefb7e2147850e69b3e574b03,
+        type: 3}
       propertyPath: _bossPosition
       value: 
       objectReference: {fileID: 647434065}
@@ -331,6 +347,11 @@ PrefabInstance:
       propertyPath: _hidePosition
       value: 
       objectReference: {fileID: 1550470408}
+    - target: {fileID: 8836386827191840120, guid: daca9bdbefb7e2147850e69b3e574b03,
+        type: 3}
+      propertyPath: _windDuration
+      value: 60
+      objectReference: {fileID: 0}
     - target: {fileID: 8836386827191840120, guid: daca9bdbefb7e2147850e69b3e574b03,
         type: 3}
       propertyPath: _thunderSpawner

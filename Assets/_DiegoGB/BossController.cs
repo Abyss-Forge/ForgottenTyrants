@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using Systems.BehaviourTree;
+using Unity.Mathematics;
+using Random = UnityEngine.Random;
 
 public class BossController : Entity
 {
@@ -21,7 +23,7 @@ public class BossController : Entity
     [SerializeField] GameObject _powerUpPrefab;
     [SerializeField] float _spawnRadius = 100f;
     [SerializeField] int _spawnCount = 3;
-    [SerializeField] float _heightOffset = 2f;
+    [SerializeField] float _heightOffsetPowerUp = 2f;
 
     [Header("Storm settings")]
     [SerializeField] GameObject _lightningPrefab;
@@ -36,6 +38,12 @@ public class BossController : Entity
     [SerializeField] Transform _bossPosition;
     [SerializeField] private float _moveDuration = 5f;
     [SerializeField] private AnimationCurve _movementCurve;
+
+    [Header("Wind settings")]
+    [SerializeField] GameObject _windPrefab;
+    [SerializeField] float _windDuration = 10;
+    [SerializeField] int _windCount;
+    [SerializeField] float _heightOffsetWind = 0.04f;
 
     private BehaviorSequence _rootSequence;
     private Terrain _terrain;
@@ -136,8 +144,11 @@ public class BossController : Entity
                 TriggerSwapPositionsServerRpc();
             }
 
+            if (Input.GetKeyDown(KeyCode.Alpha7))
+            {
+                TriggerWindEventServerRpc();
+            }
         }
-
     }
 
     void InitializeBehaviorTree()
@@ -384,8 +395,7 @@ public class BossController : Entity
 
         for (int i = 0; i < _spawnCount; i++)
         {
-            // Generar una posición aleatoria dentro del radio
-            Vector3 randomPosition = GetRandomPositionAroundBoss();
+            Vector3 randomPosition = GetRandomPositionAroundBoss(_heightOffsetPowerUp, out _);
 
             // Instanciar el potenciador en la posición calculada
             GameObject powerUp = Instantiate(_powerUpPrefab, randomPosition, Quaternion.identity);
@@ -405,7 +415,7 @@ public class BossController : Entity
 
     #endregion
 
-    #region 4- CLIMATE CHANGES (STORM) EVENT
+    #region 4.1 - CLIMATE CHANGES (STORM) EVENT
 
     [ServerRpc(RequireOwnership = false)]
     public void TriggerStormServerRpc()
@@ -453,6 +463,51 @@ public class BossController : Entity
         var netObj = lightning.GetComponent<NetworkObject>();
         netObj.Spawn(); // El servidor lo spawnea y lo controla
     }
+
+    #endregion
+
+    #region 4.2 - CLIMATE CHANGES (WIND) EVENT
+
+    [ServerRpc(RequireOwnership = false)]
+    public void TriggerWindEventServerRpc()
+    {
+        StartCoroutine(EventWind());
+    }
+
+    private IEnumerator EventWind()
+    {
+        if (!IsServer) yield break;
+
+        List<GameObject> winds = new List<GameObject>();
+
+        for (int i = 0; i < _windCount; i++)
+        {
+            Vector3 randomPosition = GetRandomPositionAroundBoss(_heightOffsetWind, out Quaternion rotation);
+
+
+            GameObject wind = Instantiate(_windPrefab, randomPosition, rotation);
+
+            NetworkObject networkObject = wind.GetComponent<NetworkObject>();
+            if (networkObject != null)
+            {
+                // Spawnear el objeto en la red
+                networkObject.Spawn();
+                winds.Add(wind);
+            }
+            else
+            {
+                Debug.LogError("El prefab del wind no tiene un componente NetworkObject.");
+            }
+        }
+        yield return new WaitForSeconds(_windDuration);
+
+        foreach (GameObject wind in winds)
+        {
+            NetworkObject networkObject = wind.GetComponent<NetworkObject>();
+            networkObject.Despawn();
+        }
+    }
+
 
     #endregion
 
@@ -629,7 +684,7 @@ public class BossController : Entity
         }
     }
 
-    private Vector3 GetRandomPositionAroundBoss()
+    private Vector3 GetRandomPositionAroundBoss(float heightOffset, out Quaternion rotation)
     {
         // Generar un punto aleatorio dentro de un círculo
         Vector2 randomCircle = Random.insideUnitCircle * _spawnRadius;
@@ -639,9 +694,19 @@ public class BossController : Entity
         // Obtener la altura del terreno en la posición (x, z)
         float y = _terrain.SampleHeight(new Vector3(x, 0, z));
 
+        // Obtener la normal del terreno en el punto (x, z)
+        Vector3 terrainNormal = _terrain.terrainData.GetInterpolatedNormal(
+            (x - _terrain.transform.position.x) / _terrain.terrainData.size.x,
+            (z - _terrain.transform.position.z) / _terrain.terrainData.size.z
+        );
+
+        // Calcular la rotación basada en la normal
+        rotation = Quaternion.LookRotation(terrainNormal);
+
         // Devolver la posición con el offset de altura
-        return new Vector3(x, y + _heightOffset, z);
+        return new Vector3(x, y + heightOffset, z);
     }
+
 
     #endregion
 
