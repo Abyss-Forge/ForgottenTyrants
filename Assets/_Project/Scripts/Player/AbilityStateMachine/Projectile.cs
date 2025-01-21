@@ -11,6 +11,8 @@ public abstract class Projectile : NetworkBehaviour
     protected Rigidbody _rigidbody;
     protected CapsuleCollider _collider;
 
+    public DamageInfo DamageInfo;
+
     public enum EProjectileState
     {
         LIVE, HIT, DESTROYED

@@ -12,8 +12,8 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
     #endregion
     #region Interface implementation
 
-    [SerializeField] private GameObject _projectilePrefab;
-    public GameObject ProjectilePrefab => _projectilePrefab;
+    [SerializeField] private Projectile _projectilePrefab;
+    public GameObject ProjectilePrefab => _projectilePrefab.gameObject;
 
     [SerializeField] private int _projectileAmount = 1;
     public int ProjectileAmount => _projectileAmount;
@@ -77,7 +77,9 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
             Quaternion rotation = _ability.SpawnPoint.rotation;
             Vector3 scale = _ability.SpawnPoint.localScale;
 
-            GameObject instance = Instantiate(_ability.ProjectilePrefab, position, rotation, _ability.transform);
+            Projectile projectile = Instantiate(_ability._projectilePrefab, position, rotation, _ability.transform);
+            projectile.DamageInfo = _ability.DamageInfo;
+            GameObject instance = projectile.gameObject;
             instance.transform.localScale = scale;
             instance.transform.SetParent(null); // esto es para que spawnee en la misma escena si hay aditivas
             instance.GetComponent<NetworkObject>().Spawn();

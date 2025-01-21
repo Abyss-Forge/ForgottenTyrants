@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Systems.FSM;
+using Systems.ServiceLocator;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,6 +14,8 @@ public enum EAbilityState
 public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
 {
     #region Default logic
+
+    public DamageInfo DamageInfo { get; protected set; }
 
     [field: SerializeField] public Stats Stats { get; private set; }
 
@@ -52,10 +55,20 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
         if (context.performed) UpdateState();
     }
 
+    private void CalculateDamageInfo()
+    {
+        ServiceLocator.For(this).Get(out Player player);
+
+        ClientData data = HostManager.Instance.GetMyClientData();
+        float damage = player.ModifiedStats.PhysicalDamage + Stats.PhysicalDamage;
+        DamageInfo = new(data.TeamId, damage, ElementalType.PHYSIC);
+    }
+
     protected virtual void UpdateState()
     {
         if (_fsm.CurrentState.ID == EAbilityState.READY)
         {
+            CalculateDamageInfo();
             _fsm.TransitionTo(EAbilityState.ACTIVE);
         }
         else if (_fsm.CurrentState.ID == EAbilityState.ACTIVE)
