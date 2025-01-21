@@ -15,10 +15,10 @@ public abstract class Entity : NetworkBehaviour
 
     }
 
-    public int CurrentHp = 0;   // TODO: Remove this
+    public float CurrentHp = 0;   // mierdas de diego
     void Start()
     {
-        CurrentHp = BaseStats.Hp;
+        CurrentHp = BaseStats.Health;
     }
 
 }

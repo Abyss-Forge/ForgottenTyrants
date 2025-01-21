@@ -3942,6 +3942,7 @@ GameObject:
   - component: {fileID: 4054528826392371104}
   - component: {fileID: 7469343458014759698}
   - component: {fileID: 5758305532538830851}
+  - component: {fileID: 2437863349558890583}
   m_Layer: 0
   m_Name: Player Combat
   m_TagString: Untagged
@@ -4007,6 +4008,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e2a01949e4a7f459dd905b96d10116, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2437863349558890583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7023587951338344644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 114cbc3f0e2d2c043b2d14f43095c8a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _health:
+    _defaultValue: 0
+    _maximumValue: 0
+    _minimumValue: 0
+  _physicalDamage:
+    _defaultValue: 0
+    _maximumValue: 0
+    _minimumValue: 0
+  _magicalDamage:
+    _defaultValue: 0
+    _maximumValue: 0
+    _minimumValue: 0
+  _physicalDefense:
+    _defaultValue: 0
+    _maximumValue: 0
+    _minimumValue: 0
+  _magicalDefense:
+    _defaultValue: 0
+    _maximumValue: 0
+    _minimumValue: 0
+  _movementSpeed:
+    _defaultValue: 0
+    _maximumValue: 0
+    _minimumValue: 0
+  _attackSpeed:
+    _defaultValue: 0
+    _maximumValue: 0
+    _minimumValue: 0
+  _cooldownReduction:
+    _defaultValue: 0
+    _maximumValue: 0
+    _minimumValue: 0
 --- !u!1 &7122726189728923422
 GameObject:
   m_ObjectHideFlags: 0

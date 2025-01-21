@@ -210,7 +210,7 @@ public class CharacterUISelectionController : Presettable<CharacterPresetXML>
 
     private string FormatStats(Stats stats)
     {
-        return $"HP: {stats.Hp}\n" +
+        return $"HP: {stats.Health}\n" +
                $"Physical Damage: {stats.PhysicalDamage}\n" +
                $"Magical Damage: {stats.MagicalDamage}\n" +
                $"Movement Speed: {stats.MovementSpeed}\n" +

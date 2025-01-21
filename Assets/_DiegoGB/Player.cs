@@ -43,7 +43,7 @@ public class Player : Entity
         _baseStats.Add(_playerData.Armor.Stats);
         _baseStats.Add(_playerData.Trinket.Stats);
 
-        Debug.Log($"Total HP: {_baseStats.Hp}, Physical Damage: {_baseStats.PhysicalDamage}, " +
+        Debug.Log($"Total HP: {_baseStats.Health}, Physical Damage: {_baseStats.PhysicalDamage}, " +
                  $"Magical Damage: {_baseStats.MagicalDamage}, Movement Speed: {_baseStats.MovementSpeed}, " +
                  $"Attack Speed: {_baseStats.AttackSpeed}, Physical Defense: {_baseStats.PhysicalDefense}, " +
                  $"Magical Defense: {_baseStats.MagicalDefense}, Cooldown Reduction: {_baseStats.CooldownReduction}");

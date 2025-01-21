@@ -54,7 +54,7 @@ public class BossController : Entity
             // Solo el servidor (o el host, si eres host) inicializa la lógica
             // si quieres que sea autoritativa. Si NO, puedes ponerlo en Start() normal.
             //InitializeBehaviorTree();
-            CurrentHp = BaseStats.Hp;
+            CurrentHp = BaseStats.Health;
 
             GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
             foreach (GameObject obj in playerObjects)
@@ -76,7 +76,7 @@ public class BossController : Entity
     void Start()
     {
         InitializeBehaviorTree();
-        CurrentHp = BaseStats.Hp;
+        CurrentHp = BaseStats.Health;
 
         // GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
 
@@ -178,7 +178,7 @@ public class BossController : Entity
             Player player = entry.Key;
             float aggro = entry.Value;
             float distance = Vector3.Distance(transform.position, player.transform.position);
-            int health = player.CurrentHp;
+            float health = player.CurrentHp;
 
             float normalizedDamage = aggro / 100;
             float normalizedDistance = 1 - (distance / 100);

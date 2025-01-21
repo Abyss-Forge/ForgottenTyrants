@@ -5,41 +5,35 @@ using UnityEngine;
 [System.Serializable]
 public class Stats
 {
-    [SerializeField] int _hp;
-    [SerializeField] int _physicalDamage;
-    [SerializeField] int _magicalDamage;
-    [SerializeField] int _physicalDefense;
-    [SerializeField] int _magicalDefense;
+    public enum EStat
+    {
+        HEALTH, MOVEMENT_SPEED, ATTACK_SPEED, COOLDOWN_REDUCTION,
+        PHYSIC_DAMAGE, MAGIC_DAMAGE, PHYSIC_DEFENSE, MAGIC_DEFENSE,
+    }
+
+    [SerializeField] float _health;
+    [SerializeField] float _physicalDamage;
+    [SerializeField] float _magicalDamage;
+    [SerializeField] float _physicalDefense;
+    [SerializeField] float _magicalDefense;
     [SerializeField] float _movementSpeed;
     [SerializeField] float _attackSpeed;
     [SerializeField] float _cooldownReduction;
 
-    public int Hp => _hp;
-    public int PhysicalDamage => _physicalDamage;
-    public int MagicalDamage => _magicalDamage;
-    public int PhysicalDefense => _physicalDefense;
-    public int MagicalDefense => _magicalDefense;
+    public float Health => _health;
+    public float PhysicalDamage => _physicalDamage;
+    public float MagicalDamage => _magicalDamage;
+    public float PhysicalDefense => _physicalDefense;
+    public float MagicalDefense => _magicalDefense;
     public float MovementSpeed => _movementSpeed;
     public float AttackSpeed => _attackSpeed;
     public float CooldownReduction => _cooldownReduction;
 
-    //TODO [SerializeField] float _range;
+    public Stats() { }
 
-    public Stats()
+    public Stats(int hp, int physicalDamage, int magicalDamage, float movementSpeed, float attackSpeed, int physicalDefense, int magicalDefense, float cooldownReduction) : base()
     {
-        _hp = 0;
-        _physicalDamage = 0;
-        _magicalDamage = 0;
-        _physicalDefense = 0;
-        _magicalDefense = 0;
-        _movementSpeed = 0f;
-        _attackSpeed = 0f;
-        _cooldownReduction = 0f;
-    }
-
-    public Stats(int hp, int physicalDamage, int magicalDamage, float movementSpeed, float attackSpeed, int physicalDefense, int magicalDefense, float cooldownReduction)
-    {
-        _hp = hp;
+        _health = hp;
         _physicalDamage = physicalDamage;
         _magicalDamage = magicalDamage;
         _physicalDefense = physicalDefense;
@@ -51,7 +45,7 @@ public class Stats
 
     public void Add(Stats other)
     {
-        _hp += other._hp;
+        _health += other._health;
         _physicalDamage += other._physicalDamage;
         _magicalDamage += other._magicalDamage;
         _physicalDefense += other._physicalDefense;
@@ -61,11 +55,13 @@ public class Stats
         _cooldownReduction += other._cooldownReduction;
     }
 
-    public void ChangePhysicalDamage(int newPhysicalDamage)
+
+    //mierdas del diego
+    public void ChangePhysicalDamage(float newPhysicalDamage)
     {
         _physicalDamage = newPhysicalDamage;
     }
-    public void ChangeMagicalDamage(int newMagicalDamage)
+    public void ChangeMagicalDamage(float newMagicalDamage)
     {
         _magicalDamage = newMagicalDamage;
     }
