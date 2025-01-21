@@ -12,7 +12,7 @@ public class ClientData
     public ArmorTemplate Armor { get; set; }
     public TrinketTemplate Trinket { get; set; }
 
-    public int Team { get; set; } = -1;
+    public int TeamId { get; set; } = -1;
 
     public ClientData(ulong clientId)
     {

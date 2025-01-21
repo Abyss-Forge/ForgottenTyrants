@@ -14,10 +14,9 @@ public class Player : Entity
     void Awake()
     {
         _playerData = HostManager.Instance.GetMyClientData();
-
+        Debug.Log("Team" + _playerData.TeamId);
         CalculateTotalStats();
     }
-
 
     public void AddStatusEffect(StatusEffect statusEffect)
     {

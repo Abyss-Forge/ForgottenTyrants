@@ -1,14 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using Systems.ServiceLocator;
 using Unity.Netcode;
 using UnityEngine;
-
-public enum Team
-{
-    A,
-    B
-}
 
 public class CharacterSpawner : NetworkBehaviour
 {
@@ -16,7 +7,6 @@ public class CharacterSpawner : NetworkBehaviour
     [SerializeField] private NetworkObject _playerPrefab;
     [SerializeField] private Transform[] _spawnPointsTeamA, _spawnPointsTeamB;
 
-    private Dictionary<ulong, Team> _clientTeamDictionary = new();
     private int _teamACount = 0, _teamBCount = 0;
 
     public override void OnNetworkSpawn()
@@ -30,46 +20,31 @@ public class CharacterSpawner : NetworkBehaviour
     {
         foreach (var clientEntry in HostManager.Instance.ClientData)
         {
-            ulong clientId = clientEntry.Value.ClientId;
-
-            AssignTeamToClient(clientId);
-
             var character = _characterDatabase.GetById(clientEntry.Value.CharacterId);
             if (character != null)
             {
-                Team playerTeam = _clientTeamDictionary[clientId];
-                Transform spawnTransform = GetSpawnTransformForTeam(playerTeam);
+                Transform spawnTransform = GetSpawnTransformForTeam(clientEntry.Value.TeamId);
 
                 NetworkObject instance = Instantiate(_playerPrefab, spawnTransform.position, spawnTransform.rotation);
-                instance.SpawnAsPlayerObject(clientId);
+                instance.SpawnAsPlayerObject(clientEntry.Value.ClientId);
             }
         }
     }
 
-    private void AssignTeamToClient(ulong clientId)
+    private Transform GetSpawnTransformForTeam(int teamId)
     {
-        if (_clientTeamDictionary.ContainsKey(clientId)) return;
-
-        Team assignedTeam = (_teamACount <= _teamBCount) ? Team.A : Team.B;
-        _clientTeamDictionary.Add(clientId, assignedTeam);
-
-        if (assignedTeam == Team.A)
+        Transform tr;
+        if (teamId == 0)
+        {
+            tr = _spawnPointsTeamA[_teamACount];
             _teamACount++;
+        }
         else
+        {
+            tr = _spawnPointsTeamB[_teamBCount];
             _teamBCount++;
+        }
+        return tr;
     }
 
-    private Transform GetSpawnTransformForTeam(Team team)
-    {
-        if (team == Team.A)
-        {
-            int spawnIndex = (_teamACount - 1) % _spawnPointsTeamA.Length;
-            return _spawnPointsTeamA[spawnIndex];
-        }
-        else
-        {
-            int spawnIndex = (_teamBCount - 1) % _spawnPointsTeamB.Length;
-            return _spawnPointsTeamB[spawnIndex];
-        }
-    }
 }

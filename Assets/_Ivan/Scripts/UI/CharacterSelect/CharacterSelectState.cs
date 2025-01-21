@@ -5,26 +5,31 @@ public struct CharacterSelectState : INetworkSerializable, IEquatable<CharacterS
 {
     public ulong ClientId;
     public bool IsLockedIn;
+    public int TeamId;
     public int CharacterId;
 
-    public CharacterSelectState(ulong clientId, int characterId = -1, bool isLockedIn = false)
+    public CharacterSelectState(ulong clientId, int teamId = -1, bool isLockedIn = false, int characterId = -1)
     {
         ClientId = clientId;
-        CharacterId = characterId;
         IsLockedIn = isLockedIn;
+        TeamId = teamId;
+        CharacterId = characterId;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref ClientId);
-        serializer.SerializeValue(ref CharacterId);
         serializer.SerializeValue(ref IsLockedIn);
+        serializer.SerializeValue(ref TeamId);
+        serializer.SerializeValue(ref CharacterId);
     }
 
     public bool Equals(CharacterSelectState other)
     {
         return ClientId == other.ClientId &&
-            CharacterId == other.CharacterId &&
-            IsLockedIn == other.IsLockedIn;
+            IsLockedIn == other.IsLockedIn &&
+            TeamId == other.TeamId &&
+            CharacterId == other.CharacterId;
     }
+
 }

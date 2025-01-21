@@ -1,15 +1,17 @@
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CharacterSelectButton : MonoBehaviour
+public class TeamSelectElement : MonoBehaviour
 {
-    [SerializeField] private Image _iconImage;
-    [SerializeField] private GameObject _disabledOverlay;
+    [SerializeField] private TMP_Text _playerCountText;
     [SerializeField] private Button _button;
 
     private CharacterSelectDisplay _characterSelect;
 
-    public CharacterTemplate Character { get; private set; }
+    public Team Team { get; private set; }
     public bool IsDisabled { get; private set; }
 
     void OnEnable()
@@ -22,25 +24,33 @@ public class CharacterSelectButton : MonoBehaviour
         _button.onClick.AddListener(Select);
     }
 
-    public void SetCharacter(CharacterSelectDisplay characterSelect, CharacterTemplate character)
+    public void SetTeam(CharacterSelectDisplay characterSelect, Team team)
     {
-        _iconImage.sprite = character.Icon;
-
         _characterSelect = characterSelect;
 
-        Character = character;
+        Team = team;
+
+        UpdateText();
     }
 
     public void SetDisabled(bool disabled = true)
     {
         IsDisabled = disabled;
-        _disabledOverlay.SetActive(disabled);
         _button.interactable = !disabled;
+
+        UpdateText();
     }
 
     private void Select()
     {
-        _characterSelect.SelectCharacter(Character);
+        _characterSelect.SelectTeam(Team);
+
+        UpdateText();
+    }
+
+    private void UpdateText()
+    {
+        _playerCountText.text = $"{Team.CurrentPlayerCount} / {Team.Size}";
     }
 
 }

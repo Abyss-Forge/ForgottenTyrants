@@ -17,6 +17,7 @@ using UnityEngine.SceneManagement;
 public class HostManager : Singleton<HostManager>
 {
     [SerializeField] private int _maxConnections = 6;
+    public int MaxConnections => _maxConnections;
 
     [SerializeField] private SceneReference _gameplayScene; //TODO remove test
 
@@ -134,14 +135,6 @@ public class HostManager : Singleton<HostManager>
         }
     }
 
-    public void SetCharacter(ulong clientId, int characterId)
-    {
-        if (ClientData.TryGetValue(clientId, out ClientData data))
-        {
-            data.CharacterId = characterId;
-        }
-    }
-
     public void SetCharacterBuild(ulong clientId, RaceTemplate characterRace, ClassTemplate characterClass, ArmorTemplate characterArmor, TrinketTemplate characterTrinket)
     {
         if (ClientData.TryGetValue(clientId, out ClientData data))
@@ -150,6 +143,22 @@ public class HostManager : Singleton<HostManager>
             data.Class = characterClass;
             data.Armor = characterArmor;
             data.Trinket = characterTrinket;
+        }
+    }
+
+    public void SetTeam(ulong clientId, int teamId)
+    {
+        if (ClientData.TryGetValue(clientId, out ClientData data))
+        {
+            data.TeamId = teamId;
+        }
+    }
+
+    public void SetCharacter(ulong clientId, int characterId)
+    {
+        if (ClientData.TryGetValue(clientId, out ClientData data))
+        {
+            data.CharacterId = characterId;
         }
     }
 
