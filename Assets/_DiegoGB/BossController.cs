@@ -45,6 +45,12 @@ public class BossController : Entity
     [SerializeField] int _windCount;
     [SerializeField] float _heightOffsetWind = 0.04f;
 
+    [Header("Blood settings")]
+    [SerializeField] GameObject _bloodRain;
+    [SerializeField] int _healingPerTick;
+    [SerializeField] float _timeBetweenTicks;
+    [SerializeField] int _ticks;
+
     private BehaviorSequence _rootSequence;
     private Terrain _terrain;
     private Dictionary<GameObject, float> _originalJumpForces = new Dictionary<GameObject, float>();
@@ -148,7 +154,13 @@ public class BossController : Entity
             {
                 TriggerWindEventServerRpc();
             }
+            if (Input.GetKeyDown(KeyCode.Alpha8))
+            {
+                TriggerBloodEventServerRpc();
+            }
         }
+
+
     }
 
     void InitializeBehaviorTree()
@@ -505,6 +517,49 @@ public class BossController : Entity
         {
             NetworkObject networkObject = wind.GetComponent<NetworkObject>();
             networkObject.Despawn();
+        }
+    }
+
+
+    #endregion
+
+    #region 4.2 - CLIMATE CHANGES (BLOOD) EVENT
+
+    [ServerRpc(RequireOwnership = false)]
+    public void TriggerBloodEventServerRpc()
+    {
+        // 1. El Servidor inicia la curación.
+        StartCoroutine(BossHeal());
+
+        // 2. El Servidor ordena a TODOS los clientes que reproduzcan el efecto.
+        TriggerBloodEventClientRpc();
+    }
+
+    [ClientRpc]
+    private void TriggerBloodEventClientRpc()
+    {
+        // Cada cliente inicia su corrutina local de lluvia de sangre.
+        StartCoroutine(BloodRainEffect());
+    }
+
+    private IEnumerator BloodRainEffect()
+    {
+        var ps = _bloodRain.GetComponent<ParticleSystem>();
+        ps.Play();
+
+        float totalDuration = _ticks * _timeBetweenTicks;
+        yield return new WaitForSeconds(totalDuration);
+
+        ps.Stop();
+    }
+
+    private IEnumerator BossHeal()
+    {
+        // El servidor va aplicando la curación poco a poco.
+        for (int i = 0; i < _ticks; i++)
+        {
+            CurrentHp += _healingPerTick;
+            yield return new WaitForSeconds(_timeBetweenTicks);
         }
     }
 
