@@ -12,7 +12,7 @@ public class PlayerController : NetworkBehaviour
     CharacterController _characterController;
     [SerializeField] private Camera _camera;
 
-    public new bool IsOwner = true;
+    //public new bool IsOwner = true;
 
     [Header("Aesthetic")]
     [SerializeField] private AnimationCurve _dashFovCurve;
@@ -21,6 +21,8 @@ public class PlayerController : NetworkBehaviour
     [Header("Config")]
     [SerializeField] private float _lookSensitivityX;    //en 2 lineas separadas para que no clone el header por cada field
     [SerializeField] private float _walkSpeed, _gravityMultiplier, _jumpForce, _dashForce, _dashDuration, _dashCooldown, _dashFovChange;
+
+    private float _currentSpeed;
 
     private Vector2 _move, _look;
     private float _lookRotationX;
@@ -64,6 +66,7 @@ public class PlayerController : NetworkBehaviour
     void Awake()
     {
         _characterController = GetComponent<CharacterController>();
+        _currentSpeed = _walkSpeed;
     }
 
     void OnEnable()
@@ -131,7 +134,7 @@ public class PlayerController : NetworkBehaviour
     private void Move()
     {
         Vector3 moveDirection = transform.right * _move.x + transform.forward * _move.y;
-        moveDirection *= _walkSpeed;
+        moveDirection *= _currentSpeed;
 
         _velocity.x = moveDirection.x;
         _velocity.z = moveDirection.z;
@@ -201,6 +204,19 @@ public class PlayerController : NetworkBehaviour
     public void SetJumpForce(float jumpForce)
     {
         _jumpForce = jumpForce;
+    }
+
+    public void SetSpeed(float delta)
+    {
+        // Suma o resta a la velocidad actual
+        _currentSpeed += delta;
+        // Asegúrate de que no quede por debajo de 0 si no quieres velocidades negativas
+        // currentSpeed = Mathf.Max(0, currentSpeed);
+    }
+
+    public float GetSpeed()
+    {
+        return _currentSpeed;
     }
 
 }

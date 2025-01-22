@@ -227,7 +227,7 @@ public class LightningBehaviour : NetworkBehaviour
         if (other.gameObject.layer == Layer.Terrain)
         {
             _shouldMove = false;
-            //StartCoroutine(FadeOut());
+            StartCoroutine(FadeOut());
         }
     }
 
