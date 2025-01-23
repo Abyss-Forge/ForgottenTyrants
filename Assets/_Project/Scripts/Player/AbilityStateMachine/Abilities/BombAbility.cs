@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using Utils.Extensions;
 
 public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
 {
@@ -77,12 +78,11 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
             Quaternion rotation = _ability.SpawnPoint.rotation;
             Vector3 scale = _ability.SpawnPoint.localScale;
 
-            Projectile projectile = Instantiate(_ability._projectilePrefab, position, rotation, _ability.transform);
-            projectile.DamageInfo = _ability.DamageInfo;
-            GameObject instance = projectile.gameObject;
+            GameObject instance = Instantiate(_ability._projectilePrefab.gameObject, position, rotation, _ability.transform);
             instance.transform.localScale = scale;
-            instance.transform.SetParent(null); // esto es para que spawnee en la misma escena si hay aditivas
             instance.GetComponent<NetworkObject>().Spawn();
+            //instance.MoveComponent<InfoContainer>(_ability.gameObject);
+            instance.CopyComponent<InfoContainer>(_ability.gameObject.GetComponent<InfoContainer>());
 
             Transform camera = Camera.main.transform;
             Vector3 targetPoint = camera.position + camera.forward * 100f;
@@ -94,6 +94,8 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
             playerVelocity.y = 0;
             Vector3 launchVelocity = adjustedDirection * _ability._launchForce + playerVelocity;
             rb.AddForce(launchVelocity * rb.mass, ForceMode.Impulse);
+
+            instance.transform.SetParent(null); // esto es para que spawnee en la misma escena si hay aditivas, deberia ir arriba pero como usarmos un GetComponentInParent pues...
         }
 
     }

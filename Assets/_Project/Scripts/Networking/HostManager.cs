@@ -171,14 +171,25 @@ public class HostManager : Singleton<HostManager>
 
     public ClientData GetMyClientData()
     {
-        foreach (var data in ClientData)
+        if (NetworkManager.Singleton == null)
         {
-            if (data.Key == NetworkManager.Singleton.LocalClientId)
-            {
-                return data.Value;
-            }
+            Debug.LogError("NetworkManager.Singleton is null.");
+            return null;
         }
-        return null;
+
+        if (ClientData == null)
+        {
+            Debug.LogError("ClientData dictionary is null.");
+            return null;
+        }
+
+        if (!ClientData.ContainsKey(NetworkManager.Singleton.LocalClientId))
+        {
+            Debug.LogError($"ClientData does not contain LocalClientId: {NetworkManager.Singleton.LocalClientId}");
+            return null;
+        }
+
+        return ClientData[NetworkManager.Singleton.LocalClientId];
     }
 
 }

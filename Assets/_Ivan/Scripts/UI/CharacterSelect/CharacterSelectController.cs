@@ -20,7 +20,7 @@ public class Team
     }
 }
 
-public class CharacterSelectDisplay : NetworkBehaviour
+public class CharacterSelectController : NetworkBehaviour
 {
     [SerializeField] private CharacterSelectionMenuController _buildController; // TODO: remove
 

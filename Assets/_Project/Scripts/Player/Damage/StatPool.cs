@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Systems.GameManagers;
 using UnityEngine;
 
+//TODO implement
+
 public class StatPool : MonoBehaviour
 {
     [SerializeField] Stat _health;
@@ -16,11 +18,6 @@ public class StatPool : MonoBehaviour
     [SerializeField] Stat _attackSpeed;
     [SerializeField] Stat _cooldownReduction;
 
-    void nidf()
-    {
-        _health.Buff(50, duration: 3f);
-    }
-
     [Serializable]
     public class Stat//<T> where T : struct, IComparable, IConvertible
     {
@@ -29,7 +26,7 @@ public class StatPool : MonoBehaviour
 
         [SerializeField] private float _defaultValue, _maximumValue, _minimumValue;
 
-        public float Value { get; private set; }    //"Baked" value, modified by buffs, and debuffs
+        public float Value { get; private set; }    //"Baked" value, modified at runtime by buffs and debuffs
 
         public Stat(float defaultValue = 0, float maximumValue = float.PositiveInfinity, float minimumValue = 0)
         {
@@ -41,17 +38,9 @@ public class StatPool : MonoBehaviour
             _minimumValue = minimumValue;
         }
 
-        public void Buff(float value, bool isPercentual = true, float duration = -1)
-        {
-            SetValue(value, false, isPercentual, duration);
-        }
+        public void ApplyBuffFromInfo(BuffInfo info) => ApplyBuff(info.Value, info.Duration, info.IsPercentual, info.IsDebuff);
 
-        public void Debuff(float value, bool isPercentual = true, float duration = -1)
-        {
-            SetValue(value, true, isPercentual, duration);
-        }
-
-        private void SetValue(float value, bool isDebuff, bool isPercentual, float duration)//15, false, false, -1
+        public void ApplyBuff(float value, float duration = -1, bool isPercentual = true, bool isDebuff = false)
         {
             if (isPercentual) value *= _defaultValue / 100;
 
@@ -62,7 +51,7 @@ public class StatPool : MonoBehaviour
 
             Value += value;
 
-            if (duration > 0) CoroutineManager.Instance.StartCoroutine(ResetBuff(value, duration));   //corrutina
+            if (duration > 0) CoroutineManager.Instance.StartCoroutine(ResetBuff(value, duration));
 
             Debug.Log("Buff apply ");
         }

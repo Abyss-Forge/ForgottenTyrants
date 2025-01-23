@@ -12,8 +12,6 @@ public class PlayerController : NetworkBehaviour
     CharacterController _characterController;
     [SerializeField] private Camera _camera;
 
-    public new bool IsOwner = true;
-
     [Header("Aesthetic")]
     [SerializeField] private AnimationCurve _dashFovCurve;
     [SerializeField] private TrailRenderer _trail;

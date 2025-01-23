@@ -77,7 +77,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Stats>k__BackingField:
-    _hp: 0
+    _health: 0
     _physicalDamage: 50
     _magicalDamage: 0
     _physicalDefense: 0
@@ -89,7 +89,7 @@ MonoBehaviour:
   <CanBeCanceled>k__BackingField: 0
   <ActiveDuration>k__BackingField: 0
   <CooldownDuration>k__BackingField: 1
-  _projectilePrefab: {fileID: 256056090793051824, guid: 73ecb5544a02d3249a5369c8778b0ec4,
+  _projectilePrefab: {fileID: 8071749846780607451, guid: 73ecb5544a02d3249a5369c8778b0ec4,
     type: 3}
   _projectileAmount: 3
   _projectileThreshold: 0.1

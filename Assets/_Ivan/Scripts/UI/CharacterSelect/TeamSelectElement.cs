@@ -9,7 +9,7 @@ public class TeamSelectElement : MonoBehaviour
     [SerializeField] private TMP_Text _playerCountText;
     [SerializeField] private Button _button;
 
-    private CharacterSelectDisplay _characterSelect;
+    private CharacterSelectController _characterSelect;
 
     public Team Team { get; private set; }
     public bool IsDisabled { get; private set; }
@@ -24,7 +24,7 @@ public class TeamSelectElement : MonoBehaviour
         _button.onClick.AddListener(Select);
     }
 
-    public void SetTeam(CharacterSelectDisplay characterSelect, Team team)
+    public void SetTeam(CharacterSelectController characterSelect, Team team)
     {
         _characterSelect = characterSelect;
 

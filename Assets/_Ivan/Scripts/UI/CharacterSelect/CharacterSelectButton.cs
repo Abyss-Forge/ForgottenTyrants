@@ -7,7 +7,7 @@ public class CharacterSelectButton : MonoBehaviour
     [SerializeField] private GameObject _disabledOverlay;
     [SerializeField] private Button _button;
 
-    private CharacterSelectDisplay _characterSelect;
+    private CharacterSelectController _characterSelect;
 
     public CharacterTemplate Character { get; private set; }
     public bool IsDisabled { get; private set; }
@@ -22,7 +22,7 @@ public class CharacterSelectButton : MonoBehaviour
         _button.onClick.AddListener(Select);
     }
 
-    public void SetCharacter(CharacterSelectDisplay characterSelect, CharacterTemplate character)
+    public void SetCharacter(CharacterSelectController characterSelect, CharacterTemplate character)
     {
         _iconImage.sprite = character.Icon;
 

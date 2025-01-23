@@ -753,7 +753,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14cb8db45277ac74d8ee6250bb9087d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Health>k__BackingField: 0
+  <Health>k__BackingField: 100
 --- !u!114 &2858234191623224488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1693,9 +1693,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9963347311403842}
-  - component: {fileID: 6393651471854648655}
   - component: {fileID: -7936775410058264635}
   - component: {fileID: -3100300571400905276}
+  - component: {fileID: 6393651471854648655}
   - component: {fileID: 6373535343249460430}
   - component: {fileID: 5358312612419074516}
   - component: {fileID: 3517057852779847120}
@@ -1726,22 +1726,6 @@ Transform:
   - {fileID: 1484020662159581804}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6393651471854648655
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2471761912260363661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99f959048b0a03b489be2b1c97d20636, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _services:
-  - {fileID: -7936775410058264635}
-  - {fileID: 7673370260004093441}
-  - {fileID: 7469343458014759698}
 --- !u!114 &-7936775410058264635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1794,6 +1778,20 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &6393651471854648655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2471761912260363661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99f959048b0a03b489be2b1c97d20636, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _services:
+  - {fileID: 1838305148283312940}
 --- !u!143 &6373535343249460430
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2918,6 +2916,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e2a01949e4a7f459dd905b96d10116, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _scriptsToDisable: []
 --- !u!1 &4713006375128150126
 GameObject:
   m_ObjectHideFlags: 0
@@ -3940,9 +3939,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1575714076233256837}
   - component: {fileID: 4054528826392371104}
+  - component: {fileID: 1838305148283312940}
   - component: {fileID: 7469343458014759698}
-  - component: {fileID: 5758305532538830851}
-  - component: {fileID: 2437863349558890583}
+  - component: {fileID: 7275996562590618905}
   m_Layer: 0
   m_Name: Player Combat
   m_TagString: Untagged
@@ -3981,6 +3980,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _abilitiesIconsHolder: {fileID: 6844021077475509826}
   _abilitiesHolder: {fileID: 2287754177044405011}
+--- !u!114 &1838305148283312940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7023587951338344644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9a28d5559e07cf4d9941d0ed4e83eab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7469343458014759698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3996,7 +4007,7 @@ MonoBehaviour:
   <Name>k__BackingField: BananaMan
   CurrentHp: 0
   bossController: {fileID: 0}
---- !u!114 &5758305532538830851
+--- !u!114 &7275996562590618905
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4008,50 +4019,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e2a01949e4a7f459dd905b96d10116, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2437863349558890583
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7023587951338344644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 114cbc3f0e2d2c043b2d14f43095c8a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _health:
-    _defaultValue: 0
-    _maximumValue: 0
-    _minimumValue: 0
-  _physicalDamage:
-    _defaultValue: 0
-    _maximumValue: 0
-    _minimumValue: 0
-  _magicalDamage:
-    _defaultValue: 0
-    _maximumValue: 0
-    _minimumValue: 0
-  _physicalDefense:
-    _defaultValue: 0
-    _maximumValue: 0
-    _minimumValue: 0
-  _magicalDefense:
-    _defaultValue: 0
-    _maximumValue: 0
-    _minimumValue: 0
-  _movementSpeed:
-    _defaultValue: 0
-    _maximumValue: 0
-    _minimumValue: 0
-  _attackSpeed:
-    _defaultValue: 0
-    _maximumValue: 0
-    _minimumValue: 0
-  _cooldownReduction:
-    _defaultValue: 0
-    _maximumValue: 0
-    _minimumValue: 0
+  _scriptsToDisable: []
 --- !u!1 &7122726189728923422
 GameObject:
   m_ObjectHideFlags: 0
@@ -4812,6 +4780,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e2a01949e4a7f459dd905b96d10116, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _scriptsToDisable: []
 --- !u!224 &4648814798784173194 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7502429820707974623, guid: 3fd2813f9e684f146ac2b2813de8db7c,

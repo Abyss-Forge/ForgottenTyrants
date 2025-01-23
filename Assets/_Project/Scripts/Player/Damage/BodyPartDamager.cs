@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using ForgottenTyrants;
 using Systems.EventBus;
 using UnityEngine;
@@ -10,7 +11,7 @@ public class BodyPartDamager : MonoBehaviour
 {
     DamageableBehaviour _damageable;
 
-    [System.Serializable]
+    [Serializable]
     private struct BodyPartData
     {
         public EBodySection BodySection;
@@ -26,7 +27,7 @@ public class BodyPartDamager : MonoBehaviour
     }
 
     private Dictionary<EBodySection, (BodyPart[], float)> _bodyPartsDictionary = new();
-    private DamageInfo _damageInfo;
+    private List<NetworkedInfo> _alreadyApliedInfos;    //TODO: dynamyc empty
 
     void Awake()
     {
@@ -64,37 +65,35 @@ public class BodyPartDamager : MonoBehaviour
         }
     }
 
-    private void HandleCollision(Collision other)
-    {
-        if (other.gameObject.CompareTag(Tag.Enemy)) // Solo afecta proyectiles enemigos
-        {
-            DamageInfo dmg = other.gameObject.GetComponent<DamageInfo>();
-
-            if (dmg != null && dmg != _damageInfo)
-            {
-                Debug.Log("Te ha dado: " + other.gameObject.name);
-                _damageInfo = dmg;
-                EBodySection? bodyPart = GetBodyPartHit(other.contacts);
-
-                if (bodyPart.HasValue)
-                {
-                    ApplyDamage(bodyPart.Value, dmg.Damage);
-                }
-
-                _damageInfo = null;
-            }
-        }
-    }
-
-    public void HandleDeath()   //Ragdoll
+    private void HandleDeath()
     {
         EventBus<PlayerDeathEvent>.Raise(new PlayerDeathEvent());
 
-        foreach (var entry in _bodyPartsDictionary)
+        foreach (var entry in _bodyPartsDictionary) //Ragdoll
         {
             foreach (BodyPart bodyPart in entry.Value.Item1)
             {
                 bodyPart.Rigidbody.isKinematic = false;
+            }
+        }
+    }
+
+    private void HandleCollision(Collision other)
+    {
+        ClientData data = HostManager.Instance.GetMyClientData();
+
+        InfoContainer container = other.gameObject.GetComponent<InfoContainer>();
+        if (container == null) return;
+
+        foreach (var info in container.InfoList.OfType<DamageInfo>())   //TODO heal y buffs
+        {
+            if (info.CanApply(data) && !_alreadyApliedInfos.Contains(info))
+            {
+                Debug.Log("Te ha dado: " + other.gameObject.name);
+                _alreadyApliedInfos.Add(info);
+
+                EBodySection? bodyPart = GetBodyPartHit(other.contacts);
+                if (bodyPart.HasValue) ApplyDamage(bodyPart.Value, info.DamageAmount);
             }
         }
     }

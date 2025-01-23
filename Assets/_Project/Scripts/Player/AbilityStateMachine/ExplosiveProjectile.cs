@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ForgottenTyrants;
+using System.Linq;
+using System.ComponentModel;
 
 [RequireComponent(typeof(SphereCollider))]
 public abstract class ExplosiveProjectile : Projectile, IDamageable
@@ -69,8 +71,15 @@ public abstract class ExplosiveProjectile : Projectile, IDamageable
 
                     float effectPercentage = CalculateDistanceBasedEffect(hitCollider.transform.position);
 
-                    if (_hasDamage)
+                    InfoContainer container = gameObject.GetComponent<InfoContainer>(); //ñapa
+
+                    if (_hasDamage && container != null)
                     {
+                        foreach (var info in container.InfoList.OfType<DamageInfo>())
+                        {
+                            info.DamageAmount *= effectPercentage;
+                        }
+
                         float damage = _damage * effectPercentage;
                         Debug.Log($"Enemy takes {damage} damage");  // TODO
 

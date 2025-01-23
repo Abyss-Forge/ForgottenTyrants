@@ -15,8 +15,6 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
 {
     #region Default logic
 
-    public DamageInfo DamageInfo { get; protected set; }
-
     [field: SerializeField] public Stats Stats { get; private set; }
 
     [field: SerializeField] public Transform SpawnPoint { get; private set; }
@@ -28,8 +26,10 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
     public float ActiveTimer { get; set; } = 0;
     public float CooldownTimer { get; set; } = 0;
 
+    protected List<NetworkedInfo> _networkedInfoList { get; } = new();
+
     public void Lock(float time = -1) => StartCoroutine(ApplyLock(time));
-    public void Unlock() => _fsm.TransitionTo(EAbilityState.COOLDOWN);   //si el cooldown es 0, automaticamente transicionara a READY
+    public void Unlock() => _fsm.TransitionTo(EAbilityState.COOLDOWN);   //if cooldown is 0, will automatically transition to READY state
 
     private IEnumerator ApplyLock(float time)
     {
@@ -55,26 +55,58 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
         if (context.performed) UpdateState();
     }
 
-    private void CalculateDamageInfo()
-    {
-        ServiceLocator.For(this).Get(out Player player);
-
-        ClientData data = HostManager.Instance.GetMyClientData();
-        float damage = player.ModifiedStats.PhysicalDamage + Stats.PhysicalDamage;
-        DamageInfo = new(data.TeamId, damage, ElementalType.PHYSIC);
-    }
-
     protected virtual void UpdateState()
     {
         if (_fsm.CurrentState.ID == EAbilityState.READY)
         {
-            CalculateDamageInfo();
+            CalculateInfo();
+            AddInfo();
             _fsm.TransitionTo(EAbilityState.ACTIVE);
         }
         else if (_fsm.CurrentState.ID == EAbilityState.ACTIVE)
         {
             if (CanBeCanceled) ActiveTimer = 0;
         }
+    }
+
+    protected virtual void CalculateInfo()
+    {
+        ServiceLocator.Global.Get(out PlayerInfo player);
+
+        if (Stats.PhysicalDamage <= 0)
+        {
+            float damage = player.Stats.PhysicalDamage + Stats.PhysicalDamage;
+            _networkedInfoList.Add(new DamageInfo(
+                teamId: player.Data.TeamId,
+                affectedChannels: new() { EDamageApplyChannel.ENEMIES },
+                damageAmount: damage,
+                damageType: EElementalType.PHYSIC));
+        }
+
+        if (Stats.MagicalDamage <= 0)
+        {
+            float damage = player.Stats.MagicalDamage + Stats.MagicalDamage;
+            _networkedInfoList.Add(new DamageInfo(
+                teamId: player.Data.TeamId,
+                affectedChannels: new() { EDamageApplyChannel.ENEMIES },
+                damageAmount: damage,
+                damageType: EElementalType.MAGIC));
+        }
+
+        if (Stats.Health <= 0)
+        {
+            float healAmount = Stats.Health;
+            _networkedInfoList.Add(new HealInfo(
+                teamId: player.Data.TeamId,
+                affectedChannels: new() { EDamageApplyChannel.ALLIES },
+                healAmount: healAmount));
+        }
+    }
+
+    private void AddInfo()
+    {
+        InfoContainer container = gameObject.AddComponent<InfoContainer>();
+        container.InfoList = _networkedInfoList;
     }
 
     #endregion
@@ -94,13 +126,11 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
     void FixedUpdate() => _fsm.FixedUpdate();
     void LateUpdate() => _fsm.LateUpdate();
 
-    protected virtual void InitializeStates()
-    {
-        // _fsm.Add(new AbilityDefaultReadyState(this, EAbilityState.READY));
-        // _fsm.Add(new AbilityDefaultActiveState(this, EAbilityState.ACTIVE));
-        // _fsm.Add(new AbilityDefaultCooldownState(this, EAbilityState.COOLDOWN));
-        // _fsm.Add(new AbilityDefaultLockedState(this, EAbilityState.LOCKED));
-    }
+    protected abstract void InitializeStates();
+    // _fsm.Add(new AbilityDefaultReadyState(this, EAbilityState.READY));
+    // _fsm.Add(new AbilityDefaultActiveState(this, EAbilityState.ACTIVE));
+    // _fsm.Add(new AbilityDefaultCooldownState(this, EAbilityState.COOLDOWN));
+    // _fsm.Add(new AbilityDefaultLockedState(this, EAbilityState.LOCKED));
 
     #endregion
 }
