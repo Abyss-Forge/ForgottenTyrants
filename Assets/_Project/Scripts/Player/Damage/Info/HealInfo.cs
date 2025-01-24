@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-public class HealInfo : NetworkedInfo
+public class HealInfo : AbilityInfo
 {
     public float HealAmount { get; }
 

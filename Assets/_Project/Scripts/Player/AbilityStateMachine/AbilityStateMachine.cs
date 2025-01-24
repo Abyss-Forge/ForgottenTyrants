@@ -11,8 +11,11 @@ public enum EAbilityState
     READY, PREVIEW, ACTIVE, COOLDOWN, LOCKED
 }
 
+[RequireComponent(typeof(InfoContainer))]
 public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
 {
+    protected InfoContainer _infoContainer { get; set; }
+
     #region Default logic
 
     [field: SerializeField] public Stats Stats { get; private set; }
@@ -25,8 +28,6 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
 
     public float ActiveTimer { get; set; } = 0;
     public float CooldownTimer { get; set; } = 0;
-
-    protected List<NetworkedInfo> _networkedInfoList { get; } = new();
 
     public void Lock(float time = -1) => StartCoroutine(ApplyLock(time));
     public void Unlock() => _fsm.TransitionTo(EAbilityState.COOLDOWN);   //if cooldown is 0, will automatically transition to READY state
@@ -60,7 +61,6 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
         if (_fsm.CurrentState.ID == EAbilityState.READY)
         {
             CalculateInfo();
-            AddInfo();
             _fsm.TransitionTo(EAbilityState.ACTIVE);
         }
         else if (_fsm.CurrentState.ID == EAbilityState.ACTIVE)
@@ -76,7 +76,7 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
         if (Stats.PhysicalDamage <= 0)
         {
             float damage = player.Stats.PhysicalDamage + Stats.PhysicalDamage;
-            _networkedInfoList.Add(new DamageInfo(
+            _infoContainer.InfoList.Add(new DamageInfo(
                 teamId: player.Data.TeamId,
                 affectedChannels: new() { EDamageApplyChannel.ENEMIES },
                 damageAmount: damage,
@@ -86,7 +86,7 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
         if (Stats.MagicalDamage <= 0)
         {
             float damage = player.Stats.MagicalDamage + Stats.MagicalDamage;
-            _networkedInfoList.Add(new DamageInfo(
+            _infoContainer.InfoList.Add(new DamageInfo(
                 teamId: player.Data.TeamId,
                 affectedChannels: new() { EDamageApplyChannel.ENEMIES },
                 damageAmount: damage,
@@ -96,17 +96,11 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
         if (Stats.Health <= 0)
         {
             float healAmount = Stats.Health;
-            _networkedInfoList.Add(new HealInfo(
+            _infoContainer.InfoList.Add(new HealInfo(
                 teamId: player.Data.TeamId,
                 affectedChannels: new() { EDamageApplyChannel.ALLIES },
                 healAmount: healAmount));
         }
-    }
-
-    private void AddInfo()
-    {
-        InfoContainer container = gameObject.AddComponent<InfoContainer>();
-        container.InfoList = _networkedInfoList;
     }
 
     #endregion
@@ -117,6 +111,8 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
 
     void Awake()
     {
+        _infoContainer = GetComponent<InfoContainer>();
+
         _fsm = new();
         InitializeStates();
         _fsm.TransitionTo(EAbilityState.READY);

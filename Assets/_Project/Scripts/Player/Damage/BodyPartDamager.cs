@@ -27,7 +27,7 @@ public class BodyPartDamager : MonoBehaviour
     }
 
     private Dictionary<EBodySection, (BodyPart[], float)> _bodyPartsDictionary = new();
-    private List<NetworkedInfo> _alreadyApliedInfos;    //TODO: dynamyc empty
+    private List<AbilityInfo> _alreadyApliedInfos = new();    //TODO: dynamyc empty
 
     void Awake()
     {
@@ -84,9 +84,10 @@ public class BodyPartDamager : MonoBehaviour
 
         InfoContainer container = other.gameObject.GetComponent<InfoContainer>();
         if (container == null) return;
-
+        Debug.Log("Impacto" + container.InfoList.OfType<DamageInfo>().Count());
         foreach (var info in container.InfoList.OfType<DamageInfo>())   //TODO heal y buffs
         {
+            Debug.Log("Impactrueno");
             if (info.CanApply(data) && !_alreadyApliedInfos.Contains(info))
             {
                 Debug.Log("Te ha dado: " + other.gameObject.name);

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-public class BuffInfo : NetworkedInfo
+public class BuffInfo : AbilityInfo
 {
     public EStat Stat { get; }
     public float Value { get; }

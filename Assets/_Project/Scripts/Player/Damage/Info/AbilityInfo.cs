@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 
-public abstract class NetworkedInfo
+public abstract class AbilityInfo
 {
     public ulong PlayerId { get; }
     public int TeamId { get; }
     public HashSet<EDamageApplyChannel> AffectedChannels { get; }
 
-    public NetworkedInfo(HashSet<EDamageApplyChannel> affectedChannels)
+    public AbilityInfo(HashSet<EDamageApplyChannel> affectedChannels)
     {
         ClientData data = HostManager.Instance.GetMyClientData();
 
@@ -15,13 +15,13 @@ public abstract class NetworkedInfo
         AffectedChannels = affectedChannels;
     }
 
-    public NetworkedInfo(int teamId, HashSet<EDamageApplyChannel> affectedChannels)
+    public AbilityInfo(int teamId, HashSet<EDamageApplyChannel> affectedChannels)
     {
         TeamId = teamId;
         AffectedChannels = affectedChannels;
     }
 
-    public NetworkedInfo(ulong playerId, int teamId, HashSet<EDamageApplyChannel> affectedChannels) : this(teamId, affectedChannels)
+    public AbilityInfo(ulong playerId, int teamId, HashSet<EDamageApplyChannel> affectedChannels) : this(teamId, affectedChannels)
     {
         PlayerId = playerId;
     }

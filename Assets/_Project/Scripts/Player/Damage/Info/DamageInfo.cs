@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-public class DamageInfo : NetworkedInfo
+public class DamageInfo : AbilityInfo
 {
     public float DamageAmount { get; set; }
     public EElementalType DamageType { get; }
