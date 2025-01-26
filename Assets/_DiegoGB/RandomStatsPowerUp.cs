@@ -37,6 +37,9 @@ public class RandomStatsPowerUp : NetworkBehaviour
     [SerializeField] float _cooldownReductionMin;
     [SerializeField] float _cooldownReductionMax;
 
+    [SerializeField] float _duration;
+    [SerializeField] GameObject _test;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
@@ -49,6 +52,8 @@ public class RandomStatsPowerUp : NetworkBehaviour
             float randomMovementSpeed = Random.Range(_movementSpeedMin, _movementSpeedMax);
             float randomAttackSpeed = Random.Range(_attackSpeedMin, _attackSpeedMax);
             float randomCooldownReduction = Random.Range(_cooldownReductionMin, _cooldownReductionMax);
+
+            PlayVisualEffectClientRpc();
 
             Debug.Log($"{other.gameObject} ha sido randomizado con las siguientes stats:\n" +
             $" Hp: {randomHp}\n" +
@@ -63,5 +68,10 @@ public class RandomStatsPowerUp : NetworkBehaviour
             GetComponent<NetworkObject>().Despawn();
             Destroy(gameObject);
         }
+    }
+    [ClientRpc]
+    private void PlayVisualEffectClientRpc()
+    {
+        _test.GetComponent<PlayerController>().StartGlowingEffect(_duration);
     }
 }

@@ -219,4 +219,54 @@ public class PlayerController : NetworkBehaviour
         return _currentSpeed;
     }
 
+
+    // Color e intensidad configurables desde el inspector
+    public Color emissionColor = Color.yellow;
+    public float emissionIntensity = 1.2f;
+
+    private Material objectMaterial;
+
+    void Start()
+    {
+        // Accede al material del objeto
+        MeshRenderer renderer = GetComponent<MeshRenderer>();
+        if (renderer != null)
+        {
+            // Usamos el material instanciado para no afectar materiales compartidos
+            objectMaterial = renderer.material;
+        }
+    }
+
+    public void ActivateEmission()
+    {
+        if (objectMaterial != null)
+        {
+            // Habilita la emisión
+            objectMaterial.EnableKeyword("_EMISSION");
+            // Cambia el color e intensidad de la emisión
+            Color finalEmissionColor = emissionColor * emissionIntensity;
+            objectMaterial.SetColor("_EmissionColor", finalEmissionColor);
+        }
+    }
+
+    public IEnumerator GlowingEffect(float duration)
+    {
+        ActivateEmission();
+        yield return new WaitForSeconds(duration);
+        DeactivateEmission();
+    }
+
+    public void StartGlowingEffect(float duration)
+    {
+        StartCoroutine(GlowingEffect(duration));
+    }
+
+    public void DeactivateEmission()
+    {
+        if (objectMaterial != null)
+        {
+            // Desactiva la emisión
+            objectMaterial.DisableKeyword("_EMISSION");
+        }
+    }
 }
