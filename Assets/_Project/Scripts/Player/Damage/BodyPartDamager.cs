@@ -84,8 +84,9 @@ public class BodyPartDamager : MonoBehaviour
 
         InfoContainer container = other.gameObject.GetComponent<InfoContainer>();
         if (container == null) return;
-        Debug.Log("Impacto" + container.InfoList.OfType<DamageInfo>().Count());
-        foreach (var info in container.InfoList.OfType<DamageInfo>())   //TODO heal y buffs
+        Debug.Log("Impacto" + container.InfoList.Count);
+        // Debug.Log(container.InfoList.OfType<DamageInfo>().Count());
+        foreach (var info in container.InfoList)   //TODO heal y buffs
         {
             Debug.Log("Impactrueno");
             if (info.CanApply(data) && !_alreadyApliedInfos.Contains(info))

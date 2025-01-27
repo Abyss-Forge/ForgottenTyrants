@@ -73,34 +73,39 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
     {
         ServiceLocator.Global.Get(out PlayerInfo player);
 
-        if (Stats.PhysicalDamage <= 0)
+        if (Stats.PhysicalDamage > 0)
         {
             float damage = player.Stats.PhysicalDamage + Stats.PhysicalDamage;
-            _infoContainer.InfoList.Add(new DamageInfo(
+            _infoContainer.Add(new AbilityInfo(
+                playerId: player.Data.ClientId,
                 teamId: player.Data.TeamId,
-                affectedChannels: new() { EDamageApplyChannel.ENEMIES },
-                damageAmount: damage,
-                damageType: EElementalType.PHYSIC));
+                affectedChannel: (int)EDamageApplyChannel.ENEMIES,
+                damageAmount: damage));
+            //damageType: EElementalType.PHYSIC
         }
 
-        if (Stats.MagicalDamage <= 0)
+        Debug.Log("Info metida" + _infoContainer.InfoList.Count);
+
+        /*if (Stats.MagicalDamage > 0)
         {
             float damage = player.Stats.MagicalDamage + Stats.MagicalDamage;
-            _infoContainer.InfoList.Add(new DamageInfo(
+            _infoContainer.Add(new DamageInfo(
+                playerId: player.Data.ClientId,
                 teamId: player.Data.TeamId,
-                affectedChannels: new() { EDamageApplyChannel.ENEMIES },
+                affectedChannel: EDamageApplyChannel.ENEMIES,
                 damageAmount: damage,
                 damageType: EElementalType.MAGIC));
         }
 
-        if (Stats.Health <= 0)
+        if (Stats.Health > 0)
         {
             float healAmount = Stats.Health;
-            _infoContainer.InfoList.Add(new HealInfo(
+            _infoContainer.Add(new HealInfo(
+                playerId: player.Data.ClientId,
                 teamId: player.Data.TeamId,
-                affectedChannels: new() { EDamageApplyChannel.ALLIES },
+                affectedChannel: EDamageApplyChannel.ALLIES,
                 healAmount: healAmount));
-        }
+        }*/
     }
 
     #endregion

@@ -1,46 +1,67 @@
-using System.Collections.Generic;
+using System;
+using Unity.Netcode;
 
-public abstract class AbilityInfo
+public enum EDamageApplyChannel
 {
-    public ulong PlayerId { get; }
-    public int TeamId { get; }
-    public HashSet<EDamageApplyChannel> AffectedChannels { get; }
+    MYSELF = 0,
+    ALLIES = 1,
+    ENEMIES = 2
+}
 
-    public AbilityInfo(HashSet<EDamageApplyChannel> affectedChannels)
+[Serializable]
+public struct AbilityInfo : INetworkSerializable, IEquatable<AbilityInfo>
+{
+    public ulong PlayerId;
+    public int TeamId;
+    public int AffectedChannel;
+
+    public float DamageAmount;
+
+    public AbilityInfo(int affectedChannel, float damageAmount)
     {
         ClientData data = HostManager.Instance.GetMyClientData();
 
         PlayerId = data.ClientId;
         TeamId = data.TeamId;
-        AffectedChannels = affectedChannels;
+        AffectedChannel = affectedChannel;
+
+        DamageAmount = damageAmount;
     }
 
-    public AbilityInfo(int teamId, HashSet<EDamageApplyChannel> affectedChannels)
-    {
-        TeamId = teamId;
-        AffectedChannels = affectedChannels;
-    }
-
-    public AbilityInfo(ulong playerId, int teamId, HashSet<EDamageApplyChannel> affectedChannels) : this(teamId, affectedChannels)
+    public AbilityInfo(ulong playerId, int teamId, int affectedChannel, float damageAmount)
     {
         PlayerId = playerId;
+        TeamId = teamId;
+        AffectedChannel = affectedChannel;
+
+        DamageAmount = damageAmount;
     }
 
     public bool CanApply(ClientData data)
     {
-        if (AffectedChannels.Contains(EDamageApplyChannel.MYSELF))
-        {
-            return data.ClientId == PlayerId;
-        }
-        else if (AffectedChannels.Contains(EDamageApplyChannel.ALLIES))
-        {
-            return data.TeamId == TeamId;
-        }
-        else if (AffectedChannels.Contains(EDamageApplyChannel.ENEMIES))
-        {
-            return data.TeamId != TeamId;
-        }
+        if (AffectedChannel == (int)EDamageApplyChannel.MYSELF) return data.ClientId == PlayerId;
+        if (AffectedChannel == (int)EDamageApplyChannel.ALLIES) return data.TeamId == TeamId;
+        if (AffectedChannel == (int)EDamageApplyChannel.ENEMIES) return data.TeamId != TeamId;
 
         return false;
+    }
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref PlayerId);
+        serializer.SerializeValue(ref TeamId);
+        serializer.SerializeValue(ref AffectedChannel);
+
+        serializer.SerializeValue(ref DamageAmount);
+    }
+
+    public bool Equals(AbilityInfo other)
+    {
+        return //other != null &&
+               PlayerId == other.PlayerId &&
+               TeamId == other.TeamId &&
+               AffectedChannel == other.AffectedChannel &&
+
+               DamageAmount == other.DamageAmount;
     }
 }
