@@ -72,4 +72,42 @@ public class CharacterSpawner : NetworkBehaviour
             return _spawnPointsTeamB[spawnIndex];
         }
     }
+
+    public void ResetPlayersPositions()
+    {
+        // Recorremos el diccionario que tiene (clientId -> Team)
+        foreach (var kvp in _clientTeamDictionary)
+        {
+            ulong clientId = kvp.Key;
+            Team team = kvp.Value;
+
+            // Obtenemos el objeto player de ese client
+            if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var clientData))
+            {
+                NetworkObject playerObject = clientData.PlayerObject;
+                if (playerObject != null)
+                {
+                    // Calculamos el Transform de Spawn según el equipo
+                    Transform spawnTransform = GetSpawnTransformForTeam(team);
+
+                    // Obtenemos el CharacterController (si existe)
+                    CharacterController cc = playerObject.GetComponent<CharacterController>();
+                    if (cc != null && cc.enabled)
+                    {
+                        cc.enabled = false;
+                    }
+
+                    // Asignamos posición y rotación en el servidor
+                    playerObject.transform.position = spawnTransform.position;
+                    playerObject.transform.rotation = spawnTransform.rotation;
+
+                    // Activamos nuevamente el CharacterController
+                    if (cc != null)
+                    {
+                        cc.enabled = true;
+                    }
+                }
+            }
+        }
+    }
 }
