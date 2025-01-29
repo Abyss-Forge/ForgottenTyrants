@@ -78,8 +78,7 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
             Vector3 scale = _ability.SpawnPoint.localScale;
 
             Projectile projectile = Instantiate(_ability._projectilePrefab, position, rotation, _ability.transform);
-            //projectile.InfoContainer = _ability._infoContainer;
-            foreach (var item in _ability._infoContainer.InfoList)
+            foreach (var item in _ability._infoList)
             {
                 projectile.InfoContainer.Add(item);
             }

@@ -680,8 +680,6 @@ GameObject:
   - component: {fileID: 7670178137971895459}
   - component: {fileID: 7673370260004093441}
   - component: {fileID: 3955985177232526119}
-  - component: {fileID: 5683018401326056525}
-  - component: {fileID: 2858234191623224488}
   m_Layer: 6
   m_Name: Model Root
   m_TagString: Untagged
@@ -741,55 +739,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TransitionStateInfoList: []
   m_Animator: {fileID: 7673370260004093441}
---- !u!114 &5683018401326056525
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1109309290574590861}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14cb8db45277ac74d8ee6250bb9087d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <Health>k__BackingField: 100
---- !u!114 &2858234191623224488
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1109309290574590861}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d9e5d7a73d2c064a80d5d3d23fcffc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _bodyPartsData:
-  - BodySection: 0
-    BodyPart:
-    - {fileID: 8356111086557172767}
-    DamageMultiplier: 1.5
-  - BodySection: 1
-    BodyPart:
-    - {fileID: 5899182628021170237}
-    - {fileID: 4982263266992587223}
-    DamageMultiplier: 1
-  - BodySection: 2
-    BodyPart:
-    - {fileID: 5529720026183293226}
-    - {fileID: 950618474667012799}
-    - {fileID: 4536391086194164803}
-    - {fileID: 3683879162402828164}
-    DamageMultiplier: 0.75
-  - BodySection: 3
-    BodyPart:
-    - {fileID: 1029533047040730047}
-    - {fileID: 2325753037359413949}
-    - {fileID: 7533328619992459842}
-    - {fileID: 7448037011955016311}
-    DamageMultiplier: 0.75
 --- !u!1 &1116383638763403345
 GameObject:
   m_ObjectHideFlags: 0
@@ -1700,6 +1649,8 @@ GameObject:
   - component: {fileID: 6373535343249460430}
   - component: {fileID: 5358312612419074516}
   - component: {fileID: 3517057852779847120}
+  - component: {fileID: 4470385171111440181}
+  - component: {fileID: 4087283762171823678}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -1999,6 +1950,55 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &4470385171111440181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2471761912260363661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14cb8db45277ac74d8ee6250bb9087d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Health>k__BackingField: 100
+--- !u!114 &4087283762171823678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2471761912260363661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d9e5d7a73d2c064a80d5d3d23fcffc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bodyPartsData:
+  - BodySection: 0
+    BodyPart:
+    - {fileID: 8356111086557172767}
+    DamageMultiplier: 1.5
+  - BodySection: 1
+    BodyPart:
+    - {fileID: 5899182628021170237}
+    - {fileID: 4982263266992587223}
+    DamageMultiplier: 1
+  - BodySection: 2
+    BodyPart:
+    - {fileID: 5529720026183293226}
+    - {fileID: 950618474667012799}
+    - {fileID: 4536391086194164803}
+    - {fileID: 3683879162402828164}
+    DamageMultiplier: 0.75
+  - BodySection: 3
+    BodyPart:
+    - {fileID: 1029533047040730047}
+    - {fileID: 2325753037359413949}
+    - {fileID: 7533328619992459842}
+    - {fileID: 7448037011955016311}
+    DamageMultiplier: 0.75
 --- !u!1 &2509428203324753225
 GameObject:
   m_ObjectHideFlags: 0

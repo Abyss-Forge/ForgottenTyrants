@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Systems.FSM;
 using Systems.ServiceLocator;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,10 +10,9 @@ public enum EAbilityState
     READY, PREVIEW, ACTIVE, COOLDOWN, LOCKED
 }
 
-[RequireComponent(typeof(InfoContainer))]
 public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
 {
-    protected InfoContainer _infoContainer { get; set; }
+    protected List<AbilityInfo> _infoList = new();
 
     #region Default logic
 
@@ -76,15 +74,17 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
         if (Stats.PhysicalDamage > 0)
         {
             float damage = player.Stats.PhysicalDamage + Stats.PhysicalDamage;
-            _infoContainer.Add(new AbilityInfo(
+            _infoList.Add(new AbilityInfo(
                 playerId: player.Data.ClientId,
                 teamId: player.Data.TeamId,
                 affectedChannel: (int)EDamageApplyChannel.ENEMIES,
                 damageAmount: damage));
             //damageType: EElementalType.PHYSIC
+
+            Debug.Log("Info metida " + _infoList.Count);
         }
 
-        Debug.Log("Info metida" + _infoContainer.InfoList.Count);
+
 
         /*if (Stats.MagicalDamage > 0)
         {
@@ -116,8 +116,6 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
 
     void Awake()
     {
-        _infoContainer = GetComponent<InfoContainer>();
-
         _fsm = new();
         InitializeStates();
         _fsm.TransitionTo(EAbilityState.READY);

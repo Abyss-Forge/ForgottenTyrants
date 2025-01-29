@@ -10,10 +10,15 @@ public class InfoContainer : NetworkBehaviour, INetworkSerializable, IEquatable<
 
     public void Add(AbilityInfo info)
     {
-        if (!IsOwner) return;
-
         _infoList.Add(info);
-        UpdateInfoListClientRpc(_infoList);
+        UpdateInfoListServerRpc(_infoList);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void UpdateInfoListServerRpc(List<AbilityInfo> updatedList)
+    {
+        _infoList = new List<AbilityInfo>(updatedList);
+        UpdateInfoListClientRpc(updatedList);
     }
 
     [ClientRpc]
@@ -22,7 +27,7 @@ public class InfoContainer : NetworkBehaviour, INetworkSerializable, IEquatable<
         _infoList = new List<AbilityInfo>(updatedList);
     }
 
-    public virtual void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         if (serializer.IsWriter)
         {

@@ -1,9 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using ForgottenTyrants;
 using Systems.EventBus;
+using Unity.Netcode;
 using UnityEngine;
 
 [RequireComponent(typeof(DamageableBehaviour))]
@@ -80,13 +79,13 @@ public class BodyPartDamager : MonoBehaviour
 
     private void HandleCollision(Collision other)
     {
-        ClientData data = HostManager.Instance.GetMyClientData();
+        if (!other.gameObject.TryGetComponent<NetworkObject>(out NetworkObject networkObject)) return;
+        if (!networkObject.TryGetComponent<InfoContainer>(out InfoContainer infoContainer)) return;
+        Debug.Log("Impacto " + infoContainer.InfoList.Count);
 
-        InfoContainer container = other.gameObject.GetComponent<InfoContainer>();
-        if (container == null) return;
-        Debug.Log("Impacto" + container.InfoList.Count);
+        ClientData data = HostManager.Instance.GetMyClientData();
         // Debug.Log(container.InfoList.OfType<DamageInfo>().Count());
-        foreach (var info in container.InfoList)   //TODO heal y buffs
+        foreach (var info in infoContainer.InfoList)   //TODO heal y buffs
         {
             Debug.Log("Impactrueno");
             if (info.CanApply(data) && !_alreadyApliedInfos.Contains(info))

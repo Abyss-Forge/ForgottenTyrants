@@ -45,12 +45,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e41c1d3762ad88e4587f2c1627d9f61c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Stats>k__BackingField:
+    _health: 0
+    _physicalDamage: 0
+    _magicalDamage: 50
+    _physicalDefense: 0
+    _magicalDefense: 0
+    _movementSpeed: 0
+    _attackSpeed: 0
+    _cooldownReduction: 0
   <SpawnPoint>k__BackingField: {fileID: 1040431495866940547}
   <CanBeCanceled>k__BackingField: 0
   <ActiveDuration>k__BackingField: 5
   <CooldownDuration>k__BackingField: 5
   _dotThreshold: 1
-  _dotDamage: 3
 --- !u!1 &8666031855489571430
 GameObject:
   m_ObjectHideFlags: 0
