@@ -12,7 +12,7 @@ public enum EAbilityState
 
 public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
 {
-    protected List<AbilityInfo> _infoList = new();
+    protected List<AbilityInfoTest> _infoList = new();
 
     #region Default logic
 
@@ -70,29 +70,29 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
     protected virtual void CalculateInfo()
     {
         ServiceLocator.Global.Get(out PlayerInfo player);
+        ServiceLocator.Global.Get(out BuffableBehaviour buffable);
 
         if (Stats.PhysicalDamage > 0)
         {
-            float damage = player.Stats.PhysicalDamage + Stats.PhysicalDamage;
-            _infoList.Add(new AbilityInfo(
-                playerId: player.Data.ClientId,
-                teamId: player.Data.TeamId,
-                affectedChannel: (int)EDamageApplyChannel.ENEMIES,
+            float damage = buffable.CurrentStats.PhysicalDamage + Stats.PhysicalDamage;
+            _infoList.Add(new AbilityInfoTest(
+                playerId: player.ClientData.ClientId,
+                teamId: player.ClientData.TeamId,
+                affectedChannel: (int)EDamageApplyChannel.ALLIES,   //TODO ponerlo en ENEMIES cuando el playerinfo este sincronizado
                 damageAmount: damage));
-            //damageType: EElementalType.PHYSIC
+            //damageType: EElementalType.PHYSIC));
 
             Debug.Log("Info metida " + _infoList.Count);
         }
 
-
-
-        /*if (Stats.MagicalDamage > 0)
+        /*
+        if (Stats.MagicalDamage > 0)
         {
             float damage = player.Stats.MagicalDamage + Stats.MagicalDamage;
-            _infoContainer.Add(new DamageInfo(
+            _infoList.Add(new DamageInfo(
                 playerId: player.Data.ClientId,
                 teamId: player.Data.TeamId,
-                affectedChannel: EDamageApplyChannel.ENEMIES,
+                affectedChannel: (int)EDamageApplyChannel.ENEMIES,
                 damageAmount: damage,
                 damageType: EElementalType.MAGIC));
         }
@@ -100,12 +100,13 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
         if (Stats.Health > 0)
         {
             float healAmount = Stats.Health;
-            _infoContainer.Add(new HealInfo(
+            _infoList.Add(new HealInfo(
                 playerId: player.Data.ClientId,
                 teamId: player.Data.TeamId,
-                affectedChannel: EDamageApplyChannel.ALLIES,
+                affectedChannel: (int)EDamageApplyChannel.ALLIES,
                 healAmount: healAmount));
-        }*/
+        }
+        */
     }
 
     #endregion

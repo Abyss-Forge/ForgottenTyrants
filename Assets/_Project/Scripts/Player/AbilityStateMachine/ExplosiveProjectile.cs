@@ -81,7 +81,7 @@ public abstract class ExplosiveProjectile : Projectile, IDamageable
                         }
 
                         float damage = _damage * effectPercentage;
-                        Debug.Log($"Enemy takes {damage} damage");  // TODO
+                        Debug.Log($"Enemy takes {damage} damage");
 
                         damageDealt += damage;
                     }

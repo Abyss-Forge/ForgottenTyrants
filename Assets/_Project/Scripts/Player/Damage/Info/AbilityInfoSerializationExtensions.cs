@@ -3,7 +3,7 @@ using Unity.Netcode;
 
 public static class AbilityInfoSerializationExtensions
 {
-    public static void WriteValueSafe(this FastBufferWriter writer, in List<AbilityInfo> list)
+    public static void WriteValueSafe(this FastBufferWriter writer, in List<AbilityInfoTest> list)
     {
         writer.WriteValueSafe(list.Count);
         foreach (var item in list)
@@ -12,13 +12,13 @@ public static class AbilityInfoSerializationExtensions
         }
     }
 
-    public static void ReadValueSafe(this FastBufferReader reader, out List<AbilityInfo> list)
+    public static void ReadValueSafe(this FastBufferReader reader, out List<AbilityInfoTest> list)
     {
-        list = new List<AbilityInfo>();
+        list = new List<AbilityInfoTest>();
         reader.ReadValueSafe(out int count);
         for (int i = 0; i < count; i++)
         {
-            reader.ReadValueSafe(out AbilityInfo item);
+            reader.ReadValueSafe(out AbilityInfoTest item);
             list.Add(item);
         }
     }

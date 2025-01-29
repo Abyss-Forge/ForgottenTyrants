@@ -5,26 +5,26 @@ using Unity.Netcode;
 
 public class InfoContainer : NetworkBehaviour, INetworkSerializable, IEquatable<InfoContainer>
 {
-    private List<AbilityInfo> _infoList = new();
-    public List<AbilityInfo> InfoList => _infoList;
+    private List<AbilityInfoTest> _infoList = new();
+    public List<AbilityInfoTest> InfoList => _infoList;
 
-    public void Add(AbilityInfo info)
+    public void Add(AbilityInfoTest info)
     {
         _infoList.Add(info);
         UpdateInfoListServerRpc(_infoList);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void UpdateInfoListServerRpc(List<AbilityInfo> updatedList)
+    private void UpdateInfoListServerRpc(List<AbilityInfoTest> updatedList)
     {
-        _infoList = new List<AbilityInfo>(updatedList);
+        _infoList = new List<AbilityInfoTest>(updatedList);
         UpdateInfoListClientRpc(updatedList);
     }
 
     [ClientRpc]
-    private void UpdateInfoListClientRpc(List<AbilityInfo> updatedList)
+    private void UpdateInfoListClientRpc(List<AbilityInfoTest> updatedList)
     {
-        _infoList = new List<AbilityInfo>(updatedList);
+        _infoList = new List<AbilityInfoTest>(updatedList);
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter

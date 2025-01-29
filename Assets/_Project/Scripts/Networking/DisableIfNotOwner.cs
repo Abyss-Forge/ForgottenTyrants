@@ -5,17 +5,24 @@ using UnityEngine;
 
 public class DisableIfNotOwner : NetworkBehaviour
 {
+    [Tooltip("Leave empty to directly disable the GameObject")]
     [SerializeField] private List<MonoBehaviour> _scriptsToDisable = new();
 
     void OnValidate()
     {
-        // Eliminar duplicados de la lista
+        // Remove duplicates from list
         _scriptsToDisable = _scriptsToDisable.Distinct().ToList();
     }
 
     public override void OnNetworkSpawn()
     {
+        Debug.Log("OnNetworkSpawn ejecutado.");
         TryDisable();
+    }
+
+    void Awake()
+    {
+        Debug.Log("Awake ejecutado.");
     }
 
     private void TryDisable()
