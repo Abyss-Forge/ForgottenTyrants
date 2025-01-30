@@ -91,9 +91,9 @@ public class BodyPartDamager : MonoBehaviour
         Debug.Log("0");
         if (!networkObject.TryGetComponent<InfoContainer>(out InfoContainer infoContainer)) return;
 
-        ClientData data = HostManager.Instance.GetMyClientData();
+        ServiceLocator.Global.Get(out PlayerInfo player);
         Debug.Log("1");
-        foreach (var info in infoContainer.InfoList.Where(x => x.CanApply(data) && !_alreadyApliedInfos.Contains(x)))
+        foreach (var info in infoContainer.InfoList.Where(x => x.CanApply(player.ClientData) && !_alreadyApliedInfos.Contains(x)))
         {
             _alreadyApliedInfos.Add(info);
             Debug.Log("2");

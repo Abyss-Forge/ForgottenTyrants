@@ -1,15 +1,13 @@
 using System.Collections;
-using System.Collections.Generic;
 using Systems.EventBus;
 using Systems.GameManagers;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(CharacterController))]
-public class PlayerController : NetworkBehaviour
+//[RequireComponent(typeof(CharacterController))]
+public class PlayerController : MonoBehaviour
 {
-    CharacterController _characterController;
+    [SerializeField] CharacterController _characterController;
 
     [SerializeField] private Camera _camera;
 
@@ -39,34 +37,40 @@ public class PlayerController : NetworkBehaviour
 
     private void OnMove(InputAction.CallbackContext context)
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
+
         _move = context.ReadValue<Vector2>();
     }
     private void OnLook(InputAction.CallbackContext context)
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
+
         _look = context.ReadValue<Vector2>();
     }
 
     private void OnJump(InputAction.CallbackContext context)
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
+
         if (context.performed && CanJump && _isGrounded) Jump();
     }
 
     private void OnDash(InputAction.CallbackContext context)
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
+
         if (context.performed && CanDash && !_isDashing && !_isDashOnCooldown) StartCoroutine(Dash());
     }
 
     void Awake()
     {
-        _characterController = GetComponent<CharacterController>();
+        // _characterController = GetComponent<CharacterController>();
     }
 
     void OnEnable()
     {
+        //if (!IsOwner) return;
+
         _playerDeathEventBinding = new EventBinding<PlayerDeathEvent>(HandlePlayerDeath);
         EventBus<PlayerDeathEvent>.Register(_playerDeathEventBinding);
 
@@ -78,6 +82,8 @@ public class PlayerController : NetworkBehaviour
 
     void OnDisable()
     {
+        //if (!IsOwner) return;
+
         EventBus<PlayerDeathEvent>.Deregister(_playerDeathEventBinding);
 
         MyInputManager.Instance.Unsubscribe(EInputAction.MOVE, OnMove);
@@ -88,7 +94,8 @@ public class PlayerController : NetworkBehaviour
 
     void FixedUpdate()
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
+
         //physics belong inside fixed update
         if (CanMove) Move();
         if (GravityEnabled) ApplyGravity();
@@ -98,13 +105,15 @@ public class PlayerController : NetworkBehaviour
 
     void Update()
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
+
         //animation
     }
 
     void LateUpdate()
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
+
         //we move the camera in late update so all the movement has finished before positioning it
         //Look();
     }

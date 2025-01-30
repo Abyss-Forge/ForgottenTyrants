@@ -141,7 +141,7 @@ GameObject:
   m_IsActive: 1
 --- !u!114 &23351270
 MonoBehaviour:
-  m_ObjectHideFlags: 10
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -494,43 +494,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4278159171177442440, guid: 31238b0aea7f33044b63649580075df7,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1907067761}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31238b0aea7f33044b63649580075df7, type: 3}
---- !u!1 &544811471 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4278159171177442440, guid: 31238b0aea7f33044b63649580075df7,
-    type: 3}
-  m_PrefabInstance: {fileID: 953616082}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &544811472 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6868852265337528256, guid: 31238b0aea7f33044b63649580075df7,
     type: 3}
   m_PrefabInstance: {fileID: 953616082}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &544811473
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 544811471}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a5ea9ab204d8b2458fc6bb900070e8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Damage: 10
-  Team: 
---- !u!1 &674603120 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5670310688705787936, guid: 4ee7ff0d48b18bd4c9d36a3fbf4ead23,
-    type: 3}
-  m_PrefabInstance: {fileID: 909980946}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &674603121 stripped
 Transform:
@@ -538,20 +508,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 909980946}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &674603122
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 674603120}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a5ea9ab204d8b2458fc6bb900070e8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Damage: 10
-  Team: 
 --- !u!1001 &765159161
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -982,19 +938,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ally
       objectReference: {fileID: 0}
-    - target: {fileID: 6426247737411710827, guid: 4ee7ff0d48b18bd4c9d36a3fbf4ead23,
-        type: 3}
-      propertyPath: m_TagString
-      value: Untagged
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5670310688705787936, guid: 4ee7ff0d48b18bd4c9d36a3fbf4ead23,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 674603122}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ee7ff0d48b18bd4c9d36a3fbf4ead23, type: 3}
 --- !u!1 &938111546
 GameObject:
@@ -1067,11 +1014,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 299750324}
     m_Modifications:
-    - target: {fileID: 3224982893535296451, guid: 31238b0aea7f33044b63649580075df7,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4278159171177442440, guid: 31238b0aea7f33044b63649580075df7,
         type: 3}
       propertyPath: m_Name
@@ -1130,11 +1072,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4278159171177442440, guid: 31238b0aea7f33044b63649580075df7,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 544811473}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31238b0aea7f33044b63649580075df7, type: 3}
 --- !u!1001 &988648606
 PrefabInstance:
@@ -1744,32 +1682,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 938111548}
   m_LocalEulerAnglesHint: {x: -27.5, y: 0, z: 0}
---- !u!1 &1907067759 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4278159171177442440, guid: 31238b0aea7f33044b63649580075df7,
-    type: 3}
-  m_PrefabInstance: {fileID: 429774845}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1907067760 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6868852265337528256, guid: 31238b0aea7f33044b63649580075df7,
     type: 3}
   m_PrefabInstance: {fileID: 429774845}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1907067761
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1907067759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a5ea9ab204d8b2458fc6bb900070e8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Damage: 10
-  Team: 
 --- !u!1 &1979843172
 GameObject:
   m_ObjectHideFlags: 0

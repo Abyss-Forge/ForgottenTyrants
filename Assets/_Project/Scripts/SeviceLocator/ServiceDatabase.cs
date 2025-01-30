@@ -1,16 +1,13 @@
 using System.Collections.Generic;
 using Systems.ServiceLocator;
-using Unity.Netcode;
 using UnityEngine;
 
-public class ServiceDatabase : NetworkBehaviour
+public class ServiceDatabase : MonoBehaviour
 {
-    [SerializeField] List<Object> _services;
+    [SerializeField] Object[] _services;
 
-    public override void OnNetworkSpawn()
+    void Awake()
     {
-        if (!IsOwner) return;
-
         ServiceLocator sl = ServiceLocator.Global;
         foreach (Object service in _services)
         {

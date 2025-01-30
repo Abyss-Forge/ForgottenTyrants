@@ -78,7 +78,7 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
             _infoList.Add(new AbilityInfoTest(
                 playerId: player.ClientData.ClientId,
                 teamId: player.ClientData.TeamId,
-                affectedChannel: (int)EDamageApplyChannel.ALLIES,   //TODO ponerlo en ENEMIES cuando el playerinfo este sincronizado
+                affectedChannel: (int)EDamageApplyChannel.ENEMIES,
                 damageAmount: damage));
             //damageType: EElementalType.PHYSIC));
 

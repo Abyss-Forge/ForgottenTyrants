@@ -10,17 +10,6 @@ public struct AbilityInfoTest : INetworkSerializable, IEquatable<AbilityInfoTest
 
     public float DamageAmount;
 
-    public AbilityInfoTest(int affectedChannel, float damageAmount)
-    {
-        ClientData data = HostManager.Instance.GetMyClientData();
-
-        PlayerId = data.ClientId;
-        TeamId = data.TeamId;
-        AffectedChannel = affectedChannel;
-
-        DamageAmount = damageAmount;
-    }
-
     public AbilityInfoTest(ulong playerId, int teamId, int affectedChannel, float damageAmount)
     {
         PlayerId = playerId;

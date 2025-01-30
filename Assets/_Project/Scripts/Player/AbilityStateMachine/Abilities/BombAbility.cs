@@ -82,6 +82,7 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
             {
                 projectile.InfoContainer.Add(item);
             }
+            _ability._infoList.Clear();
             GameObject instance = projectile.gameObject;
             instance.transform.localScale = scale;
             instance.GetComponent<NetworkObject>().Spawn();

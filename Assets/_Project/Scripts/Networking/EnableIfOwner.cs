@@ -6,14 +6,14 @@ using UnityEngine;
 public class EnableIfOwner : NetworkBehaviour
 {
     //TODO unique attribute tag to unallow duplicates
-    [SerializeField] private List<BeginDisabled> _gameObjectsToEnable = new();
-    [SerializeField] private List<Component> _componentsToEnable = new();
+    [SerializeField] private BeginDisabled[] _gameObjectsToEnable;
+    [SerializeField] private Component[] _componentsToEnable;
 
     void OnValidate()
     {
         // Remove duplicates from list
-        _gameObjectsToEnable = _gameObjectsToEnable.Distinct().ToList();
-        _componentsToEnable = _componentsToEnable.Distinct().ToList();
+        _gameObjectsToEnable = _gameObjectsToEnable.ToList().Distinct().ToArray();
+        _componentsToEnable = _componentsToEnable.ToList().Distinct().ToArray();
     }
 
     public override void OnNetworkSpawn()
