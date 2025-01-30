@@ -21,16 +21,56 @@ public class HostManager : Singleton<HostManager>
 
     [SerializeField] private SceneReference _gameplayScene; //TODO remove test
 
+    public Dictionary<ulong, ClientData> ClientDataDict { get; private set; } = new();
+    public string JoinCode { get; private set; }
+
+    public bool AmIHost { get; private set; }
+    public ClientData TestData { get; set; }
+
     private bool _isGameStarted;
     private string _lobbyId;
 
-    public Dictionary<ulong, ClientData> ClientData { get; private set; }
-    public string JoinCode { get; private set; }
+    public ClientData GetMyClientData()
+    {
+        if (NetworkManager.Singleton == null)
+        {
+            Debug.LogError("NetworkManager.Singleton is null.");
+            return null;
+        }
+
+        if (ClientDataDict == null)
+        {
+            Debug.LogError("ClientData dictionary is null.");
+            return null;
+        }
+
+        if (!ClientDataDict.ContainsKey(NetworkManager.Singleton.LocalClientId))
+        {
+            Debug.LogError($"ClientData does not contain LocalClientId: {NetworkManager.Singleton.LocalClientId}");
+            return null;
+        }
+
+        if (ClientDataDict[NetworkManager.Singleton.LocalClientId] == null)
+        {
+            Debug.LogError($"shjdfsihdbfyf: {NetworkManager.Singleton.LocalClientId}");
+            return null;
+        }
+
+        if (!AmIHost)
+        {
+            Debug.Log("im client");
+            return TestData;
+        }
+
+        Debug.Log("im host");
+        return ClientDataDict[NetworkManager.Singleton.LocalClientId];
+    }
 
     public async Task StartHost(bool isPrivate = false, string lobbyName = null)
     {
-        Allocation allocation;
+        AmIHost = true;
 
+        Allocation allocation;
         try
         {
             allocation = await RelayService.Instance.CreateAllocationAsync(_maxConnections);
@@ -85,8 +125,7 @@ public class HostManager : Singleton<HostManager>
         NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
         NetworkManager.Singleton.OnServerStarted += OnNetworkReady;
 
-        ClientData = new Dictionary<ulong, ClientData>();
-
+        ClientDataDict = new();
         NetworkManager.Singleton.StartHost();
     }
 
@@ -102,7 +141,7 @@ public class HostManager : Singleton<HostManager>
 
     private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
     {
-        if (ClientData.Count >= _maxConnections || _isGameStarted)
+        if (ClientDataDict.Count >= _maxConnections || _isGameStarted)
         {
             response.Approved = false;
             return;
@@ -112,9 +151,9 @@ public class HostManager : Singleton<HostManager>
         response.CreatePlayerObject = false;
         response.Pending = false;
 
-        ClientData[request.ClientNetworkId] = new ClientData(request.ClientNetworkId);
+        ClientDataDict[request.ClientNetworkId] = new ClientData(request.ClientNetworkId);
 
-        Debug.Log($"Added client {request.ClientNetworkId}");
+        Debug.Log($"Client {request.ClientNetworkId} has connected");
     }
 
     private void OnNetworkReady()
@@ -126,18 +165,18 @@ public class HostManager : Singleton<HostManager>
 
     private void OnClientDisconnect(ulong clientId)
     {
-        if (ClientData.ContainsKey(clientId))
+        if (ClientDataDict.ContainsKey(clientId))
         {
-            if (ClientData.Remove(clientId))
+            if (ClientDataDict.Remove(clientId))
             {
-                Debug.Log($"Removed client {clientId}");
+                Debug.Log($"Client {clientId} has disconnected");
             }
         }
     }
 
     public void SetCharacterBuild(ulong clientId, RaceTemplate characterRace, ClassTemplate characterClass, ArmorTemplate characterArmor, TrinketTemplate characterTrinket)
     {
-        if (ClientData.TryGetValue(clientId, out ClientData data))
+        if (ClientDataDict.TryGetValue(clientId, out ClientData data))
         {
             data.Race = characterRace;
             data.Class = characterClass;
@@ -148,7 +187,7 @@ public class HostManager : Singleton<HostManager>
 
     public void SetTeam(ulong clientId, int teamId)
     {
-        if (ClientData.TryGetValue(clientId, out ClientData data))
+        if (ClientDataDict.TryGetValue(clientId, out ClientData data))
         {
             data.TeamId = teamId;
         }
@@ -156,7 +195,7 @@ public class HostManager : Singleton<HostManager>
 
     public void SetCharacter(ulong clientId, int characterId)
     {
-        if (ClientData.TryGetValue(clientId, out ClientData data))
+        if (ClientDataDict.TryGetValue(clientId, out ClientData data))
         {
             data.CharacterId = characterId;
         }
@@ -167,29 +206,6 @@ public class HostManager : Singleton<HostManager>
         _isGameStarted = true;
 
         SceneLoaderWrapper.Instance.LoadScene(_gameplayScene.Name, useNetworkSceneManager: true, LoadSceneMode.Single);
-    }
-
-    public ClientData GetMyClientData()
-    {
-        if (NetworkManager.Singleton == null)
-        {
-            Debug.LogError("NetworkManager.Singleton is null.");
-            return null;
-        }
-
-        if (ClientData == null)
-        {
-            Debug.LogError("ClientData dictionary is null.");
-            return null;
-        }
-
-        if (!ClientData.ContainsKey(NetworkManager.Singleton.LocalClientId))
-        {
-            Debug.LogError($"ClientData does not contain LocalClientId: {NetworkManager.Singleton.LocalClientId}");
-            return null;
-        }
-
-        return ClientData[NetworkManager.Singleton.LocalClientId];
     }
 
 }

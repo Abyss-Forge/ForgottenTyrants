@@ -718,7 +718,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: b71d950f491c42940b9e1d663f8eb028, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -4995,11 +4995,6 @@ PrefabInstance:
       propertyPath: _objectToFollow
       value: 
       objectReference: {fileID: 9963347311403842}
-    - target: {fileID: 2354323998712104720, guid: 7927e011fe602b44bad6aa56953fa8fe,
-        type: 3}
-      propertyPath: _defaultMinimapSize
-      value: 50
-      objectReference: {fileID: 0}
     - target: {fileID: 7506160260129498768, guid: 7927e011fe602b44bad6aa56953fa8fe,
         type: 3}
       propertyPath: m_Name

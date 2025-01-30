@@ -20,10 +20,11 @@ public class ClientManager : Singleton<ClientManager>
             Debug.Log($"host: {allocation.HostConnectionData[0]} {allocation.HostConnectionData[1]}");
             Debug.Log($"client: {allocation.AllocationId}");
 
+            ulong id = NetworkManager.Singleton.LocalClientId;
+            HostManager.Instance.TestData = new(0);
+
             RelayServerData relayServerData = new(allocation, "dtls");
-
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
-
             NetworkManager.Singleton.StartClient();
         }
         catch (RelayServiceException e)

@@ -18,7 +18,7 @@ public class CharacterSpawner : NetworkBehaviour
 
     private void SpawnAllPlayers()
     {
-        foreach (var clientEntry in HostManager.Instance.ClientData)
+        foreach (var clientEntry in HostManager.Instance.ClientDataDict)
         {
             var character = _characterDatabase.GetById(clientEntry.Value.CharacterId);
             if (character != null)
