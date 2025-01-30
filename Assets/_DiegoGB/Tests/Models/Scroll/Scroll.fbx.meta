@@ -3,7 +3,17 @@ guid: 6b4ede4cf69588f4d83a12f144adebe1
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PaperMat
+    second: {fileID: 2100000, guid: bf3de4cf57f96a0408288c50d8bcca98, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ScrollMat
+    second: {fileID: 2100000, guid: 135a83d198ce7344fbb8b5df47df68e6, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
