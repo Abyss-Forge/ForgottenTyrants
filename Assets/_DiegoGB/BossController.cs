@@ -5,6 +5,7 @@ using Unity.Netcode;
 using Systems.BehaviourTree;
 using Unity.Mathematics;
 using Random = UnityEngine.Random;
+using UnityEngine.UI;
 
 public class BossController : Entity
 {
@@ -17,7 +18,7 @@ public class BossController : Entity
     //[SerializeField] List<GameObject> _players = new List<GameObject>();
     [SerializeField] float _gravityEventEffectDuration = 10f;
     [SerializeField] float _damageBoostEffectDuration = 5f;
-    [SerializeField] float _disappearEffectDuration = 3f;
+
 
     [Header("Power Up settings")]
     [SerializeField] GameObject _powerUpPrefab;
@@ -38,6 +39,12 @@ public class BossController : Entity
     [SerializeField] Transform _bossPosition;
     [SerializeField] private float _moveDuration = 5f;
     [SerializeField] private AnimationCurve _movementCurve;
+    [SerializeField] float _disappearEffectDuration = 10f;
+    [SerializeField] float _warningDuration = 3f;
+    [SerializeField] private Image _warningImage;
+    [SerializeField] private float _fadeDuration = .1f;
+    [SerializeField] private int _repeatCount = 3;
+    private float _maxAlpha = 0.7f;
 
     [Header("Wind settings")]
     [SerializeField] GameObject _windPrefab;
@@ -360,6 +367,10 @@ public class BossController : Entity
 
         yield return new WaitForSeconds(_disappearEffectDuration);
 
+        StartCoroutine(DangerWarning());
+
+        yield return new WaitForSeconds(_warningDuration);
+
         yield return StartCoroutine(MoveTo(_bossPosition.position, _moveDuration));
 
     }
@@ -388,6 +399,50 @@ public class BossController : Entity
 
         // Asegúrate de llegar exactamente al destino
         transform.position = destination;
+    }
+
+    private IEnumerator DangerWarning()
+    {
+        // Guardamos el color original
+        Color originalColor = _warningImage.color;
+
+        // Asegurarnos de que la imagen comienza con alpha en 0
+        originalColor.a = 0f;
+        _warningImage.color = originalColor;
+
+        // Repetimos el ciclo fade in + fade out n veces
+        for (int i = 0; i < _repeatCount; i++)
+        {
+            // FADE IN (de 0 a 1)
+            float elapsedTime = 0f;
+            while (elapsedTime < _fadeDuration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsedTime / _fadeDuration);
+
+                // Lerp desde 0 hasta 0.7
+                float alpha = Mathf.Lerp(0f, _maxAlpha, t);
+                // Ajustamos el alpha sin modificar el color base
+                _warningImage.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+                yield return null;
+            }
+
+            // FADE OUT (de 1 a 0)
+            elapsedTime = 0f;
+            while (elapsedTime < _fadeDuration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsedTime / _fadeDuration);
+
+                // Lerp desde 0.7 hasta 0
+                float alpha = Mathf.Lerp(_maxAlpha, 0f, t);
+                _warningImage.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+                yield return null;
+            }
+        }
+
+        // Al terminar, aseguramos que la imagen quede completamente invisible
+        _warningImage.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
     }
 
     #endregion
