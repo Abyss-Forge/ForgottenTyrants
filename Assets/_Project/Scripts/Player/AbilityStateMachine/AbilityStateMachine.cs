@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Systems.FSM;
 using Systems.ServiceLocator;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,10 +10,9 @@ public enum EAbilityState
     READY, PREVIEW, ACTIVE, COOLDOWN, LOCKED
 }
 
-[RequireComponent(typeof(InfoContainer))]
 public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
 {
-    protected InfoContainer _infoContainer { get; set; }
+    protected List<AbilityInfoTest> _infoList = new();
 
     #region Default logic
 
@@ -72,35 +70,43 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
     protected virtual void CalculateInfo()
     {
         ServiceLocator.Global.Get(out PlayerInfo player);
+        ServiceLocator.Global.Get(out BuffableBehaviour buffable);
 
-        if (Stats.PhysicalDamage <= 0)
+        if (Stats.PhysicalDamage > 0)
         {
-            float damage = player.Stats.PhysicalDamage + Stats.PhysicalDamage;
-            _infoContainer.InfoList.Add(new DamageInfo(
-                teamId: player.Data.TeamId,
-                affectedChannels: new() { EDamageApplyChannel.ENEMIES },
-                damageAmount: damage,
-                damageType: EElementalType.PHYSIC));
+            float damage = buffable.CurrentStats.PhysicalDamage + Stats.PhysicalDamage;
+            _infoList.Add(new AbilityInfoTest(
+                playerId: player.ClientData.ClientId,
+                teamId: player.ClientData.TeamId,
+                affectedChannel: (int)EDamageApplyChannel.ALLIES,   //TODO ponerlo en ENEMIES cuando el playerinfo este sincronizado
+                damageAmount: damage));
+            //damageType: EElementalType.PHYSIC));
+
+            Debug.Log("Info metida " + _infoList.Count);
         }
 
-        if (Stats.MagicalDamage <= 0)
+        /*
+        if (Stats.MagicalDamage > 0)
         {
             float damage = player.Stats.MagicalDamage + Stats.MagicalDamage;
-            _infoContainer.InfoList.Add(new DamageInfo(
+            _infoList.Add(new DamageInfo(
+                playerId: player.Data.ClientId,
                 teamId: player.Data.TeamId,
-                affectedChannels: new() { EDamageApplyChannel.ENEMIES },
+                affectedChannel: (int)EDamageApplyChannel.ENEMIES,
                 damageAmount: damage,
                 damageType: EElementalType.MAGIC));
         }
 
-        if (Stats.Health <= 0)
+        if (Stats.Health > 0)
         {
             float healAmount = Stats.Health;
-            _infoContainer.InfoList.Add(new HealInfo(
+            _infoList.Add(new HealInfo(
+                playerId: player.Data.ClientId,
                 teamId: player.Data.TeamId,
-                affectedChannels: new() { EDamageApplyChannel.ALLIES },
+                affectedChannel: (int)EDamageApplyChannel.ALLIES,
                 healAmount: healAmount));
         }
+        */
     }
 
     #endregion
@@ -111,8 +117,6 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
 
     void Awake()
     {
-        _infoContainer = GetComponent<InfoContainer>();
-
         _fsm = new();
         InitializeStates();
         _fsm.TransitionTo(EAbilityState.READY);

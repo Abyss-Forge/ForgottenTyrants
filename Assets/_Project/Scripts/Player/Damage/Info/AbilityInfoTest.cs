@@ -1,36 +1,33 @@
 using System;
 using Unity.Netcode;
 
-public enum EDamageApplyChannel
-{
-    MYSELF = 0,
-    ALLIES = 1,
-    ENEMIES = 2
-}
-
-//Abstract
-public class AbilityInfo : INetworkSerializable, IEquatable<AbilityInfo>
+[Serializable]
+public struct AbilityInfoTest : INetworkSerializable, IEquatable<AbilityInfoTest>
 {
     public ulong PlayerId;
     public int TeamId;
     public int AffectedChannel;
 
-    public AbilityInfo() { }
+    public float DamageAmount;
 
-    public AbilityInfo(int affectedChannel)
+    public AbilityInfoTest(int affectedChannel, float damageAmount)
     {
         ClientData data = HostManager.Instance.GetMyClientData();
 
         PlayerId = data.ClientId;
         TeamId = data.TeamId;
         AffectedChannel = affectedChannel;
+
+        DamageAmount = damageAmount;
     }
 
-    public AbilityInfo(ulong playerId, int teamId, int affectedChannel)
+    public AbilityInfoTest(ulong playerId, int teamId, int affectedChannel, float damageAmount)
     {
         PlayerId = playerId;
         TeamId = teamId;
         AffectedChannel = affectedChannel;
+
+        DamageAmount = damageAmount;
     }
 
     public bool CanApply(ClientData data)
@@ -42,18 +39,22 @@ public class AbilityInfo : INetworkSerializable, IEquatable<AbilityInfo>
         return false;
     }
 
-    public virtual void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref PlayerId);
         serializer.SerializeValue(ref TeamId);
         serializer.SerializeValue(ref AffectedChannel);
+
+        serializer.SerializeValue(ref DamageAmount);
     }
 
-    public virtual bool Equals(AbilityInfo other)
+    public bool Equals(AbilityInfoTest other)
     {
-        return other != null &&
+        return //other != null &&
                PlayerId == other.PlayerId &&
                TeamId == other.TeamId &&
-               AffectedChannel == other.AffectedChannel;
+               AffectedChannel == other.AffectedChannel &&
+
+               DamageAmount == other.DamageAmount;
     }
 }

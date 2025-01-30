@@ -2,14 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using ForgottenTyrants;
 using Systems.EventBus;
+using Systems.ServiceLocator;
+using Unity.Netcode;
 using UnityEngine;
 
-[RequireComponent(typeof(DamageableBehaviour))]
+[RequireComponent(typeof(DamageableBehaviour), typeof(BuffableBehaviour))]
 public class BodyPartDamager : MonoBehaviour
 {
     DamageableBehaviour _damageable;
+    BuffableBehaviour _buffable;
 
     [Serializable]
     private struct BodyPartData
@@ -27,11 +29,15 @@ public class BodyPartDamager : MonoBehaviour
     }
 
     private Dictionary<EBodySection, (BodyPart[], float)> _bodyPartsDictionary = new();
-    private List<AbilityInfo> _alreadyApliedInfos = new();    //TODO: dynamyc empty
+    private List<AbilityInfoTest> _alreadyApliedInfos = new();    //TODO: dynamyc empty
 
     void Awake()
     {
-        _damageable = GetComponentInParent<DamageableBehaviour>();
+        ServiceLocator.Global.Get(out PlayerInfo player);
+        _damageable = GetComponent<DamageableBehaviour>();
+        _buffable = GetComponent<BuffableBehaviour>();
+        _damageable.Initialize((int)player.Stats.Health);
+        _buffable.Initialize(player.Stats);
 
         foreach (BodyPartData data in _bodyPartsData)
         {
@@ -39,7 +45,7 @@ public class BodyPartDamager : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    void OnEnable()
     {
         _damageable.OnDeath += HandleDeath;
 
@@ -52,7 +58,7 @@ public class BodyPartDamager : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    void OnDisable()
     {
         _damageable.OnDeath -= HandleDeath;
 
@@ -80,22 +86,33 @@ public class BodyPartDamager : MonoBehaviour
 
     private void HandleCollision(Collision other)
     {
+        Debug.Log("Hola");
+        if (!other.gameObject.TryGetComponent<NetworkObject>(out NetworkObject networkObject)) return;
+        Debug.Log("0");
+        if (!networkObject.TryGetComponent<InfoContainer>(out InfoContainer infoContainer)) return;
+
         ClientData data = HostManager.Instance.GetMyClientData();
-
-        InfoContainer container = other.gameObject.GetComponent<InfoContainer>();
-        if (container == null) return;
-        Debug.Log("Impacto" + container.InfoList.OfType<DamageInfo>().Count());
-        foreach (var info in container.InfoList.OfType<DamageInfo>())   //TODO heal y buffs
+        Debug.Log("1");
+        foreach (var info in infoContainer.InfoList.Where(x => x.CanApply(data) && !_alreadyApliedInfos.Contains(x)))
         {
-            Debug.Log("Impactrueno");
-            if (info.CanApply(data) && !_alreadyApliedInfos.Contains(info))
+            _alreadyApliedInfos.Add(info);
+            Debug.Log("2");
+            EBodySection? bodyPart = GetBodyPartHit(other.contacts);
+            if (bodyPart.HasValue) ApplyDamage(bodyPart.Value, info.DamageAmount);
+            /*if (info is DamageInfo damageInfo)
             {
-                Debug.Log("Te ha dado: " + other.gameObject.name);
-                _alreadyApliedInfos.Add(info);
-
+                Debug.Log("3");
                 EBodySection? bodyPart = GetBodyPartHit(other.contacts);
-                if (bodyPart.HasValue) ApplyDamage(bodyPart.Value, info.DamageAmount);
+                if (bodyPart.HasValue) ApplyDamage(bodyPart.Value, damageInfo.DamageAmount);
             }
+            else if (info is HealInfo healInfo)
+            {
+                _damageable.Heal((int)healInfo.HealAmount);
+            }
+            else if (info is BuffInfo buffInfo)
+            {
+                _buffable.ApplyBuffFromInfo(buffInfo);
+            }*/
         }
     }
 
@@ -118,13 +135,13 @@ public class BodyPartDamager : MonoBehaviour
         return null;
     }
 
-    private void ApplyDamage(EBodySection bodyPart, float baseDamage)
+    private void ApplyDamage(EBodySection bodyPart, float damage)
     {
         if (_bodyPartsDictionary.TryGetValue(bodyPart, out var bodyPartData))
         {
-            baseDamage *= bodyPartData.Item2;
-            _damageable.Damage((int)baseDamage);
-            Debug.Log("Recibiste " + baseDamage + " de daño en " + bodyPart);
+            damage *= bodyPartData.Item2;
+            _damageable.Damage((int)damage);
+            Debug.Log("Recibiste " + damage + " de daño en " + bodyPart);
         }
     }
 

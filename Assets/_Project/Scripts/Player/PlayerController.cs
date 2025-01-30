@@ -10,6 +10,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : NetworkBehaviour
 {
     CharacterController _characterController;
+
     [SerializeField] private Camera _camera;
 
     [Header("Aesthetic")]
@@ -192,10 +193,13 @@ public class PlayerController : NetworkBehaviour
         _isDashOnCooldown = false;
     }
 
+    //cosas de diego
+
     public void SetVelocity(Vector3 newVelocity)
     {
         _velocity = newVelocity;
     }
+
     public void SetJumpForce(float jumpForce)
     {
         _jumpForce = jumpForce;
