@@ -24,8 +24,7 @@ public class HostManager : Singleton<HostManager>
     public Dictionary<ulong, ClientData> ClientDataDict { get; private set; } = new();
     public string JoinCode { get; private set; }
 
-    public bool AmIHost { get; private set; }
-    public ClientData TestData { get; set; }
+    bool AmIHost;
 
     private bool _isGameStarted;
     private string _lobbyId;
@@ -38,10 +37,29 @@ public class HostManager : Singleton<HostManager>
             return null;
         }
 
+        if (!NetworkManager.Singleton.IsConnectedClient)
+        {
+            Debug.LogError("Client is not connected yet.");
+            //return null;
+        }
+
         if (ClientDataDict == null)
         {
             Debug.LogError("ClientData dictionary is null.");
-            return null;
+            ClientDataDict = new();
+            //return null;
+        }
+
+        if (!AmIHost)
+        {
+            ulong id = NetworkManager.Singleton.LocalClientId;
+            if (!ClientDataDict.TryGetValue(id, out ClientData clientData))
+            {
+                // Si no existe, se crea y se agrega
+                clientData = new ClientData(id);
+                ClientDataDict[id] = clientData;
+                Debug.Log("jajajasjajajajajajajaj");
+            }
         }
 
         if (!ClientDataDict.ContainsKey(NetworkManager.Singleton.LocalClientId))
@@ -52,17 +70,11 @@ public class HostManager : Singleton<HostManager>
 
         if (ClientDataDict[NetworkManager.Singleton.LocalClientId] == null)
         {
-            Debug.LogError($"shjdfsihdbfyf: {NetworkManager.Singleton.LocalClientId}");
+            Debug.LogError($"esto no se deberia ver nunca: {NetworkManager.Singleton.LocalClientId}");
             return null;
         }
 
-        if (!AmIHost)
-        {
-            Debug.Log("im client");
-            return TestData;
-        }
-
-        Debug.Log("im host");
+        Debug.Log("im host: " + AmIHost);
         return ClientDataDict[NetworkManager.Singleton.LocalClientId];
     }
 
@@ -187,17 +199,21 @@ public class HostManager : Singleton<HostManager>
 
     public void SetTeam(ulong clientId, int teamId)
     {
+        Debug.Log("team");
         if (ClientDataDict.TryGetValue(clientId, out ClientData data))
         {
             data.TeamId = teamId;
+            Debug.Log("team");
         }
     }
 
     public void SetCharacter(ulong clientId, int characterId)
     {
+        Debug.Log("character");
         if (ClientDataDict.TryGetValue(clientId, out ClientData data))
         {
             data.CharacterId = characterId;
+            Debug.Log("character");
         }
     }
 

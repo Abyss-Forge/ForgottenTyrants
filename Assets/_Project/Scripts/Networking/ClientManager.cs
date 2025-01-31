@@ -21,7 +21,8 @@ public class ClientManager : Singleton<ClientManager>
             Debug.Log($"client: {allocation.AllocationId}");
 
             ulong id = NetworkManager.Singleton.LocalClientId;
-            HostManager.Instance.TestData = new(0);
+            HostManager.Instance.GetMyClientData();
+            Debug.Log("prueba ID: " + id);
 
             RelayServerData relayServerData = new(allocation, "dtls");
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);

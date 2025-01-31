@@ -6,7 +6,7 @@ public struct CharacterSelectState : INetworkSerializable, IEquatable<CharacterS
     public ulong ClientId;
     public bool IsLockedIn;
     public int TeamId;
-    public int CharacterId;
+    public int CharacterId; //TODO remove
 
     public CharacterSelectState(ulong clientId, int teamId = -1, bool isLockedIn = false, int characterId = -1)
     {
