@@ -22,7 +22,7 @@ public class Team
 
 public class CharacterSelectController : NetworkBehaviour
 {
-    [SerializeField] private CharacterSelectionMenuController _buildController; // TODO: remove
+    [SerializeField] private CharacterSelectionMenuController _buildController;
 
     [SerializeField] private CharacterDatabase _characterDatabase;
     [SerializeField] private Transform _charactersHolder, _cardsHolder, _characterInfoPanel, _introSpawnPoint;
@@ -80,7 +80,7 @@ public class CharacterSelectController : NetworkBehaviour
             foreach (var character in _characterDatabase.Characters)
             {
                 var selectbuttonInstance = Instantiate(_selectButtonPrefab, _charactersHolder);
-                selectbuttonInstance.SetCharacter(this, character);
+                selectbuttonInstance.Initialize(this, character);
                 _characterButtons.Add(selectbuttonInstance);
             }
 
@@ -168,12 +168,48 @@ public class CharacterSelectController : NetworkBehaviour
 
             if (IsTeamFull(teamId, true)) { return; }
 
-            _players[i] = new CharacterSelectState(
-                _players[i].ClientId,
-                teamId,
-                _players[i].IsLockedIn,
-                _players[i].CharacterId
-            );
+            CharacterSelectState temp = _players[i];
+            temp.TeamId = teamId;
+            _players[i] = temp;
+        }
+    }
+
+    public void SelectBuild(RaceTemplate race, ClassTemplate @class, ArmorTemplate armor, TrinketTemplate trinket)
+    {
+        for (int i = 0; i < _players.Count; i++)
+        {
+            if (_players[i].ClientId != NetworkManager.Singleton.LocalClientId) { continue; }
+
+            if (_players[i].IsLockedIn) { return; }
+
+            if (_players[i].RaceId == race.UID && _players[i].ClassId == @class.UID &&
+            _players[i].ArmorId == armor.UID && _players[i].TrinketId == trinket.UID)
+            {
+                return;
+            }
+        }
+
+        SelectBuildServerRpc(race.UID, @class.UID, armor.UID, trinket.UID);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SelectBuildServerRpc(ulong raceId, ulong classId, ulong armorId, ulong trinketId, ServerRpcParams serverRpcParams = default)
+    {
+        for (int i = 0; i < _players.Count; i++)
+        {
+            if (_players[i].ClientId != serverRpcParams.Receive.SenderClientId) { continue; }
+
+            if (!_buildController.RaceDatabase.IsValidId(raceId)) { return; }
+            if (!_buildController.ClassDatabase.IsValidId(classId)) { return; }
+            if (!_buildController.ArmorDatabase.IsValidId(armorId)) { return; }
+            if (!_buildController.TrinketDatabase.IsValidId(trinketId)) { return; }
+
+            CharacterSelectState temp = _players[i];
+            temp.RaceId = raceId;
+            temp.ClassId = classId;
+            temp.ArmorId = armorId;
+            temp.TrinketId = trinketId;
+            _players[i] = temp;
         }
     }
 
@@ -210,16 +246,19 @@ public class CharacterSelectController : NetworkBehaviour
 
             if (IsCharacterTaken(characterId, true)) { return; }
 
-            _players[i] = new CharacterSelectState(
-                _players[i].ClientId,
-                _players[i].TeamId,
-                _players[i].IsLockedIn,
-                characterId
-            );
+            CharacterSelectState temp = _players[i];
+            temp.CharacterId = characterId;
+            _players[i] = temp;
         }
     }
 
-    public void LockIn() => LockInServerRpc();
+    public void LockIn()
+    {
+        SelectBuild(_buildController.SelectedRace, _buildController.SelectedClass,
+            _buildController.SelectedArmor, _buildController.SelectedTrinket);
+
+        LockInServerRpc();
+    }
 
     [ServerRpc(RequireOwnership = false)]
     private void LockInServerRpc(ServerRpcParams serverRpcParams = default)
@@ -232,25 +271,39 @@ public class CharacterSelectController : NetworkBehaviour
 
             if (IsCharacterTaken(_players[i].CharacterId, true)) { return; }
 
-            _players[i] = new CharacterSelectState(
+
+            CharacterSelectState temp = _players[i];
+            temp.IsLockedIn = true;
+            _players[i] = temp;
+
+            /*_players[i] = new CharacterSelectState(
                 _players[i].ClientId,
                 _players[i].TeamId,
                 true,
                 _players[i].CharacterId
-            );
+            );*/
         }
 
         foreach (var player in _players)
         {
-            if (!player.IsLockedIn) { return; }
+            if (!player.IsLockedIn) return;
         }
 
         foreach (var player in _players)
         {
-            HostManager.Instance.SetCharacter(player.ClientId, player.CharacterId);
+            HostManager.Instance.SetCharacter(player.ClientId, _characterDatabase.GetById(player.CharacterId));
+
             HostManager.Instance.SetTeam(player.ClientId, player.TeamId);
 
-            _buildController.Ready(player.ClientId);
+            var race = _buildController.RaceDatabase.GetById(player.RaceId);
+            var @class = _buildController.ClassDatabase.GetById(player.ClassId);
+            var armor = _buildController.ArmorDatabase.GetById(player.ArmorId);
+            var trinket = _buildController.TrinketDatabase.GetById(player.TrinketId);
+
+            Debug.Log($"{player.RaceId}");
+            Debug.Log($"{race.name}");
+
+            HostManager.Instance.SetCharacterBuild(player.ClientId, race, @class, armor, trinket);
         }
 
         HostManager.Instance.StartGame();

@@ -9,19 +9,12 @@ public class CharacterDatabase : ScriptableObject
 
     public CharacterTemplate GetById(int id)
     {
-        foreach (var character in _characters)
-        {
-            if (character.ID == id)
-            {
-                return character;
-            }
-        }
-
-        return null;
+        return _characters.FirstOrDefault(element => element.ID == id);
     }
 
     public bool IsValidId(int id)
     {
         return _characters.Any(x => x.ID == id);
     }
+
 }

@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class CharacterSpawner : NetworkBehaviour
 {
-    [SerializeField] private CharacterDatabase _characterDatabase;
     [SerializeField] private NetworkObject _playerPrefab;
     [SerializeField] private Transform[] _spawnPointsTeamA, _spawnPointsTeamB;
 
@@ -20,7 +19,7 @@ public class CharacterSpawner : NetworkBehaviour
     {
         foreach (var clientEntry in HostManager.Instance.ClientDataDict)
         {
-            var character = _characterDatabase.GetById(clientEntry.Value.CharacterId);
+            var character = clientEntry.Value.Character;
             if (character != null)
             {
                 Transform spawnTransform = GetSpawnTransformForTeam(clientEntry.Value.TeamId);

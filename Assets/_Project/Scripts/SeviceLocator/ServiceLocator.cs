@@ -102,9 +102,11 @@ namespace Systems.ServiceLocator
         /// Gets the closest ServiceLocator instance to the provided MonoBehaviour
         /// in hierarchy, the ServiceLocator for its scene, or the global ServiceLocator.
         /// </summary>
-        public static ServiceLocator For(MonoBehaviour mb)
+        public static ServiceLocator For(MonoBehaviour mb, bool searchInChildren = false)
         {
-            return mb.GetComponentInParent<ServiceLocator>().OrNull() ?? ForSceneOf(mb) ?? Global;
+            return mb.GetComponentInParent<ServiceLocator>().OrNull() ??
+            searchInChildren ? mb.GetComponentInChildren<ServiceLocator>().OrNull() : null ??
+            ForSceneOf(mb) ?? Global;
         }
 
         /// <summary>

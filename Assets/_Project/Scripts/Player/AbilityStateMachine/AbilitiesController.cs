@@ -21,10 +21,10 @@ public class AbilitiesController : MonoBehaviour
 
         foreach (AbilityTemplate template in player.ClientData.Class.Abilities)
         {
-            var ability = ExtensionMethods.GetInstantiate<AbilityStateMachine>(template.AbilityPrefab.gameObject, _abilitiesHolder);
+            var ability = ExtensionMethods.InstantiateAndGet<AbilityStateMachine>(template.AbilityPrefab.gameObject, _abilitiesHolder);
             _abilities.Add(ability);
 
-            var icon = ExtensionMethods.GetInstantiate<AbilityIcon>(template.IconPrefab.gameObject, _abilitiesIconsHolder);
+            var icon = ExtensionMethods.InstantiateAndGet<AbilityIcon>(template.IconPrefab.gameObject, _abilitiesIconsHolder);
             template.InitializeSprites();
             icon.Initialize(ability);
         }

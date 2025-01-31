@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Eflatun.SceneReference;
+using Mono.CSharp;
 using Unity.Multiplayer.Samples.Utilities;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
@@ -25,6 +26,11 @@ public class HostManager : Singleton<HostManager>
     public string JoinCode { get; private set; }
 
     bool AmIHost;
+
+    public RaceTemplate Race;
+    public ClassTemplate Class;
+    public ArmorTemplate Armor;
+    public TrinketTemplate Trinket;
 
     private bool _isGameStarted;
     private string _lobbyId;
@@ -56,9 +62,9 @@ public class HostManager : Singleton<HostManager>
             if (!ClientDataDict.TryGetValue(id, out ClientData clientData))
             {
                 // Si no existe, se crea y se agrega
-                clientData = new ClientData(id);
+                clientData = new ClientData(id, Race, Class, Armor, Trinket);
                 ClientDataDict[id] = clientData;
-                Debug.Log("jajajasjajajajajajajaj");
+                Debug.Log("la seleccion de clase ES MENTIRA");
             }
         }
 
@@ -137,7 +143,7 @@ public class HostManager : Singleton<HostManager>
         NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
         NetworkManager.Singleton.OnServerStarted += OnNetworkReady;
 
-        ClientDataDict = new();
+        // ClientDataDict = new();
         NetworkManager.Singleton.StartHost();
     }
 
@@ -186,14 +192,16 @@ public class HostManager : Singleton<HostManager>
         }
     }
 
-    public void SetCharacterBuild(ulong clientId, RaceTemplate characterRace, ClassTemplate characterClass, ArmorTemplate characterArmor, TrinketTemplate characterTrinket)
+    public void SetCharacterBuild(ulong clientId, RaceTemplate race, ClassTemplate @class, ArmorTemplate armor, TrinketTemplate trinket)
     {
+        Debug.Log("build");
         if (ClientDataDict.TryGetValue(clientId, out ClientData data))
         {
-            data.Race = characterRace;
-            data.Class = characterClass;
-            data.Armor = characterArmor;
-            data.Trinket = characterTrinket;
+            data.Race = race;
+            data.Class = @class;
+            data.Armor = armor;
+            data.Trinket = trinket;
+            Debug.Log("build");
         }
     }
 
@@ -207,12 +215,12 @@ public class HostManager : Singleton<HostManager>
         }
     }
 
-    public void SetCharacter(ulong clientId, int characterId)
+    public void SetCharacter(ulong clientId, CharacterTemplate character)
     {
         Debug.Log("character");
         if (ClientDataDict.TryGetValue(clientId, out ClientData data))
         {
-            data.CharacterId = characterId;
+            data.Character = character;
             Debug.Log("character");
         }
     }

@@ -22,13 +22,11 @@ public class CharacterSelectButton : MonoBehaviour
         _button.onClick.AddListener(Select);
     }
 
-    public void SetCharacter(CharacterSelectController characterSelect, CharacterTemplate character)
+    public void Initialize(CharacterSelectController characterSelect, CharacterTemplate character)
     {
-        _iconImage.sprite = character.Icon;
-
         _characterSelect = characterSelect;
-
         Character = character;
+        _iconImage.sprite = character.Icon;
     }
 
     public void SetDisabled(bool disabled = true)

@@ -7,6 +7,13 @@ namespace Utils.Extensions
     public static class ExtensionMethods
     {
 
+        /// <summary>
+        /// Checks if the specified index is within the bounds of the array.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the array.</typeparam>
+        /// <param name="array">The array to check.</param>
+        /// <param name="index">The index to check.</param>
+        /// <returns>True if the index is within the bounds of the array; otherwise, false.</returns>
         public static bool IsInRange<T>(this T[] array, int index) => index >= 0 && index < array.Length;
 
         public static void Enable(this GameObject gameObject) => gameObject.SetActive(true);
@@ -22,6 +29,14 @@ namespace Utils.Extensions
             transform.position = position;
         }
 
+        public static void CopyTransform(this Transform target, Transform source)
+        {
+            target.position = source.position;
+            target.rotation = source.rotation;
+            target.localScale = source.localScale;
+        }
+
+
         /// <summary>
         /// Instantiates a prefab at the specified position and rotation, optionally under a parent transform,
         /// and returns the component of type <typeparamref name="T"/> attached to the instantiated GameObject.
@@ -33,7 +48,7 @@ namespace Utils.Extensions
         /// <param name="parent">The parent transform to set for the instantiated GameObject. Defaults to null.</param>
         /// <param name="autoUnparent">If true, the instantiated GameObject will be unparented immediately after instantiation. Defaults to false.</param>
         /// <returns>The component of type <typeparamref name="T"/> attached to the instantiated GameObject, or null if no such component is found.</returns>
-        public static T GetInstantiate<T>
+        public static T InstantiateAndGet<T>
         (
             GameObject prefab,
             Vector3 position = default,
@@ -48,12 +63,16 @@ namespace Utils.Extensions
             return instance?.GetComponent<T>() ?? null;
         }
 
-        public static T GetInstantiate<T>(GameObject prefab, Transform parent) where T : MonoBehaviour
+        public static T InstantiateAndGet<T>(GameObject prefab, Transform parent) where T : MonoBehaviour
         {
             GameObject instance = MonoBehaviour.Instantiate(prefab, parent, false);
             return instance?.GetComponent<T>() ?? null;
         }
 
+        public static T GetComponentInParentOrChildren<T>(this GameObject target) where T : Component
+        {
+            return target.GetComponentInParent<T>().OrNull() ?? target.GetComponentInChildren<T>().OrNull();
+        }
 
         /// <summary>
         /// Deletes the specified component from the target GameObject. If no component is specified,
@@ -62,7 +81,7 @@ namespace Utils.Extensions
         /// <typeparam name="T">The type of the component to delete.</typeparam>
         /// <param name="target">The GameObject from which the component will be deleted.</param>
         /// <param name="component">The specific component to delete. If null, the method will find and delete the component of type T.</param>
-        public static void DeleteComponent<T>(this GameObject target, T component = null) where T : Component
+        public static void RemoveComponent<T>(this GameObject target, T component = null) where T : Component
         {
             component ??= target.GetComponent<T>();
             if (component != null) UnityEngine.Object.Destroy(component);
@@ -82,7 +101,7 @@ namespace Utils.Extensions
             if (component == null) return null;
 
             T copy = target.CopyComponent<T>(component);
-            target.DeleteComponent<T>(component);
+            target.RemoveComponent<T>(component);
             return copy;
         }
 

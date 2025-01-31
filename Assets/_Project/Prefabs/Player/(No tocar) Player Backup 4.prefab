@@ -715,10 +715,10 @@ Animator:
   m_GameObject: {fileID: 1109309290574590861}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 81bb9eea30387e442899949a80011e55, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b71d950f491c42940b9e1d663f8eb028, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -1759,6 +1759,7 @@ GameObject:
   - component: {fileID: -7936775410058264635}
   - component: {fileID: -3100300571400905276}
   - component: {fileID: 3735747864391589000}
+  - component: {fileID: 2624578383135005869}
   - component: {fileID: 6373535343249460430}
   m_Layer: 6
   m_Name: (No tocar) Player Backup 4
@@ -1859,6 +1860,18 @@ MonoBehaviour:
   - {fileID: 7836066011949525608}
   - {fileID: 6316421081484768529}
   _componentsToEnable: []
+--- !u!114 &2624578383135005869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2471761912260363661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 836e6e27fbac2b04a9316903409eeb4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!143 &6373535343249460430
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2155,7 +2168,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _services:
   - {fileID: 6978986995751033359}
-  - {fileID: 7366578044370390550}
   - {fileID: 6651336051553288473}
 --- !u!114 &6978986995751033359
 MonoBehaviour:
@@ -4996,11 +5008,6 @@ PrefabInstance:
       propertyPath: _objectToFollow
       value: 
       objectReference: {fileID: 9963347311403842}
-    - target: {fileID: 2354323998712104720, guid: 7927e011fe602b44bad6aa56953fa8fe,
-        type: 3}
-      propertyPath: _defaultMinimapSize
-      value: 50
-      objectReference: {fileID: 0}
     - target: {fileID: 7506160260129498768, guid: 7927e011fe602b44bad6aa56953fa8fe,
         type: 3}
       propertyPath: m_Name

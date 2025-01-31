@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2d6c38086c33fe4fb74f05efb5777e3, type: 3}
   m_Name: Shadow Dancer
   m_EditorClassIdentifier: Assembly-CSharp::CharacterClassTemplate
-  <UID>k__BackingField: 
+  <UID>k__BackingField: 7584157430003531776
   <DisplayName>k__BackingField: 
   <Stats>k__BackingField:
-    _hp: 0
+    _health: 0
     _physicalDamage: 0
     _magicalDamage: 0
     _physicalDefense: 0
@@ -29,6 +29,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   <Weapons>k__BackingField:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 6afc11e4a9e497e488e0494979b89853, type: 2}
+  - {fileID: 11400000, guid: 7474bd4bec768d949b78500f190a86c6, type: 2}
+  - {fileID: 11400000, guid: 6f006153846181b4a93bd08d51c9a9e9, type: 2}

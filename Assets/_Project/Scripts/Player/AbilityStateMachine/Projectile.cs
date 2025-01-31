@@ -36,6 +36,11 @@ public abstract class Projectile : NetworkBehaviour
     protected float _lifetimeTimer;
     protected int _remainingRicochets;
 
+    public override void OnNetworkSpawn()
+    {
+        Awake();
+    }
+
     protected virtual void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();

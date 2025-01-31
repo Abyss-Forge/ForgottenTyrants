@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd904b686e829a147a2420be7f0f1955, type: 3}
-  m_Name: Deck
+  m_Name: Card Deck
   m_EditorClassIdentifier: 
-  _stats:
-    _hp: 0
+  <UID>k__BackingField: 1350136507234516992
+  <DisplayName>k__BackingField: 
+  <Stats>k__BackingField:
+    _health: 0
     _physicalDamage: 0
     _magicalDamage: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
     _physicalDefense: 0
     _magicalDefense: 0
+    _movementSpeed: 0
+    _attackSpeed: 0
     _cooldownReduction: 0
-  _name: 
