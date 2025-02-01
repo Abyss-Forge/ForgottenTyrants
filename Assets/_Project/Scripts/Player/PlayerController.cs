@@ -228,6 +228,8 @@ public class PlayerController : NetworkBehaviour
 
     void Start()
     {
+        if (!IsOwner) return;
+        HandlePlayerDeath();
         // Accede al material del objeto
         MeshRenderer renderer = GetComponent<MeshRenderer>();
         if (renderer != null)
@@ -268,5 +270,14 @@ public class PlayerController : NetworkBehaviour
             // Desactiva la emisión
             objectMaterial.DisableKeyword("_EMISSION");
         }
+    }
+
+    [ClientRpc]
+    public void ActivateMovementClientRpc()
+    {
+        if (IsOwner)
+            CanMove = true;
+        CanDash = true;
+        CanJump = true;
     }
 }

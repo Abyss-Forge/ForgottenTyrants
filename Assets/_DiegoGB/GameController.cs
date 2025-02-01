@@ -8,6 +8,10 @@ using UnityEngine;
 public class GameController : NetworkBehaviour
 {
     [SerializeField] private TMP_Text _timer;
+    [SerializeField] private TMP_Text _starting;
+    [SerializeField] private float _minAlpha = 0.3f;
+    [SerializeField] private float _maxAlpha = 1f;
+    [SerializeField] private float _velocity = 1f;
     [SerializeField] private string _prepareTime = "00:30";
     [SerializeField] private string _gameTime = "15:00";
 
@@ -42,6 +46,7 @@ public class GameController : NetworkBehaviour
     private void Update()
     {
         TimerClock();
+        GameStartingAnimation();
     }
 
     void TimerClock()
@@ -54,6 +59,7 @@ public class GameController : NetworkBehaviour
             if (currentTime.Value <= 0f && !gameStarted.Value)
             {
                 StartGameServerRpc();
+
             }
             else if (currentTime.Value <= 0f && gameStarted.Value)
             {
@@ -63,16 +69,18 @@ public class GameController : NetworkBehaviour
         _timer.text = SecondsToTimeString(currentTime.Value);
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     private void StartGameServerRpc()
     {
         gameStarted.Value = true;
+        HideStartingTextClientRpc();
+        ActivateMovementPlayers();
         currentTime.Value = TimeStringToSeconds(_gameTime);
         countingDown.Value = true;
-        PlayersToSpawn();
+        //PlayersToSpawn();
     }
 
-    void PlayersToSpawn()
+    /*void PlayersToSpawn()
     {
         // Reposiciona a los players
         CharacterSpawner spawner = FindObjectOfType<CharacterSpawner>();
@@ -80,12 +88,48 @@ public class GameController : NetworkBehaviour
         {
             spawner.ResetPlayersPositions();
         }
-    }
+    }*/
 
     void FinishGame()
     {
         currentTime.Value = 0f;
         countingDown.Value = false;
+    }
+
+    [ClientRpc]
+    private void HideStartingTextClientRpc()
+    {
+        StartCoroutine(HideStartingText());
+    }
+
+    public void ActivateMovementPlayers()
+    {
+        foreach (var player in FindObjectsOfType<PlayerController>())
+        {
+            player.ActivateMovementClientRpc();
+        }
+    }
+
+    IEnumerator HideStartingText()
+    {
+        yield return new WaitForSeconds(.5f);
+        Color _actualColor = _starting.color;
+        _actualColor.a = 0;
+        _starting.color = _actualColor;
+    }
+
+    void GameStartingAnimation()
+    {
+        if (gameStarted.Value) return;
+        // Mathf.PingPong genera un valor que oscila entre 0 y (alfaMaximo - alfaMinimo)
+        // Al sumarle alfaMinimo, el valor oscila entre alfaMinimo y alfaMaximo.
+        float newAlpha = Mathf.PingPong(Time.time * _velocity, _maxAlpha - _minAlpha) + _minAlpha;
+
+        // Actualizamos el color del texto, conservando los valores RGB y modificando el alfa.
+        Color _actualColor = _starting.color;
+        _actualColor.a = newAlpha;
+        _starting.color = _actualColor;
+
     }
 
     private float TimeStringToSeconds(string timeString)

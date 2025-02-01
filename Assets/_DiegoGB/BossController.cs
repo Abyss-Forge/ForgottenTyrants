@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using Systems.BehaviourTree;
-using Unity.Mathematics;
 using Random = UnityEngine.Random;
 using UnityEngine.UI;
+using Vector3 = UnityEngine.Vector3;
+using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.Rendering.Universal;
+using DecalProjector = UnityEngine.Rendering.Universal.DecalProjector;
 
 public class BossController : Entity
 {
@@ -44,6 +47,7 @@ public class BossController : Entity
     [SerializeField] private Image _warningImage;
     [SerializeField] private float _fadeDuration = .1f;
     [SerializeField] private int _repeatCount = 3;
+    [SerializeField] private DecalProjector _decalProjector;
     private float _maxAlpha = 0.7f;
 
     [Header("Wind settings")]
@@ -98,6 +102,8 @@ public class BossController : Entity
     {
         InitializeBehaviorTree();
         CurrentHp = BaseStats.Hp;
+        _decalProjector.fadeFactor = 0;
+        _decalProjector.gameObject.transform.position = new Vector3(this.gameObject.transform.position.x, _decalProjector.transform.position.y, this.gameObject.transform.position.z);
 
         // GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
 
@@ -403,46 +409,37 @@ public class BossController : Entity
 
     private IEnumerator DangerWarning()
     {
-        // Guardamos el color original
-        Color originalColor = _warningImage.color;
+        // Guarda el valor original si lo necesitas restaurar luego
+        float originalFade = _decalProjector.fadeFactor;
 
-        // Asegurarnos de que la imagen comienza con alpha en 0
-        originalColor.a = 0f;
-        _warningImage.color = originalColor;
+        // Inicia con opacidad 0
+        _decalProjector.fadeFactor = 0f;
 
-        // Repetimos el ciclo fade in + fade out n veces
         for (int i = 0; i < _repeatCount; i++)
         {
-            // FADE IN (de 0 a 1)
+            // FADE IN (de 0 a _maxAlpha)
             float elapsedTime = 0f;
             while (elapsedTime < _fadeDuration)
             {
                 elapsedTime += Time.deltaTime;
                 float t = Mathf.Clamp01(elapsedTime / _fadeDuration);
-
-                // Lerp desde 0 hasta 0.7
-                float alpha = Mathf.Lerp(0f, _maxAlpha, t);
-                // Ajustamos el alpha sin modificar el color base
-                _warningImage.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+                _decalProjector.fadeFactor = Mathf.Lerp(0f, _maxAlpha, t);
                 yield return null;
             }
 
-            // FADE OUT (de 1 a 0)
+            // FADE OUT (de _maxAlpha a 0)
             elapsedTime = 0f;
             while (elapsedTime < _fadeDuration)
             {
                 elapsedTime += Time.deltaTime;
                 float t = Mathf.Clamp01(elapsedTime / _fadeDuration);
-
-                // Lerp desde 0.7 hasta 0
-                float alpha = Mathf.Lerp(_maxAlpha, 0f, t);
-                _warningImage.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+                _decalProjector.fadeFactor = Mathf.Lerp(_maxAlpha, 0f, t);
                 yield return null;
             }
         }
 
-        // Al terminar, aseguramos que la imagen quede completamente invisible
-        _warningImage.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+        // Al finalizar, dejamos el fade en 0 o lo restauramos a su valor original
+        _decalProjector.fadeFactor = 0f; // o originalFade, según tu necesidad
     }
 
     #endregion
