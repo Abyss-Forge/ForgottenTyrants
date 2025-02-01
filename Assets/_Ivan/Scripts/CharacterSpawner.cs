@@ -73,7 +73,7 @@ public class CharacterSpawner : NetworkBehaviour
         }
     }
 
-    public void ResetPlayersPositions()
+    /*public void ResetPlayersPositions()
     {
         // Recorremos el diccionario que tiene (clientId -> Team)
         foreach (var kvp in _clientTeamDictionary)
@@ -109,5 +109,5 @@ public class CharacterSpawner : NetworkBehaviour
                 }
             }
         }
-    }
+    }*/
 }
