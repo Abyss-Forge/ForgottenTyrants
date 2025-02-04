@@ -45,6 +45,7 @@ namespace Utils.Extensions
         /// <param name="prefab">The prefab to instantiate.</param>
         /// <param name="position">The position to place the instantiated GameObject. Defaults to <see cref="Vector3.zero"/>.</param>
         /// <param name="rotation">The rotation to apply to the instantiated GameObject. Defaults to <see cref="Quaternion.identity"/>.</param>
+        /// <param name="scale">The scale to apply to the instantiated GameObject. Defaults to the prefab scale.</param>
         /// <param name="parent">The parent transform to set for the instantiated GameObject. Defaults to null.</param>
         /// <param name="autoUnparent">If true, the instantiated GameObject will be unparented immediately after instantiation. Defaults to false.</param>
         /// <returns>The component of type <typeparamref name="T"/> attached to the instantiated GameObject, or null if no such component is found.</returns>
@@ -53,12 +54,14 @@ namespace Utils.Extensions
             GameObject prefab,
             Vector3 position = default,
             Quaternion rotation = default,
+            Vector3? scale = null,
             Transform parent = null,
             bool autoUnparent = false
         )
         where T : MonoBehaviour
         {
             GameObject instance = MonoBehaviour.Instantiate(prefab, position, rotation, parent);
+            if (scale != null) instance.transform.localScale = scale ?? Vector3.one;
             if (autoUnparent) instance.transform.SetParent(null);
             return instance?.GetComponent<T>() ?? null;
         }

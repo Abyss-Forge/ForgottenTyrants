@@ -4,42 +4,55 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-public class MultiplayersBuildAndRun : EditorWindow
+public class MultiplayerBuildAndRun : EditorWindow
 {
-    private int _playerAmount = 2;
-    private int _selectedPlatformIndex = 0;
-    private readonly BuildTarget[] _supportedBuildTargets = {
+    const string PLAYER_AMOUNT_KEY = "MB&R_PlayerAmount";
+    const string PLATFORM_INDEX_KEY = "MB&R_SelectedPlatformIndex";
+    const string RUN_IN_EDITOR_KEY = "MB&R_RunInEditor";
+
+    int _playerAmount, _selectedPlatformIndex;
+    bool _runInEditor;
+
+    readonly BuildTarget[] _supportedBuildTargets = {
         BuildTarget.StandaloneWindows64,
+        BuildTarget.StandaloneLinux64,
         BuildTarget.StandaloneOSX,
-        BuildTarget.StandaloneLinux64
     };
 
     [MenuItem("File/Run Multiplayer")]
     public static void ShowWindow()
     {
-        MultiplayersBuildAndRun window = GetWindow<MultiplayersBuildAndRun>("Run Multiplayer");
-        window.maxSize = window.minSize = new Vector2(300, 130);
+        MultiplayerBuildAndRun window = GetWindow<MultiplayerBuildAndRun>("Run Multiplayer");
+        window.maxSize = window.minSize = new Vector2(300, 160);
+        window.LoadPreferences();
     }
 
     void OnGUI()
     {
         GUILayout.Label("Build a launcher for each player", EditorStyles.boldLabel);
         GUILayout.Space(10);
-        GUILayout.Label("Select Build Platform:", EditorStyles.label);
+        GUILayout.Label("Select target platform:", EditorStyles.label);
 
         string[] platformOptions = Array.ConvertAll(_supportedBuildTargets, target => target.ToString());
         _selectedPlatformIndex = EditorGUILayout.Popup(_selectedPlatformIndex, platformOptions);
 
         GUILayout.Space(10);
         _playerAmount = EditorGUILayout.IntField("Players:", _playerAmount);
-
         if (_playerAmount < 1) _playerAmount = 1;
         if (_playerAmount > 10) _playerAmount = 10;
 
         GUILayout.Space(10);
+        _runInEditor = EditorGUILayout.Toggle("Also run in Editor", _runInEditor);
+
+        GUILayout.Space(10);
         if (GUILayout.Button("Build"))
         {
+            SavePreferences();
             PerformBuild();
+            if (_runInEditor)
+            {
+                EditorApplication.isPlaying = true;
+            }
             Close();
         }
     }
@@ -67,13 +80,25 @@ public class MultiplayersBuildAndRun : EditorWindow
     private static string[] GetScenePaths()
     {
         string[] scenes = new string[EditorBuildSettings.scenes.Length];
-
         for (int i = 0; i < scenes.Length; i++)
         {
             scenes[i] = EditorBuildSettings.scenes[i].path;
         }
-
         return scenes;
+    }
+
+    private void SavePreferences()
+    {
+        EditorPrefs.SetInt(PLAYER_AMOUNT_KEY, _playerAmount);
+        EditorPrefs.SetInt(PLATFORM_INDEX_KEY, _selectedPlatformIndex);
+        EditorPrefs.SetBool(RUN_IN_EDITOR_KEY, _runInEditor);
+    }
+
+    private void LoadPreferences()
+    {
+        _playerAmount = EditorPrefs.GetInt(PLAYER_AMOUNT_KEY, 2);
+        _selectedPlatformIndex = EditorPrefs.GetInt(PLATFORM_INDEX_KEY, 0);
+        _runInEditor = EditorPrefs.GetBool(RUN_IN_EDITOR_KEY, false);
     }
 }
 

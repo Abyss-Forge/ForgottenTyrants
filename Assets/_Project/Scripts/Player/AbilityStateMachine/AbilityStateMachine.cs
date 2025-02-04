@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Systems.FSM;
 using Systems.ServiceLocator;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,7 +11,7 @@ public enum EAbilityState
     READY, PREVIEW, ACTIVE, COOLDOWN, LOCKED
 }
 
-public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
+public abstract class AbilityStateMachine : NetworkBehaviour, IAbilityBase
 {
     protected List<AbilityInfoTest> _infoList = new();
 

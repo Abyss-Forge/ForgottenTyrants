@@ -517,6 +517,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6485963998722371871, guid: d3062ecfb0bd4bf4da5e175e5a3e2e8f,
+        type: 3}
+      propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6485963998722371871, guid: d3062ecfb0bd4bf4da5e175e5a3e2e8f,
+        type: 3}
+      propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: b3d8ffee1a251184797c49290a81ee12,
+        type: 2}
+    - target: {fileID: 6485963998722371871, guid: d3062ecfb0bd4bf4da5e175e5a3e2e8f,
+        type: 3}
+      propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: a5f674633f6d1a64881277d9f7d00091,
+        type: 2}
+    - target: {fileID: 6485963998722371871, guid: d3062ecfb0bd4bf4da5e175e5a3e2e8f,
+        type: 3}
+      propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: ede4046527a5b334b833d111f2d0e43f,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -827,12 +850,12 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 879499277, guid: fb4c12f82b356ac4784c451366cdd2b0, type: 3}
       propertyPath: _gameplayScene.guid
-      value: 7e9f3954d9ce356419006cb77316abd4
+      value: 1c123a5f2b6a65749b3b5346446be4c8
       objectReference: {fileID: 0}
     - target: {fileID: 879499277, guid: fb4c12f82b356ac4784c451366cdd2b0, type: 3}
       propertyPath: _gameplayScene.asset
       value: 
-      objectReference: {fileID: 102900000, guid: 7e9f3954d9ce356419006cb77316abd4,
+      objectReference: {fileID: 102900000, guid: 1c123a5f2b6a65749b3b5346446be4c8,
         type: 3}
     - target: {fileID: 8950656886617044264, guid: fb4c12f82b356ac4784c451366cdd2b0,
         type: 3}
@@ -972,5 +995,5 @@ SceneRoots:
   - {fileID: 8950656888486211936}
   - {fileID: 9024595479823716806}
   - {fileID: 7476178347008298467}
-  - {fileID: 1330187121}
   - {fileID: 1930227201}
+  - {fileID: 1330187121}

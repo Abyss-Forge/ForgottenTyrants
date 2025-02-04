@@ -38,7 +38,7 @@ public abstract class Projectile : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        Awake();
+        //Awake();
     }
 
     protected virtual void Awake()
