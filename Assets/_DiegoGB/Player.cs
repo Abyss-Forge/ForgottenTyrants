@@ -9,7 +9,7 @@ public class Player : Entity
     private List<StatusEffect> _statusEffects = new();
     public List<StatusEffect> StatusEffects => _statusEffects;
 
-    ClientData _playerData;
+    public ClientData _playerData;
 
     void Awake()
     {

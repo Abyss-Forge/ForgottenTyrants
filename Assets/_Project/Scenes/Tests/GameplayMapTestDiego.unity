@@ -846,6 +846,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 344598843626036933, guid: 57a51c7f741c3464abc999f7e0a91134,
         type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 344598843626036933, guid: 57a51c7f741c3464abc999f7e0a91134,
+        type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
@@ -1501,15 +1506,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 158220895581249844, guid: ce7fb81c2282e5049862dd3d56c052e3,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 158220895581249844, guid: ce7fb81c2282e5049862dd3d56c052e3,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 487004260658543759, guid: ce7fb81c2282e5049862dd3d56c052e3,
         type: 3}
       propertyPath: GlobalObjectIdHash
       value: 4171152395
-      objectReference: {fileID: 0}
-    - target: {fileID: 487004260658543759, guid: ce7fb81c2282e5049862dd3d56c052e3,
-        type: 3}
-      propertyPath: InScenePlacedSourceGlobalObjectIdHash
-      value: 3354779224
       objectReference: {fileID: 0}
     - target: {fileID: 3360202750961090120, guid: ce7fb81c2282e5049862dd3d56c052e3,
         type: 3}
@@ -1614,7 +1624,12 @@ PrefabInstance:
     - target: {fileID: 4773764261347667945, guid: ce7fb81c2282e5049862dd3d56c052e3,
         type: 3}
       propertyPath: m_Name
-      value: Canvas
+      value: Canvas game info
+      objectReference: {fileID: 0}
+    - target: {fileID: 6790658984511712152, guid: ce7fb81c2282e5049862dd3d56c052e3,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

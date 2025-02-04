@@ -1,9 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.Netcode;
+using Unity.Services.Authentication;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameController : NetworkBehaviour
 {
@@ -14,6 +17,12 @@ public class GameController : NetworkBehaviour
     [SerializeField] private float _velocity = 1f;
     [SerializeField] private string _prepareTime = "00:30";
     [SerializeField] private string _gameTime = "15:00";
+
+    [SerializeField] private Transform _alliesContainer; // Contenedor para aliados
+    [SerializeField] private Transform _enemiesContainer; // Contenedor para enemigos
+    [SerializeField] private GameObject _characterFramePrefab; // Prefab del cuadro
+    //private List<Player> _allies = new List<Player>();
+    //private List<Player> _enemies = new List<Player>();
 
     private NetworkVariable<float> currentTime = new NetworkVariable<float>(
         0f,
@@ -40,6 +49,10 @@ public class GameController : NetworkBehaviour
             countingDown.Value = true;
             gameStarted.Value = false;
         }
+        if (IsClient)
+        {
+            StartCoroutine(PopulateContainer());
+        }
 
     }
 
@@ -47,6 +60,49 @@ public class GameController : NetworkBehaviour
     {
         TimerClock();
         GameStartingAnimation();
+    }
+
+    IEnumerator PopulateContainer()
+    {
+        yield return new WaitForSeconds(2);
+        List<Player> players = FindObjectsByType<Player>(FindObjectsSortMode.None).ToList();
+
+        foreach (var player in players)
+        {
+            // Determina el contenedor según el equipo del jugador
+            Transform cont = player._playerData.Team == 0 ? _alliesContainer : _enemiesContainer;
+
+            // Instanciar el cuadro
+            GameObject frame = Instantiate(_characterFramePrefab, cont);
+
+            //frame.transform.Find("CharacterImage").GetComponent<Image>().sprite = GetCharacterSprite(client.CharacterId);
+            frame.transform.Find("Player health").GetComponent<Slider>().value = player.CurrentHp;
+            //frame.transform.Find("KDA").GetComponent<Text>().text = $"ID: {client.ClientId}";
+        }
+    }
+
+    /*public void UpdateHealth(Player character, float newHealth)
+    {
+        character.BaseStats.Hp = Mathf.Clamp01(newHealth); // Asegura que la vida esté entre 0 y 1
+        // Opcional: Actualiza dinámicamente el UI (puedes optimizar esto según el sistema de eventos del juego)
+        PopulateContainer(alliesContainer, allies);
+        PopulateContainer(enemiesContainer, enemies);
+    }*/
+
+    IEnumerator SmoothHealthChange(Slider slider, float targetValue)
+    {
+        float currentValue = slider.value;
+        float elapsedTime = 0f;
+        float duration = 0.5f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            slider.value = Mathf.Lerp(currentValue, targetValue, elapsedTime / duration);
+            yield return null;
+        }
+
+        slider.value = targetValue;
     }
 
     void TimerClock()
@@ -150,4 +206,14 @@ public class GameController : NetworkBehaviour
         int seconds = Mathf.FloorToInt(totalSeconds % 60f);
         return string.Format("{0:00}:{1:00}", minutes, seconds);
     }
+}
+
+// Clase para manejar datos de personajes
+[System.Serializable]
+public class CharacterData
+{
+    public Sprite characterImage;
+    public int kills;
+    public int deaths;
+    public int assists;
 }
