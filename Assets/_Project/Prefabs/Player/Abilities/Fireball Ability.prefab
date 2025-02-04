@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5623546619512426153}
+  - component: {fileID: 4001861690663800134}
   - component: {fileID: 1943745214005972064}
   m_Layer: 0
   m_Name: Fireball Ability
@@ -33,6 +34,27 @@ Transform:
   - {fileID: 1858363852166979910}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4001861690663800134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 428633045151709916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 85094965
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &1943745214005972064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46,9 +68,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Stats>k__BackingField:
-    _hp: 0
+    _health: 0
     _physicalDamage: 0
-    _magicalDamage: 0
+    _magicalDamage: 50
     _physicalDefense: 0
     _magicalDefense: 0
     _movementSpeed: 0

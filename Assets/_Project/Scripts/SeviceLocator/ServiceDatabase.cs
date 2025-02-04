@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ServiceDatabase : MonoBehaviour
 {
-    [SerializeField] List<Object> _services;
+    [SerializeField] Object[] _services;
 
     void Awake()
     {

@@ -21,9 +21,7 @@ public class ClientManager : Singleton<ClientManager>
             Debug.Log($"client: {allocation.AllocationId}");
 
             RelayServerData relayServerData = new(allocation, "dtls");
-
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
-
             NetworkManager.Singleton.StartClient();
         }
         catch (RelayServiceException e)

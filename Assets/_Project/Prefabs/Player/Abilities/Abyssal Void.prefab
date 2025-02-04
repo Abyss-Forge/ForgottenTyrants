@@ -45,6 +45,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3795929545afc044b43acefe3a053f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Stats>k__BackingField:
+    _health: 0
+    _physicalDamage: 0
+    _magicalDamage: 50
+    _physicalDefense: 0
+    _magicalDefense: 0
+    _movementSpeed: 0
+    _attackSpeed: 0
+    _cooldownReduction: 0
   <SpawnPoint>k__BackingField: {fileID: 3365034520501307851}
   <CanBeCanceled>k__BackingField: 0
   <ActiveDuration>k__BackingField: 5

@@ -1,18 +1,15 @@
 using System.Collections;
-using System.Collections.Generic;
 using Systems.EventBus;
 using Systems.GameManagers;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(CharacterController))]
-public class PlayerController : NetworkBehaviour
+//[RequireComponent(typeof(CharacterController))]
+public class PlayerController : MonoBehaviour
 {
-    CharacterController _characterController;
-    [SerializeField] private Camera _camera;
+    [SerializeField] CharacterController _characterController;
 
-    //public new bool IsOwner = true;
+    [SerializeField] private Camera _camera;
 
     [Header("Aesthetic")]
     [SerializeField] private AnimationCurve _dashFovCurve;
@@ -42,31 +39,27 @@ public class PlayerController : NetworkBehaviour
 
     private void OnMove(InputAction.CallbackContext context)
     {
-        if (!IsOwner) return;
         _move = context.ReadValue<Vector2>();
     }
     private void OnLook(InputAction.CallbackContext context)
     {
-        if (!IsOwner) return;
         _look = context.ReadValue<Vector2>();
     }
 
     private void OnJump(InputAction.CallbackContext context)
     {
-        if (!IsOwner) return;
         if (context.performed && CanJump && _isGrounded) Jump();
     }
 
     private void OnDash(InputAction.CallbackContext context)
     {
-        if (!IsOwner) return;
         if (context.performed && CanDash && !_isDashing && !_isDashOnCooldown) StartCoroutine(Dash());
     }
 
     void Awake()
     {
-        _characterController = GetComponent<CharacterController>();
-        _currentSpeed = _walkSpeed;
+        _currentSpeed = _walkSpeed;     //no
+        // _characterController = GetComponent<CharacterController>();
     }
 
     void OnEnable()
@@ -90,27 +83,23 @@ public class PlayerController : NetworkBehaviour
         MyInputManager.Instance.Unsubscribe(EInputAction.DASH, OnDash);
     }
 
-    void FixedUpdate()
+    void FixedUpdate()  //physics belong inside fixed update
     {
-        if (!IsOwner) return;
-        //physics belong inside fixed update
+
         if (CanMove) Move();
         if (GravityEnabled) ApplyGravity();
 
-        if (_isDashing) _velocity.y = 0; //esto hace que el dash no tenga verticalidad, me parece un diseño de mierda pero bueno
+        if (_isDashing) _velocity.y = 0; // esto hace que el dash no tenga verticalidad, me parece un diseño de mierda pero bueno
     }
 
     void Update()
     {
-        if (!IsOwner) return;
         //animation
     }
 
-    void LateUpdate()
+    void LateUpdate()   //we move the camera in late update so all the movement has finished before positioning it
     {
-        if (!IsOwner) return;
-        //we move the camera in late update so all the movement has finished before positioning it
-        //Look();
+        //  Look();
     }
 
     private void HandlePlayerDeath()
@@ -193,14 +182,17 @@ public class PlayerController : NetworkBehaviour
         _camera.fieldOfView = originalFov;
 
         _isDashing = false;
-        yield return new WaitForSeconds(_dashCooldown + _dashDuration); //avoid counting the performing time as cooldown
+        yield return new WaitForSeconds(_dashCooldown + _dashDuration); //  avoid counting the performing time as cooldown
         _isDashOnCooldown = false;
     }
+
+    #region cosas de diego
 
     public void SetVelocity(Vector3 newVelocity)
     {
         _velocity = newVelocity;
     }
+
     public void SetJumpForce(float jumpForce)
     {
         _jumpForce = jumpForce;
@@ -228,8 +220,7 @@ public class PlayerController : NetworkBehaviour
 
     void Start()
     {
-        if (!IsOwner) return;
-        HandlePlayerDeath();
+        // HandlePlayerDeath();
         // Accede al material del objeto
         MeshRenderer renderer = GetComponent<MeshRenderer>();
         if (renderer != null)
@@ -272,12 +263,12 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
-    public void ActivateMovementClientRpc()
+    //[ClientRpc]
+    public void ActivateMovement()
     {
-        if (IsOwner)
-            CanMove = true;
+        CanMove = true;
         CanDash = true;
         CanJump = true;
     }
+    #endregion
 }

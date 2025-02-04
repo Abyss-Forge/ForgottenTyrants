@@ -640,4 +640,4 @@ MonoBehaviour:
   _zoomOutLerpSpeed: 1
   _maxSpeedForZoomOut: 30
   _minimapZoomOutSize: 20
-  _defaultMinimapSize: 10
+  _defaultMinimapSize: 50

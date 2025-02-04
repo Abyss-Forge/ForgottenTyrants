@@ -9,8 +9,9 @@ public class NaturalBarrierAbility : AbilityStateMachine, IAbilityWithRange, IAb
 {
     #region Specific ability properties
 
-    [SerializeField] private PlaceablePreview _previewBarrierPrefab;
     [SerializeField] private GameObject _barrierPrefab;
+    [SerializeField] private PlaceablePreview _previewBarrierPrefab;
+    [SerializeField] private float _maxPreviewDistance = 50f;
 
     private PlaceablePreview _previewBarrierInstance;
     private GameObject _barrierInstance;
@@ -88,7 +89,7 @@ public class NaturalBarrierAbility : AbilityStateMachine, IAbilityWithRange, IAb
         private void SpawnProp()
         {
             //_ability._previewBarrierInstance = Instantiate(_ability._previewBarrierPrefab.gameObject, _ability.transform, false);
-            _ability._previewBarrierInstance = ExtensionMethods.GetInstantiate<PlaceablePreview>(_ability._previewBarrierPrefab.gameObject, _ability.transform);
+            _ability._previewBarrierInstance = ExtensionMethods.InstantiateAndGet<PlaceablePreview>(_ability._previewBarrierPrefab.gameObject, _ability.transform);
             _ability._previewBarrierInstance.transform.SetParent(null);
             _ability._previewBarrierInstance.gameObject.Disable();
         }
@@ -97,7 +98,7 @@ public class NaturalBarrierAbility : AbilityStateMachine, IAbilityWithRange, IAb
         {
             _ability._propSpawnPosition = CrosshairRaycaster.GetImpactPosition(Layer.Mask.Terrain);
 
-            if (_ability._propSpawnPosition == null)
+            if (_ability._propSpawnPosition == null || !_ability.transform.position.InRangeOf(_ability._propSpawnPosition.Value, _ability._maxPreviewDistance))
             {
                 _ability._previewBarrierInstance.gameObject.Disable();
                 return;
@@ -114,10 +115,24 @@ public class NaturalBarrierAbility : AbilityStateMachine, IAbilityWithRange, IAb
         private void UpdatePropPosition()
         {
             Vector3 position = GetTargetPosition();
-            Quaternion rotation = _ability.SpawnPoint.transform.rotation;
+            Quaternion rotation = GetTargetRotation(position);
 
             _ability._previewBarrierInstance.transform.position = position;
             _ability._previewBarrierInstance.transform.rotation = rotation;
+        }
+
+        private Quaternion GetTargetRotation(Vector3 position)
+        {
+            if (Physics.Raycast(position + Vector3.up, Vector3.down, out RaycastHit hit, 5f, Layer.Mask.Terrain))
+            {
+                Debug.DrawRay(position + Vector3.up, Vector3.down * 5f, Color.green);
+
+                Quaternion surfaceRotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+                Quaternion yRotation = Quaternion.Euler(0, _ability.SpawnPoint.transform.eulerAngles.y, 0);
+                return surfaceRotation * yRotation;
+            }
+
+            return _ability.SpawnPoint.transform.rotation;
         }
 
         private Vector3 GetTargetPosition()
@@ -128,7 +143,6 @@ public class NaturalBarrierAbility : AbilityStateMachine, IAbilityWithRange, IAb
             targetPosition.y += halfHeight;
             return targetPosition;
         }
-
 
         private void DespawnProp()
         {

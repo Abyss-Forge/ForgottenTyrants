@@ -23,9 +23,6 @@ namespace ForgottenTyrants
     {
         public const string Bootstrapper = "Bootstrapper";
         public const string StartMenu = "Start Menu";
-        public const string UICharacterSelection = "UI Character Selection";
-        public const string PruebasIvan = "PruebasIvan";
-        public const string PruebasDiego = "PruebasDiego";
         public const string MultiplayerMenu = "MultiplayerMenu";
         public const string CharacterSelect = "CharacterSelect";
         public const string GameplayMap = "GameplayMap";
@@ -42,13 +39,10 @@ namespace ForgottenTyrants
         {
             public const int Bootstrapper = 0;
             public const int StartMenu = 1;
-            public const int UICharacterSelection = 2;
-            public const int PruebasIvan = 3;
-            public const int PruebasDiego = 4;
-            public const int MultiplayerMenu = 5;
-            public const int CharacterSelect = 6;
-            public const int GameplayMap = 7;
-            public const int GameplayMapTestDiego = 8;
+            public const int MultiplayerMenu = 2;
+            public const int CharacterSelect = 3;
+            public const int GameplayMap = 4;
+            public const int GameplayMapTestDiego = 5;
         }
     }
 }

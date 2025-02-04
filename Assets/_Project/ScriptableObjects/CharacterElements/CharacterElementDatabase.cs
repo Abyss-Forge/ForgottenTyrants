@@ -7,12 +7,12 @@ public abstract class CharacterElementDatabase<T> : ScriptableObject where T : C
     [SerializeField] protected T[] _elements = new T[0];
     public T[] Elements => _elements;
 
-    public T GetById(string id)
+    public T GetById(ulong id)
     {
         return _elements.FirstOrDefault(element => element.UID == id);
     }
 
-    public bool IsValidId(string id)
+    public bool IsValidId(ulong id)
     {
         return _elements.Any(element => element.UID == id);
     }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Systems.GameManagers;
+using Systems.ServiceLocator;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Utils.Extensions;
@@ -10,20 +11,20 @@ public class AbilitiesController : MonoBehaviour
     [SerializeField] RectTransform _abilitiesIconsHolder;
     [SerializeField] Transform _abilitiesHolder;
 
-    ClientData _playerData;
     List<AbilityStateMachine> _abilities;
 
     void Awake()
     {
-        _playerData = HostManager.Instance.GetMyClientData();
         _abilities = new();
 
-        foreach (AbilityTemplate template in _playerData.Class.Abilities)
+        ServiceLocator.Global.Get(out PlayerInfo player);
+
+        foreach (AbilityTemplate template in player.ClientData.Class.Abilities)
         {
-            var ability = ExtensionMethods.GetInstantiate<AbilityStateMachine>(template.AbilityPrefab.gameObject, _abilitiesHolder);
+            var ability = ExtensionMethods.InstantiateAndGet<AbilityStateMachine>(template.AbilityPrefab.gameObject, _abilitiesHolder);
             _abilities.Add(ability);
 
-            var icon = ExtensionMethods.GetInstantiate<AbilityIcon>(template.IconPrefab.gameObject, _abilitiesIconsHolder);
+            var icon = ExtensionMethods.InstantiateAndGet<AbilityIcon>(template.IconPrefab.gameObject, _abilitiesIconsHolder);
             template.InitializeSprites();
             icon.Initialize(ability);
         }

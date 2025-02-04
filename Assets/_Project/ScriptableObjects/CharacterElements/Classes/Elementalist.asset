@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2d6c38086c33fe4fb74f05efb5777e3, type: 3}
   m_Name: Elementalist
   m_EditorClassIdentifier: Assembly-CSharp::CharacterClassTemplate
-  <UID>k__BackingField: 
+  <UID>k__BackingField: 2901752472945033216
   <DisplayName>k__BackingField: 
   <Stats>k__BackingField:
-    _hp: 0
+    _health: 0
     _physicalDamage: 0
     _magicalDamage: 0
     _physicalDefense: 0
@@ -29,6 +29,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   <Weapons>k__BackingField:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: eb6ab1780481ec848b4d26a423206b26, type: 2}
+  - {fileID: 11400000, guid: 4a3823309638eb747994bcbacd7de22b, type: 2}
+  - {fileID: 11400000, guid: d37029f0a99a5304293feb8df6dcea38, type: 2}

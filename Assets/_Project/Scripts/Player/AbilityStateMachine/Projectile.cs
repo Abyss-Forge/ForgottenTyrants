@@ -5,11 +5,13 @@ using UnityEngine;
 using ForgottenTyrants;
 using Unity.Netcode;
 
-[RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
+[RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider), typeof(InfoContainer))]
 public abstract class Projectile : NetworkBehaviour
 {
-    protected Rigidbody _rigidbody;
-    protected CapsuleCollider _collider;
+    protected Rigidbody _rigidbody { get; set; }
+    protected CapsuleCollider _collider { get; set; }
+
+    public InfoContainer InfoContainer { get; set; }
 
     public enum EProjectileState
     {
@@ -34,10 +36,17 @@ public abstract class Projectile : NetworkBehaviour
     protected float _lifetimeTimer;
     protected int _remainingRicochets;
 
+    public override void OnNetworkSpawn()
+    {
+        //Awake();
+    }
+
     protected virtual void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
         _collider = GetComponent<CapsuleCollider>();
+
+        InfoContainer = GetComponent<InfoContainer>();
 
         _lifetimeTimer = _lifetime;
         _remainingRicochets = _ricochets;

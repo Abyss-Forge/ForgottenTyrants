@@ -3,33 +3,42 @@ using UnityEngine.UI;
 
 public class CharacterSelectButton : MonoBehaviour
 {
-    [SerializeField] private Image iconImage;
-    [SerializeField] private GameObject disabledOverlay;
-    [SerializeField] private Button button;
+    [SerializeField] private Image _iconImage;
+    [SerializeField] private GameObject _disabledOverlay;
+    [SerializeField] private Button _button;
 
-    private CharacterSelectDisplay characterSelect;
+    private CharacterSelectController _characterSelect;
 
     public CharacterTemplate Character { get; private set; }
     public bool IsDisabled { get; private set; }
 
-    public void SetCharacter(CharacterSelectDisplay characterSelect, CharacterTemplate character)
+    void OnEnable()
     {
-        iconImage.sprite = character.Icon;
+        _button.onClick.AddListener(Select);
+    }
 
-        this.characterSelect = characterSelect;
+    void OnDisable()
+    {
+        _button.onClick.AddListener(Select);
+    }
 
+    public void Initialize(CharacterSelectController characterSelect, CharacterTemplate character)
+    {
+        _characterSelect = characterSelect;
         Character = character;
+        _iconImage.sprite = character.Icon;
     }
 
-    public void SelectCharacter()
+    public void SetDisabled(bool disabled = true)
     {
-        characterSelect.Select(Character);
+        IsDisabled = disabled;
+        _disabledOverlay.SetActive(disabled);
+        _button.interactable = !disabled;
     }
 
-    public void SetDisabled()
+    private void Select()
     {
-        IsDisabled = true;
-        disabledOverlay.SetActive(true);
-        button.interactable = false;
+        _characterSelect.SelectCharacter(Character);
     }
+
 }

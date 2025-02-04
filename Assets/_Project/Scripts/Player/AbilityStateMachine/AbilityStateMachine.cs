@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Systems.FSM;
+using Systems.ServiceLocator;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,8 +11,10 @@ public enum EAbilityState
     READY, PREVIEW, ACTIVE, COOLDOWN, LOCKED
 }
 
-public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
+public abstract class AbilityStateMachine : NetworkBehaviour, IAbilityBase
 {
+    protected List<AbilityInfoTest> _infoList = new();
+
     #region Default logic
 
     [field: SerializeField] public Stats Stats { get; private set; }
@@ -26,7 +29,7 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
     public float CooldownTimer { get; set; } = 0;
 
     public void Lock(float time = -1) => StartCoroutine(ApplyLock(time));
-    public void Unlock() => _fsm.TransitionTo(EAbilityState.COOLDOWN);   //si el cooldown es 0, automaticamente transicionara a READY
+    public void Unlock() => _fsm.TransitionTo(EAbilityState.COOLDOWN);   //if cooldown is 0, will automatically transition to READY state
 
     private IEnumerator ApplyLock(float time)
     {
@@ -56,12 +59,55 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
     {
         if (_fsm.CurrentState.ID == EAbilityState.READY)
         {
+            CalculateInfo();
             _fsm.TransitionTo(EAbilityState.ACTIVE);
         }
         else if (_fsm.CurrentState.ID == EAbilityState.ACTIVE)
         {
             if (CanBeCanceled) ActiveTimer = 0;
         }
+    }
+
+    protected virtual void CalculateInfo()
+    {
+        ServiceLocator.Global.Get(out PlayerInfo player);
+        ServiceLocator.Global.Get(out BuffableBehaviour buffable);
+
+        if (Stats.PhysicalDamage > 0)
+        {
+            float damage = buffable.CurrentStats.PhysicalDamage + Stats.PhysicalDamage;
+            _infoList.Add(new AbilityInfoTest(
+                playerId: player.ClientData.ClientId,
+                teamId: player.ClientData.TeamId,
+                affectedChannel: (int)EDamageApplyChannel.ENEMIES,
+                damageAmount: damage));
+            //damageType: EElementalType.PHYSIC));
+
+            Debug.Log("Info metida " + _infoList.Count);
+        }
+
+        /*
+        if (Stats.MagicalDamage > 0)
+        {
+            float damage = player.Stats.MagicalDamage + Stats.MagicalDamage;
+            _infoList.Add(new DamageInfo(
+                playerId: player.Data.ClientId,
+                teamId: player.Data.TeamId,
+                affectedChannel: (int)EDamageApplyChannel.ENEMIES,
+                damageAmount: damage,
+                damageType: EElementalType.MAGIC));
+        }
+
+        if (Stats.Health > 0)
+        {
+            float healAmount = Stats.Health;
+            _infoList.Add(new HealInfo(
+                playerId: player.Data.ClientId,
+                teamId: player.Data.TeamId,
+                affectedChannel: (int)EDamageApplyChannel.ALLIES,
+                healAmount: healAmount));
+        }
+        */
     }
 
     #endregion
@@ -81,13 +127,11 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
     void FixedUpdate() => _fsm.FixedUpdate();
     void LateUpdate() => _fsm.LateUpdate();
 
-    protected virtual void InitializeStates()
-    {
-        // _fsm.Add(new AbilityDefaultReadyState(this, EAbilityState.READY));
-        // _fsm.Add(new AbilityDefaultActiveState(this, EAbilityState.ACTIVE));
-        // _fsm.Add(new AbilityDefaultCooldownState(this, EAbilityState.COOLDOWN));
-        // _fsm.Add(new AbilityDefaultLockedState(this, EAbilityState.LOCKED));
-    }
+    protected abstract void InitializeStates();
+    // _fsm.Add(new AbilityDefaultReadyState(this, EAbilityState.READY));
+    // _fsm.Add(new AbilityDefaultActiveState(this, EAbilityState.ACTIVE));
+    // _fsm.Add(new AbilityDefaultCooldownState(this, EAbilityState.COOLDOWN));
+    // _fsm.Add(new AbilityDefaultLockedState(this, EAbilityState.LOCKED));
 
     #endregion
 }

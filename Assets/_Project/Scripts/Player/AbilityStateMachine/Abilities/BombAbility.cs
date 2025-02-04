@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Systems.ServiceLocator;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -12,8 +13,8 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
     #endregion
     #region Interface implementation
 
-    [SerializeField] private GameObject _projectilePrefab;
-    public GameObject ProjectilePrefab => _projectilePrefab;
+    [SerializeField] private Projectile _projectilePrefab;
+    public GameObject ProjectilePrefab => _projectilePrefab.gameObject;
 
     [SerializeField] private int _projectileAmount = 1;
     public int ProjectileAmount => _projectileAmount;
@@ -61,7 +62,7 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
             _timer -= Time.deltaTime;
             if (_timer <= 0f)
             {
-                SpawnProjectile();
+                _ability.SpawnProjectileServerRpc();
                 _timer = _ability.ProjectileThreshold;
                 _cycles++;
                 if (_cycles >= _ability.ProjectileAmount)
@@ -70,30 +71,39 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
                 }
             }
         }
-
-        private void SpawnProjectile()
-        {
-            Vector3 position = _ability.SpawnPoint.position;
-            Quaternion rotation = _ability.SpawnPoint.rotation;
-            Vector3 scale = _ability.SpawnPoint.localScale;
-
-            GameObject instance = Instantiate(_ability.ProjectilePrefab, position, rotation, _ability.transform);
-            instance.transform.localScale = scale;
-            instance.transform.SetParent(null); // esto es para que spawnee en la misma escena si hay aditivas
-            instance.GetComponent<NetworkObject>().Spawn();
-
-            Transform camera = Camera.main.transform;
-            Vector3 targetPoint = camera.position + camera.forward * 100f;
-            Vector3 adjustedDirection = (targetPoint - position).normalized;
-            adjustedDirection.y += 0.5f;
-
-            Rigidbody rb = instance.GetComponent<Rigidbody>();
-            Vector3 playerVelocity = _ability.GetComponentInParent<PlayerController>()?.Velocity ?? Vector3.zero; //TODO hacer con service locator
-            playerVelocity.y = 0;
-            Vector3 launchVelocity = adjustedDirection * _ability._launchForce + playerVelocity;
-            rb.AddForce(launchVelocity * rb.mass, ForceMode.Impulse);
-        }
-
     }
     #endregion
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SpawnProjectileServerRpc()
+    {
+        Vector3 position = SpawnPoint.position;
+        Quaternion rotation = SpawnPoint.rotation;
+        Vector3 scale = SpawnPoint.localScale;
+
+        Projectile projectile = Instantiate(_projectilePrefab, position, rotation, transform);
+        foreach (var item in _infoList)
+        {
+            projectile.InfoContainer.Add(item);
+        }
+        _infoList.Clear();
+
+        GameObject instance = projectile.gameObject;
+        instance.transform.localScale = scale;
+        instance.transform.SetParent(null);
+        instance.GetComponent<NetworkObject>().Spawn(true);
+
+        Transform camera = Camera.main.transform;
+        Vector3 targetPoint = camera.position + camera.forward * 100f;
+        Vector3 adjustedDirection = (targetPoint - position).normalized;
+        adjustedDirection.y += 0.5f;
+
+        ServiceLocator.Global.Get(out PlayerController player);
+        Vector3 playerVelocity = player.Velocity;
+        playerVelocity.y = 0;
+        Vector3 launchVelocity = adjustedDirection * _launchForce + playerVelocity;
+
+        Rigidbody rb = instance.GetComponent<Rigidbody>();
+        rb.AddForce(launchVelocity * rb.mass, ForceMode.Impulse);
+    }
 }

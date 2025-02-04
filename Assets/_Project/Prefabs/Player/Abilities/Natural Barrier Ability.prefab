@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Stats>k__BackingField:
-    _hp: 0
+    _health: 0
     _physicalDamage: 0
     _magicalDamage: 0
     _physicalDefense: 0
@@ -58,10 +58,11 @@ MonoBehaviour:
   <CanBeCanceled>k__BackingField: 1
   <ActiveDuration>k__BackingField: 5
   <CooldownDuration>k__BackingField: 3
-  _previewBarrierPrefab: {fileID: -9022642004609456823, guid: 904266b4df8e6e647907f624d3551bf5,
-    type: 3}
   _barrierPrefab: {fileID: 3948008736373683015, guid: be6c227e6ded14343a8446e07af0bc45,
     type: 3}
+  _previewBarrierPrefab: {fileID: -9022642004609456823, guid: 904266b4df8e6e647907f624d3551bf5,
+    type: 3}
+  _maxPreviewDistance: 20
   _range: 10
 --- !u!1 &6158534061151199835
 GameObject:
