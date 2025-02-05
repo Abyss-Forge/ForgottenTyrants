@@ -19,23 +19,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _lookSensitivityX;    //en 2 lineas separadas para que no clone el header por cada field
     [SerializeField] private float _walkSpeed, _gravityMultiplier, _jumpForce, _dashForce, _dashDuration, _dashCooldown, _dashFovChange;
 
-    private float _currentSpeed;
-
+    private Vector3 _velocity;
     private Vector2 _move, _look;
     private float _lookRotationX;
     private bool _isGrounded, _isDashing, _isDashOnCooldown;
 
-    public bool GravityEnabled { get; set; } = true;
+    public bool IsGravityEnabled { get; set; } = true;
     public bool CanMove { get; set; } = true;
     public bool CanJump { get; set; } = true;
     public bool CanDash { get; set; } = true;
 
-    public float JumpForce => _jumpForce;
-
-    private Vector3 _velocity;
-    public Vector3 Velocity => _velocity;
-
     private EventBinding<PlayerDeathEvent> _playerDeathEventBinding;
+    private EventBinding<PlayerMovementEvent> _playerMovementEventBinding;
 
     private void OnMove(InputAction.CallbackContext context)
     {
@@ -58,14 +53,18 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
-        _currentSpeed = _walkSpeed;     //no
         // _characterController = GetComponent<CharacterController>();
+        StartGlowingEffect(5);
+        _currentSpeed = _walkSpeed;     //Diego troleando
     }
 
     void OnEnable()
     {
         _playerDeathEventBinding = new EventBinding<PlayerDeathEvent>(HandlePlayerDeath);
         EventBus<PlayerDeathEvent>.Register(_playerDeathEventBinding);
+
+        _playerMovementEventBinding = new EventBinding<PlayerMovementEvent>(HandleMovementEvent);
+        EventBus<PlayerMovementEvent>.Register(_playerMovementEventBinding);
 
         MyInputManager.Instance.Subscribe(EInputAction.MOVE, OnMove);
         MyInputManager.Instance.Subscribe(EInputAction.LOOK, OnLook);
@@ -76,6 +75,7 @@ public class PlayerController : MonoBehaviour
     void OnDisable()
     {
         EventBus<PlayerDeathEvent>.Deregister(_playerDeathEventBinding);
+        EventBus<PlayerMovementEvent>.Deregister(_playerMovementEventBinding);
 
         MyInputManager.Instance.Unsubscribe(EInputAction.MOVE, OnMove);
         MyInputManager.Instance.Unsubscribe(EInputAction.LOOK, OnLook);
@@ -87,9 +87,9 @@ public class PlayerController : MonoBehaviour
     {
 
         if (CanMove) Move();
-        if (GravityEnabled) ApplyGravity();
+        if (IsGravityEnabled) ApplyGravity();
 
-        if (_isDashing) _velocity.y = 0; // esto hace que el dash no tenga verticalidad, me parece un diseño de mierda pero bueno
+        if (_isDashing) _velocity.y = 0; // esto hace que el dash no tenga verticalidad, me parece un diseño de mierda par aun juego 3D pero bueno
     }
 
     void Update()
@@ -100,13 +100,6 @@ public class PlayerController : MonoBehaviour
     void LateUpdate()   //we move the camera in late update so all the movement has finished before positioning it
     {
         //  Look();
-    }
-
-    private void HandlePlayerDeath()
-    {
-        CanMove = false;
-        CanJump = false;
-        CanDash = false;
     }
 
     private void Look()
@@ -123,7 +116,7 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         Vector3 moveDirection = transform.right * _move.x + transform.forward * _move.y;
-        moveDirection *= _currentSpeed;
+        moveDirection *= _currentSpeed;     //_walkSpeed
 
         _velocity.x = moveDirection.x;
         _velocity.z = moveDirection.z;
@@ -186,7 +179,36 @@ public class PlayerController : MonoBehaviour
         _isDashOnCooldown = false;
     }
 
+    private void HandlePlayerDeath()
+    {
+        FreezeMovement(true);
+    }
+
+    private void HandleMovementEvent(PlayerMovementEvent @event)
+    {
+        FreezeMovement(!@event.Activate);
+    }
+
+    private void FreezeMovement(bool freeze = true)
+    {
+        bool b = !freeze;
+
+        CanMove = b;
+        CanJump = b;
+        CanDash = b;
+        IsGravityEnabled = b;
+    }
+
     #region cosas de diego
+
+    [SerializeField] private Color _emissionColor = Color.yellow;
+    [SerializeField] private float _emissionIntensity = 1.2f;
+    [SerializeField] private Renderer _renderer;
+    private Material _objectMaterial;
+
+    private float _currentSpeed;
+    public float JumpForce => _jumpForce;
+    public Vector3 Velocity => _velocity;
 
     public void SetVelocity(Vector3 newVelocity)
     {
@@ -211,42 +233,9 @@ public class PlayerController : MonoBehaviour
         return _currentSpeed;
     }
 
-
-    // Color e intensidad configurables desde el inspector
-    public Color emissionColor = Color.yellow;
-    public float emissionIntensity = 1.2f;
-
-    private Material objectMaterial;
-
     void Start()
     {
-        // HandlePlayerDeath();
-        // Accede al material del objeto
-        MeshRenderer renderer = GetComponent<MeshRenderer>();
-        if (renderer != null)
-        {
-            // Usamos el material instanciado para no afectar materiales compartidos
-            objectMaterial = renderer.material;
-        }
-    }
-
-    public void ActivateEmission()
-    {
-        if (objectMaterial != null)
-        {
-            // Habilita la emisión
-            objectMaterial.EnableKeyword("_EMISSION");
-            // Cambia el color e intensidad de la emisión
-            Color finalEmissionColor = emissionColor * emissionIntensity;
-            objectMaterial.SetColor("_EmissionColor", finalEmissionColor);
-        }
-    }
-
-    public IEnumerator GlowingEffect(float duration)
-    {
-        ActivateEmission();
-        yield return new WaitForSeconds(duration);
-        DeactivateEmission();
+        if (_renderer != null) _objectMaterial = _renderer.material;// Usamos el material instanciado para no afectar materiales compartidos
     }
 
     public void StartGlowingEffect(float duration)
@@ -254,21 +243,29 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(GlowingEffect(duration));
     }
 
-    public void DeactivateEmission()
+    private IEnumerator GlowingEffect(float duration)
     {
-        if (objectMaterial != null)
+        ActivateEmission();
+        yield return new WaitForSeconds(duration);
+        DeactivateEmission();
+    }
+
+    private void ActivateEmission()
+    {
+        if (_objectMaterial != null)
         {
-            // Desactiva la emisión
-            objectMaterial.DisableKeyword("_EMISSION");
+            _objectMaterial.EnableKeyword("_EMISSION");
+
+            Color finalEmissionColor = _emissionColor * _emissionIntensity;
+            _objectMaterial.SetColor("_EmissionColor", finalEmissionColor);
         }
     }
 
-    //[ClientRpc]
-    public void ActivateMovement()
+    public void DeactivateEmission()
     {
-        CanMove = true;
-        CanDash = true;
-        CanJump = true;
+        if (_objectMaterial != null) _objectMaterial.DisableKeyword("_EMISSION");
     }
-    #endregion
+
+
+    #endregion
 }

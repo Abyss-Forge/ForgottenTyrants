@@ -1773,7 +1773,6 @@ GameObject:
   - component: {fileID: -7936775410058264635}
   - component: {fileID: -3100300571400905276}
   - component: {fileID: 3735747864391589000}
-  - component: {fileID: 2624578383135005869}
   - component: {fileID: 6373535343249460430}
   m_Layer: 6
   m_Name: Player
@@ -1877,18 +1876,6 @@ MonoBehaviour:
   - {fileID: 6316421081484768529}
   - {fileID: 2309931209327357530}
   _componentsToEnable: []
---- !u!114 &2624578383135005869
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2471761912260363661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 836e6e27fbac2b04a9316903409eeb4a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!143 &6373535343249460430
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2187,6 +2174,7 @@ MonoBehaviour:
   - {fileID: 6978986995751033359}
   - {fileID: 6651336051553288473}
   - {fileID: 5816823916395895089}
+  - {fileID: 6373535343249460430}
 --- !u!114 &6978986995751033359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3077,8 +3065,9 @@ MonoBehaviour:
   _dashDuration: 0.5
   _dashCooldown: 1
   _dashFovChange: 10
-  emissionColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  emissionIntensity: 1.2
+  _emissionColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  _emissionIntensity: 1.2
+  _renderer: {fileID: 7147771930885211905}
 --- !u!114 &1019016546715915722
 MonoBehaviour:
   m_ObjectHideFlags: 0

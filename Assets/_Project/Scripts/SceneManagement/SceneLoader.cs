@@ -35,11 +35,12 @@ namespace Systems.SceneManagement
             EventBus<LoadSceneEvent>.Deregister(_sceneEventBinding);
         }
 
-        async void HandleSceneEvent(LoadSceneEvent playerEvent)
+
+        private async void HandleSceneEvent(LoadSceneEvent @event)
         {
-            if (_sceneGroups.IsInRange(playerEvent.SceneGroupToLoad))
+            if (_sceneGroups.IsInRange(@event.SceneGroupToLoad))
             {
-                await LoadSceneGroup(playerEvent.SceneGroupToLoad);
+                await LoadSceneGroup(@event.SceneGroupToLoad);
             }
         }
 

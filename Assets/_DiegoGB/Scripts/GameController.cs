@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Systems.EventBus;
 using TMPro;
 using Unity.Netcode;
 using Unity.Services.Authentication;
@@ -49,9 +50,10 @@ public class GameController : NetworkBehaviour
             countingDown.Value = true;
             gameStarted.Value = false;
         }
-        if (IsClient)
+        if (IsHost)
         {
             StartCoroutine(PopulateContainer());
+            BlockAnyMovementClientRpc();
         }
 
     }
@@ -60,6 +62,18 @@ public class GameController : NetworkBehaviour
     {
         TimerClock();
         GameStartingAnimation();
+    }
+
+    IEnumerator BlockAnyMovement()
+    {
+        yield return new WaitForSeconds(.5f);
+        EventBus<PlayerMovementEvent>.Raise(new PlayerMovementEvent { Activate = false });
+    }
+
+    [ClientRpc]
+    void BlockAnyMovementClientRpc()
+    {
+        StartCoroutine(BlockAnyMovement());
     }
 
     IEnumerator PopulateContainer()
@@ -130,7 +144,7 @@ public class GameController : NetworkBehaviour
     {
         gameStarted.Value = true;
         HideStartingTextClientRpc();
-        ActivateMovementPlayers();
+        ActivateMovementPlayersClientRpc();
         currentTime.Value = TimeStringToSeconds(_gameTime);
         countingDown.Value = true;
         //PlayersToSpawn();
@@ -158,12 +172,10 @@ public class GameController : NetworkBehaviour
         StartCoroutine(HideStartingText());
     }
 
-    public void ActivateMovementPlayers()
+    [ClientRpc]
+    public void ActivateMovementPlayersClientRpc()
     {
-        foreach (var player in FindObjectsOfType<PlayerController>())
-        {
-            player.ActivateMovement();
-        }
+        EventBus<PlayerMovementEvent>.Raise(new PlayerMovementEvent { Activate = true });
     }
 
     IEnumerator HideStartingText()
