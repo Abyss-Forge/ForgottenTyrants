@@ -22,9 +22,10 @@ public class GameController : NetworkBehaviour
     [SerializeField] private Transform _alliesContainer; // Contenedor para aliados
     [SerializeField] private Transform _enemiesContainer; // Contenedor para enemigos
     [SerializeField] private GameObject _characterFramePrefab; // Prefab del cuadro
+
     //private List<Player> _allies = new List<Player>();
     //private List<Player> _enemies = new List<Player>();
-
+    private NetworkList<SyncedPlayerData> _syncedPlayers = new NetworkList<SyncedPlayerData>();
     private NetworkVariable<float> currentTime = new NetworkVariable<float>(
         0f,
         NetworkVariableReadPermission.Everyone,
@@ -42,6 +43,25 @@ public class GameController : NetworkBehaviour
         NetworkVariableWritePermission.Server
     );
 
+    private void Start()
+    {
+        if (IsClient)
+        {
+            _syncedPlayers.OnListChanged += OnSyncedPlayersChanged;
+        }
+    }
+    public override void OnDestroy()
+    {
+        if (IsClient)
+        {
+            _syncedPlayers.OnListChanged -= OnSyncedPlayersChanged;
+        }
+    }
+    private void OnSyncedPlayersChanged(NetworkListEvent<SyncedPlayerData> changeEvent)
+    {
+        PopulateContainer();
+    }
+
     public override void OnNetworkSpawn()
     {
         if (IsServer)
@@ -49,19 +69,40 @@ public class GameController : NetworkBehaviour
             currentTime.Value = TimeStringToSeconds(_prepareTime);
             countingDown.Value = true;
             gameStarted.Value = false;
-        }
-        if (IsHost)
-        {
-            StartCoroutine(PopulateContainer());
-            BlockAnyMovementClientRpc();
-        }
 
+            // Poblar la lista de jugadores al inicio
+            foreach (var kvp in HostManager.Instance.ClientDataDict)
+            {
+                var clientId = kvp.Key;
+                var clientData = kvp.Value;
+
+                SyncedPlayerData playerData = new SyncedPlayerData
+                {
+                    ClientId = clientId,
+                    TeamId = clientData.TeamId,
+                };
+                _syncedPlayers.Add(playerData);
+            }
+            BlockAnyMovementClientRpc();
+            PopulateContainerClientRpc();
+        }
     }
 
     private void Update()
     {
         TimerClock();
         GameStartingAnimation();
+    }
+
+    private void AddPlayerToSyncedList(ulong clientId, ClientData clientData)
+    {
+        SyncedPlayerData playerData = new SyncedPlayerData
+        {
+            ClientId = clientId,
+            TeamId = clientData.TeamId
+
+        };
+        _syncedPlayers.Add(playerData);
     }
 
     IEnumerator BlockAnyMovement()
@@ -76,24 +117,61 @@ public class GameController : NetworkBehaviour
         StartCoroutine(BlockAnyMovement());
     }
 
+    [ClientRpc]
+    void PopulateContainerClientRpc()
+    {
+        StartCoroutine(PopulateContainer());
+    }
+
     IEnumerator PopulateContainer()
     {
-        yield return new WaitForSeconds(2);
-        List<Player> players = FindObjectsByType<Player>(FindObjectsSortMode.None).ToList();
+        yield return new WaitForSeconds(.5f);
 
-        foreach (var player in players)
+        //List<Player> players = FindObjectsByType<Player>(FindObjectsSortMode.None).ToList();
+
+        // Itera sobre la lista sincronizada
+        foreach (var playerData in _syncedPlayers)
         {
-            // Determina el contenedor según el equipo del jugador
-            Transform cont = player._playerData.TeamId == 0 ? _alliesContainer : _enemiesContainer;
+            Transform container = playerData.TeamId == 0 ? _alliesContainer : _enemiesContainer;
 
-            // Instanciar el cuadro
-            GameObject frame = Instantiate(_characterFramePrefab, cont);
+            // Instancia un nuevo cuadro
+            GameObject frame = Instantiate(_characterFramePrefab, container);
 
-            //frame.transform.Find("CharacterImage").GetComponent<Image>().sprite = GetCharacterSprite(client.CharacterId);
-            frame.transform.Find("Player health").GetComponent<Slider>().value = player.CurrentHp;
-            //frame.transform.Find("KDA").GetComponent<Text>().text = $"ID: {client.ClientId}";
+            // Asignar los datos al cuadro
+            //frame.transform.Find("CharacterImage").GetComponent<Image>().sprite = GetCharacterSprite(clientData.CharacterId);
+            //frame.transform.Find("HealthSlider").GetComponent<Slider>().value = clientData.Health;
+            //frame.transform.Find("KDA").GetComponent<Text>().text = $"ID: {clientId}";
         }
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdatePlayerHealthServerRpc(ulong clientId, float newHealth)
+    {
+        for (int i = 0; i < _syncedPlayers.Count; i++)
+        {
+            if (_syncedPlayers[i].ClientId == clientId)
+            {
+                var playerData = _syncedPlayers[i];
+                //playerData.Health = Mathf.Clamp01(newHealth);
+                _syncedPlayers[i] = playerData;
+                break;
+            }
+        }
+    }
+
+    /*foreach (var player in players)
+    {
+        // Determina el contenedor según el equipo del jugador
+        Transform cont = player._playerData.TeamId == 0 ? _alliesContainer : _enemiesContainer;
+
+        // Instanciar el cuadro
+        GameObject frame = Instantiate(_characterFramePrefab, cont);
+
+        //frame.transform.Find("CharacterImage").GetComponent<Image>().sprite = GetCharacterSprite(client.CharacterId);
+        frame.transform.Find("Player health").GetComponent<Slider>().value = player.CurrentHp;
+        //frame.transform.Find("KDA").GetComponent<Text>().text = $"ID: {client.ClientId}";
+    }*/
+
 
     /*public void UpdateHealth(Player character, float newHealth)
     {
@@ -228,4 +306,42 @@ public class CharacterData
     public int kills;
     public int deaths;
     public int assists;
+}
+
+
+[System.Serializable]
+public struct SyncedPlayerData : INetworkSerializable, IEquatable<SyncedPlayerData>
+{
+    public ulong ClientId;
+    public int TeamId; // Team (0: Allies, 1: Enemies)
+    //public float Health; // Player's health (0 to 1)
+    //public int CharacterId; // ID for the character's sprite
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref ClientId);
+        serializer.SerializeValue(ref TeamId);
+        //serializer.SerializeValue(ref Health);
+        ///serializer.SerializeValue(ref CharacterId);
+    }
+
+    // Implementing IEquatable<T>
+    public bool Equals(SyncedPlayerData other)
+    {
+        return ClientId == other.ClientId &&
+               TeamId == other.TeamId;
+        //Health == other.Health &&
+        //CharacterId == other.CharacterId;
+    }
+
+    // Override GetHashCode and Equals to ensure proper equality checks
+    public override bool Equals(object obj)
+    {
+        return obj is SyncedPlayerData other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(ClientId, TeamId);
+    }
 }
