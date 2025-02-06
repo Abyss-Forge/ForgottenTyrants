@@ -82,17 +82,33 @@ public class GameController : NetworkBehaviour
         if (IsClient)
         {
             //UpdateClientUIHealth_ClientRpc();
+            UpdateCurrentHp();
             _syncedPlayers.OnListChanged += OnSyncedPlayersChanged;
-            UpdateMyHealthServerRpc();
+
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    void UpdateMyHealthServerRpc(ServerRpcParams rpcParams = default)
+    void UpdateCurrentHp()
+    {
+        //yield return new WaitForSeconds(1f);
+        // Obtiene el DamageableBehaviour del jugador local usando el ServiceLocator (esto es local)
+        if (ServiceLocator.Global.TryGet<DamageableBehaviour>(out DamageableBehaviour damage))
+        {
+            Debug.Log($"[Cliente {NetworkManager.Singleton.LocalClientId}] Valor de Health local: {damage.Health}");
+            UpdateMyHealthServerRpc(damage.Health);
+        }
+        else
+        {
+            Debug.LogWarning("No se encontró DamageableBehaviour en el ServiceLocator.");
+        }
+    }
+
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    void UpdateMyHealthServerRpc(float newHealth, RpcParams rpcParams = default)
     {
         ulong senderClientId = rpcParams.Receive.SenderClientId;
 
-        ServiceLocator.Global.Get(out DamageableBehaviour damage);
+        //ServiceLocator.Global.Get(out DamageableBehaviour damage);
         // Aquí el servidor actualizará la salud del jugador en la NetworkList.
         // Usamos el LocalClientId (o el id del jugador que envía) para identificar a quién actualizar.
         for (int i = 0; i < _syncedPlayers.Count; i++)
@@ -100,9 +116,9 @@ public class GameController : NetworkBehaviour
             if (_syncedPlayers[i].ClientId == senderClientId)
             {
                 SyncedPlayerData data = _syncedPlayers[i];
-                data.Health = damage.Health;
+                data.Health = newHealth;
                 _syncedPlayers[i] = data;
-                Debug.Log($"Actualizada la salud del cliente {senderClientId} a {damage.Health}");
+                Debug.Log($"Actualizada la salud del cliente {senderClientId} a {newHealth}");
                 break;
             }
         }
@@ -175,6 +191,7 @@ public class GameController : NetworkBehaviour
 
     private void OnSyncedPlayersChanged(NetworkListEvent<SyncedPlayerData> changeEvent)
     {
+        Debug.Log($"[Cliente] OnSyncedPlayersChanged: Tipo = {changeEvent.Type} para ClientId {changeEvent.Value.ClientId} con Health = {changeEvent.Value.Health}");
         PopulateContainer();
     }
 
