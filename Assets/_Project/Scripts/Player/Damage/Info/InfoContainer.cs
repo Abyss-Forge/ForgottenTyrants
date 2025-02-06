@@ -11,18 +11,18 @@ public class InfoContainer : NetworkBehaviour, INetworkSerializable, IEquatable<
     public void Add(AbilityInfoTest info)
     {
         _infoList.Add(info);
-        UpdateInfoListClientRpc(_infoList);
-        UpdateInfoListServerRpc(_infoList);
+        UpdateInfoList_ClientRpc(_infoList);
+        //UpdateInfoList_ServerRpc(_infoList);
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    private void UpdateInfoListClientRpc(List<AbilityInfoTest> updatedList)
+    private void UpdateInfoList_ClientRpc(List<AbilityInfoTest> updatedList)
     {
         _infoList = new List<AbilityInfoTest>(updatedList);
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    private void UpdateInfoListServerRpc(List<AbilityInfoTest> updatedList)
+    private void UpdateInfoList_ServerRpc(List<AbilityInfoTest> updatedList)
     {
         _infoList = new List<AbilityInfoTest>(updatedList);
     }

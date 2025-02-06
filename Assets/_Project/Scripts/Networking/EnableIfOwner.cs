@@ -6,8 +6,8 @@ using UnityEngine;
 public class EnableIfOwner : NetworkBehaviour
 {
     //TODO unique attribute tag to unallow duplicates
-    [SerializeField] private BeginDisabled[] _gameObjectsToEnable;
-    [SerializeField] private Component[] _componentsToEnable;
+    [SerializeField,] private BeginDisabled[] _gameObjectsToEnable;
+    [SerializeField,] private Component[] _componentsToEnable;
 
     void OnValidate()
     {
@@ -36,18 +36,9 @@ public class EnableIfOwner : NetworkBehaviour
     {
         foreach (Component component in _componentsToEnable)
         {
-            if (component is Behaviour behaviour)
-            {
-                behaviour.enabled = true;
-            }
-            else if (component is Collider collider)
-            {
-                collider.enabled = true;
-            }
-            else if (component is Renderer renderer)
-            {
-                renderer.enabled = true;
-            }
+            if (component is Behaviour behaviour) behaviour.enabled = true;
+            else if (component is Collider collider) collider.enabled = true;
+            else if (component is Renderer renderer) renderer.enabled = true;
         }
     }
 

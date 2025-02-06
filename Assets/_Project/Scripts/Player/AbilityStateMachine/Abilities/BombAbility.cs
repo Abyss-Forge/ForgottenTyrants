@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using Systems.ServiceLocator;
-using Unity.Netcode;
 using UnityEngine;
 
 public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
@@ -62,7 +59,7 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
             _timer -= Time.deltaTime;
             if (_timer <= 0f)
             {
-                _ability.SpawnProjectileServerRpc();
+                _ability.SpawnProjectile();
                 _timer = _ability.ProjectileThreshold;
                 _cycles++;
                 if (_cycles >= _ability.ProjectileAmount)
@@ -74,24 +71,11 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
     }
     #endregion
 
-    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
-    private void SpawnProjectileServerRpc()
+    private void SpawnProjectile()
     {
         Vector3 position = SpawnPoint.position;
         Quaternion rotation = SpawnPoint.rotation;
         Vector3 scale = SpawnPoint.localScale;
-
-        Projectile projectile = Instantiate(_projectilePrefab, position, rotation, transform);
-        foreach (var item in _infoList)
-        {
-            projectile.InfoContainer.Add(item);
-        }
-        _infoList.Clear();
-
-        GameObject instance = projectile.gameObject;
-        instance.transform.localScale = scale;
-        instance.transform.SetParent(null);
-        instance.GetComponent<NetworkObject>().Spawn(true);
 
         Transform camera = Camera.main.transform;
         Vector3 targetPoint = camera.position + camera.forward * 100f;
@@ -103,7 +87,6 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
         playerVelocity.y = 0;
         Vector3 launchVelocity = adjustedDirection * _launchForce + playerVelocity;
 
-        Rigidbody rb = instance.GetComponent<Rigidbody>();
-        rb.AddForce(launchVelocity * rb.mass, ForceMode.Impulse);
+        SpawnManager.Instance.SpawnProjectile(_projectilePrefab.gameObject, position, rotation, scale, launchVelocity, _infoList);
     }
 }

@@ -3,13 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Systems.EventBus;
+using Systems.ServiceLocator;
 using TMPro;
 using Unity.Netcode;
-using Unity.Services.Authentication;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.UI;
-using Unity.Netcode.Transports.UTP;
-using Systems.ServiceLocator;
 
 public class GameController : NetworkBehaviour
 {
@@ -52,17 +51,17 @@ public class GameController : NetworkBehaviour
         NetworkVariableWritePermission.Server
     );
 
+    void Awake()
+    {
+        _syncedPlayers = new NetworkList<SyncedPlayerData>();
+    }
+
     void Start()
     {
         InvokeRepeating(nameof(ShowFps), 1f, _updateInterval);
         InvokeRepeating(nameof(ShowPing), 1f, _updateInterval);
         ShowPlayerHealth();
         ShowBossHealth();
-    }
-
-    void Awake()
-    {
-        _syncedPlayers = new NetworkList<SyncedPlayerData>();
     }
 
     public override void OnNetworkSpawn()
@@ -81,11 +80,26 @@ public class GameController : NetworkBehaviour
         }
         if (IsClient)
         {
-            //UpdateClientUIHealth_ClientRpc();
-            UpdateCurrentHp();
             _syncedPlayers.OnListChanged += OnSyncedPlayersChanged;
 
+            UpdateCurrentHp();
+            //UpdateClientUIHealth_ClientRpc();
         }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        if (IsClient)
+        {
+            _syncedPlayers.OnListChanged -= OnSyncedPlayersChanged;
+        }
+    }
+
+    void Update()
+    {
+        TimerClock();
+        GameStartingAnimation();
+        _deltaTime += (Time.unscaledDeltaTime - _deltaTime) * 0.1f;
     }
 
     void UpdateCurrentHp()
@@ -147,12 +161,13 @@ public class GameController : NetworkBehaviour
         DataSync(playerId, health);
     }
 
+   
     void ClientHealthUpdate()
     {
-        ServiceLocator.Global.Get(out DamageableBehaviour damage);
+        ServiceLocator.Global.Get(out DamageableBehaviour damageable);
         ServiceLocator.Global.Get(out PlayerInfo player);
-        Debug.Log("TODO");
-        SendClientHealth_ServerRpc(player.ClientData.ClientId, damage.Health);
+        float health = Mathf.InverseLerp(0, damageable.Health, player.Stats.Health);
+        SendClientHealth_ServerRpc(player.ClientData.ClientId, health);
     }
 
     [Rpc(SendTo.ClientsAndHost)]
@@ -181,27 +196,11 @@ public class GameController : NetworkBehaviour
     } */
 
 
-    public override void OnNetworkDespawn()
-    {
-        if (IsClient)
-        {
-            _syncedPlayers.OnListChanged -= OnSyncedPlayersChanged;
-        }
-    }
-
     private void OnSyncedPlayersChanged(NetworkListEvent<SyncedPlayerData> changeEvent)
     {
         Debug.Log($"[Cliente] OnSyncedPlayersChanged: Tipo = {changeEvent.Type} para ClientId {changeEvent.Value.ClientId} con Health = {changeEvent.Value.Health}");
         PopulateContainer();
     }
-
-    void Update()
-    {
-        TimerClock();
-        GameStartingAnimation();
-        _deltaTime += (Time.unscaledDeltaTime - _deltaTime) * 0.1f;
-    }
-
 
     void ShowFps()
     {
@@ -236,12 +235,6 @@ public class GameController : NetworkBehaviour
            _syncedPlayers.Add(playerData);
        } */
 
-    IEnumerator BlockAnyMovement()
-    {
-        yield return new WaitForSeconds(.5f);
-        EventBus<PlayerMovementEvent>.Raise(new PlayerMovementEvent { Activate = false });
-    }
-
     [Rpc(SendTo.ClientsAndHost)]
     void BlockAnyMovementClientRpc()
     {
@@ -252,6 +245,12 @@ public class GameController : NetworkBehaviour
     void PopulateContainerClientRpc()
     {
         StartCoroutine(PopulateContainer());
+    }
+
+    IEnumerator BlockAnyMovement()
+    {
+        yield return new WaitForSeconds(.5f);
+        EventBus<PlayerMovementEvent>.Raise(new PlayerMovementEvent { Activate = false });
     }
 
     IEnumerator PopulateContainer()

@@ -123,7 +123,7 @@ public class CharacterSelectController : NetworkBehaviour
     {
         for (int i = 0; i < _players.Count; i++)
         {
-            if (_players[i].ClientId != clientId) { continue; }
+            if (_players[i].ClientId != clientId) continue;
 
             _players.RemoveAt(i);
             break;
@@ -139,13 +139,13 @@ public class CharacterSelectController : NetworkBehaviour
     {
         for (int i = 0; i < _players.Count; i++)
         {
-            if (_players[i].ClientId != NetworkManager.Singleton.LocalClientId) { continue; }
+            if (_players[i].ClientId != NetworkManager.Singleton.LocalClientId) continue;
 
-            if (_players[i].IsLockedIn) { return; }
+            if (_players[i].IsLockedIn) return;
 
-            if (_players[i].TeamId == team.ID) { return; }
+            if (_players[i].TeamId == team.ID) return;
 
-            if (IsTeamFull(team.ID, false)) { return; }
+            if (IsTeamFull(team.ID, false)) return;
 
             Team playerTeam = _teams.FirstOrDefault(x => x.ID == _players[i].TeamId);
             if (playerTeam != null)
@@ -156,17 +156,17 @@ public class CharacterSelectController : NetworkBehaviour
 
         team.CurrentPlayerCount++;
 
-        SelectTeamServerRpc(team.ID);
+        SelectTeam_ServerRpc(team.ID);
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    private void SelectTeamServerRpc(int teamId, RpcParams rpcParams = default)
+    private void SelectTeam_ServerRpc(int teamId, RpcParams rpcParams = default)
     {
         for (int i = 0; i < _players.Count; i++)
         {
-            if (_players[i].ClientId != rpcParams.Receive.SenderClientId) { continue; }
+            if (_players[i].ClientId != rpcParams.Receive.SenderClientId) continue;
 
-            if (IsTeamFull(teamId, true)) { return; }
+            if (IsTeamFull(teamId, true)) return;
 
             CharacterSelectState temp = _players[i];
             temp.TeamId = teamId;
@@ -178,9 +178,9 @@ public class CharacterSelectController : NetworkBehaviour
     {
         for (int i = 0; i < _players.Count; i++)
         {
-            if (_players[i].ClientId != NetworkManager.Singleton.LocalClientId) { continue; }
+            if (_players[i].ClientId != NetworkManager.Singleton.LocalClientId) continue;
 
-            if (_players[i].IsLockedIn) { return; }
+            if (_players[i].IsLockedIn) return;
 
             if (_players[i].RaceId == race.UID && _players[i].ClassId == @class.UID &&
             _players[i].ArmorId == armor.UID && _players[i].TrinketId == trinket.UID)
@@ -189,20 +189,20 @@ public class CharacterSelectController : NetworkBehaviour
             }
         }
 
-        SelectBuildServerRpc(race.UID, @class.UID, armor.UID, trinket.UID);
+        SelectBuild_ServerRpc(race.UID, @class.UID, armor.UID, trinket.UID);
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    private void SelectBuildServerRpc(ulong raceId, ulong classId, ulong armorId, ulong trinketId, RpcParams rpcParams = default)
+    private void SelectBuild_ServerRpc(ulong raceId, ulong classId, ulong armorId, ulong trinketId, RpcParams rpcParams = default)
     {
         for (int i = 0; i < _players.Count; i++)
         {
-            if (_players[i].ClientId != rpcParams.Receive.SenderClientId) { continue; }
+            if (_players[i].ClientId != rpcParams.Receive.SenderClientId) continue;
 
-            if (!_buildController.RaceDatabase.IsValidId(raceId)) { return; }
-            if (!_buildController.ClassDatabase.IsValidId(classId)) { return; }
-            if (!_buildController.ArmorDatabase.IsValidId(armorId)) { return; }
-            if (!_buildController.TrinketDatabase.IsValidId(trinketId)) { return; }
+            if (!_buildController.RaceDatabase.IsValidId(raceId)) return;
+            if (!_buildController.ClassDatabase.IsValidId(classId)) return;
+            if (!_buildController.ArmorDatabase.IsValidId(armorId)) return;
+            if (!_buildController.TrinketDatabase.IsValidId(trinketId)) return;
 
             CharacterSelectState temp = _players[i];
             temp.RaceId = raceId;
@@ -232,11 +232,11 @@ public class CharacterSelectController : NetworkBehaviour
         if (_introInstance != null) { Destroy(_introInstance); }
         _introInstance = Instantiate(character.IntroPrefab.gameObject, _introSpawnPoint);
 
-        SelectCharacterServerRpc(character.ID);
+        SelectCharacter_ServerRpc(character.ID);
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    private void SelectCharacterServerRpc(int characterId, RpcParams rpcParams = default)
+    private void SelectCharacter_ServerRpc(int characterId, RpcParams rpcParams = default)
     {
         for (int i = 0; i < _players.Count; i++)
         {
@@ -257,11 +257,11 @@ public class CharacterSelectController : NetworkBehaviour
         SelectBuild(_buildController.SelectedRace, _buildController.SelectedClass,
             _buildController.SelectedArmor, _buildController.SelectedTrinket);
 
-        LockInServerRpc();
+        LockIn_ServerRpc();
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    private void LockInServerRpc(RpcParams rpcParams = default)
+    private void LockIn_ServerRpc(RpcParams rpcParams = default)
     {
         for (int i = 0; i < _players.Count; i++)
         {

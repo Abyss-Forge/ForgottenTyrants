@@ -14,14 +14,14 @@ public class HealingPowerUp : NetworkBehaviour
 
         if (other.gameObject.CompareTag("Player"))
         {
-            PlayVisualEffectClientRpc();
+            PlayVisualEffect_ClientRpc();
             Debug.Log($"{other.gameObject} ha sido curado {_healAmount}");
             GetComponent<NetworkObject>().Despawn();
             Destroy(gameObject);
         }
     }
     [Rpc(SendTo.ClientsAndHost)]
-    private void PlayVisualEffectClientRpc()
+    private void PlayVisualEffect_ClientRpc()
     {
         _test.GetComponentInChildren<ParticleSystem>().Play();
     }
