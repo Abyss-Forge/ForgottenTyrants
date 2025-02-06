@@ -82,7 +82,7 @@ public class GameController : NetworkBehaviour
         {
             _syncedPlayers.OnListChanged += OnSyncedPlayersChanged;
 
-            UpdateCurrentHp();
+            StartCoroutine(UpdateCurrentHp());
             //UpdateClientUIHealth_ClientRpc();
         }
     }
@@ -102,8 +102,9 @@ public class GameController : NetworkBehaviour
         _deltaTime += (Time.unscaledDeltaTime - _deltaTime) * 0.1f;
     }
 
-    void UpdateCurrentHp()
+    IEnumerator UpdateCurrentHp()
     {
+        yield return new WaitForSeconds(.5f);
         //yield return new WaitForSeconds(1f);
         // Obtiene el DamageableBehaviour del jugador local usando el ServiceLocator (esto es local)
         if (ServiceLocator.Global.TryGet<DamageableBehaviour>(out DamageableBehaviour damage))
@@ -136,6 +137,7 @@ public class GameController : NetworkBehaviour
                 break;
             }
         }
+
     }
 
     void CreateSyncList()
@@ -199,7 +201,7 @@ public class GameController : NetworkBehaviour
     private void OnSyncedPlayersChanged(NetworkListEvent<SyncedPlayerData> changeEvent)
     {
         Debug.Log($"[Cliente] OnSyncedPlayersChanged: Tipo = {changeEvent.Type} para ClientId {changeEvent.Value.ClientId} con Health = {changeEvent.Value.Health}");
-        PopulateContainer();
+        StartCoroutine(PopulateContainer());
     }
 
     void ShowFps()
