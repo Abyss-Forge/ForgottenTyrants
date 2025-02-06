@@ -69,8 +69,8 @@ public class GameController : NetworkBehaviour
                 };
                 _syncedPlayers.Add(playerData);
             }
-            BlockAnyMovementClientRpc();
-            PopulateContainerClientRpc();
+            BlockAnyMovement_ClientRpc();
+            PopulateContainer_ClientRpc();
         }
         if (IsClient)
         {
@@ -115,13 +115,13 @@ public class GameController : NetworkBehaviour
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    void BlockAnyMovementClientRpc()
+    void BlockAnyMovement_ClientRpc()
     {
         StartCoroutine(BlockAnyMovement());
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    void PopulateContainerClientRpc()
+    void PopulateContainer_ClientRpc()
     {
         StartCoroutine(PopulateContainer());
     }
@@ -148,7 +148,7 @@ public class GameController : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    public void UpdatePlayerHealthServerRpc(ulong clientId, float newHealth)
+    public void UpdatePlayerHealth_ServerRpc(ulong clientId, float newHealth)
     {
         for (int i = 0; i < _syncedPlayers.Count; i++)
         {
@@ -209,7 +209,7 @@ public class GameController : NetworkBehaviour
 
             if (currentTime.Value <= 0f && !gameStarted.Value)
             {
-                StartGameServerRpc();
+                StartGame_ServerRpc();
 
             }
             else if (currentTime.Value <= 0f && gameStarted.Value)
@@ -221,11 +221,11 @@ public class GameController : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    private void StartGameServerRpc()
+    private void StartGame_ServerRpc()
     {
         gameStarted.Value = true;
-        HideStartingTextClientRpc();
-        ActivateMovementPlayersClientRpc();
+        HideStartingText_ClientRpc();
+        ActivateMovementPlayers_ClientRpc();
         currentTime.Value = TimeStringToSeconds(_gameTime);
         countingDown.Value = true;
         //PlayersToSpawn();
@@ -248,13 +248,13 @@ public class GameController : NetworkBehaviour
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    private void HideStartingTextClientRpc()
+    private void HideStartingText_ClientRpc()
     {
         StartCoroutine(HideStartingText());
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    public void ActivateMovementPlayersClientRpc()
+    public void ActivateMovementPlayers_ClientRpc()
     {
         EventBus<PlayerMovementEvent>.Raise(new PlayerMovementEvent { Activate = true });
     }

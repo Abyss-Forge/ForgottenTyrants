@@ -53,7 +53,7 @@ public class RandomStatsPowerUp : NetworkBehaviour
             float randomAttackSpeed = Random.Range(_attackSpeedMin, _attackSpeedMax);
             float randomCooldownReduction = Random.Range(_cooldownReductionMin, _cooldownReductionMax);
 
-            PlayVisualEffectClientRpc();
+            PlayVisualEffect_ClientRpc();
 
             Debug.Log($"{other.gameObject} ha sido randomizado con las siguientes stats:\n" +
             $" Hp: {randomHp}\n" +
@@ -70,7 +70,7 @@ public class RandomStatsPowerUp : NetworkBehaviour
         }
     }
     [Rpc(SendTo.ClientsAndHost)]
-    private void PlayVisualEffectClientRpc()//TODO hacer con el eventbus
+    private void PlayVisualEffect_ClientRpc()//TODO hacer con el eventbus
     {
         _test.GetComponent<PlayerController>().StartGlowingEffect(_duration);
     }

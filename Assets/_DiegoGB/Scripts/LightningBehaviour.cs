@@ -46,7 +46,7 @@ public class LightningBehaviour : NetworkBehaviour
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    private void UpdateLineRendererClientRpc(Vector3[] points)
+    private void UpdateLineRenderer_ClientRpc(Vector3[] points)
     {
         if (_line == null) return;
 
@@ -70,7 +70,7 @@ public class LightningBehaviour : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    private void SpawnMarkerOnTerrainServerRpc(Vector3 position)
+    private void SpawnMarkerOnTerrain_ServerRpc(Vector3 position)
     {
         // Solo el servidor spawnea las esferas
         if (!IsServer) return;
@@ -95,8 +95,8 @@ public class LightningBehaviour : NetworkBehaviour
         // Genera un punto aleatorio en el terreno
         Vector3 randomPoint = GetRandomPointOnTerrain();
 
-        // Llama al ServerRpc para spawnear la esfera roja en el servidor
-        SpawnMarkerOnTerrainServerRpc(randomPoint);
+        // Llama al _ServerRpc para spawnear la esfera roja en el servidor
+        SpawnMarkerOnTerrain_ServerRpc(randomPoint);
 
         // Retorna la posición para cualquier otra lógica que lo necesite
         return randomPoint;
@@ -128,7 +128,7 @@ public class LightningBehaviour : NetworkBehaviour
         _line.SetPositions(points.ToArray());
 
         // Envía los puntos a los clientes
-        UpdateLineRendererClientRpc(points.ToArray());
+        UpdateLineRenderer_ClientRpc(points.ToArray());
     }
 
     private List<Vector3> InterpolatePoints(Vector3 start, Vector3 end, int totalPoints)
@@ -178,11 +178,11 @@ public class LightningBehaviour : NetworkBehaviour
         SetEmissionIntensity(0.0f);
         _line.widthCurve = new AnimationCurve();
 
-        DestroyServerRpc();
+        Destroy_ServerRpc();
     }
 
     [Rpc(SendTo.Server)]
-    private void DestroyServerRpc()
+    private void Destroy_ServerRpc()
     {
         if (IsServer)
         {

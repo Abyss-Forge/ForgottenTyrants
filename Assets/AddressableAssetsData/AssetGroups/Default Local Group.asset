@@ -16,7 +16,12 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: d97e82541db71ec4d8ebac31c099f156
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 73ecb5544a02d3249a5369c8778b0ec4
+    m_Address: Assets/_Project/Prefabs/Player/Abilities/Props/Bomb.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 579325a02a893ed478e5b0e6983e5356, type: 2}
   m_SchemaSet:

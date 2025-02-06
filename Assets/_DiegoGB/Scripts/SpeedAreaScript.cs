@@ -20,7 +20,7 @@ public class SpeedAreaScript : NetworkBehaviour
         playerController.SetSpeed(_speed);
 
         // Si tu movimiento es client-driven, avisa al cliente
-        SetSpeedClientRpc(0, _speed);//playerController.OwnerClientId
+        SetSpeed_ClientRpc(0, _speed);//playerController.OwnerClientId
 
         // Esperamos la duración del boost
         yield return new WaitForSeconds(_durationSpeedBoost);
@@ -29,14 +29,14 @@ public class SpeedAreaScript : NetworkBehaviour
         playerController.SetSpeed(-_speed);
 
         // Y avisamos al cliente de nuevo
-        SetSpeedClientRpc(0, -_speed);//playerController.OwnerClientId
+        SetSpeed_ClientRpc(0, -_speed);//playerController.OwnerClientId
 
         // Lo sacamos del diccionario de boosts activos
         _activeBoostsGlobal.Remove(0);//playerController.OwnerClientId
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    private void SetSpeedClientRpc(ulong targetClientId, float speedDelta)
+    private void SetSpeed_ClientRpc(ulong targetClientId, float speedDelta)
     {
         // Si este no es el cliente objetivo, no hacemos nada
         if (NetworkManager.Singleton.LocalClientId != targetClientId)

@@ -1871,8 +1871,8 @@ MonoBehaviour:
   _gameObjectsToEnable:
   - {fileID: 951092374199941371}
   - {fileID: 1019016546715915722}
-  - {fileID: 7836066011949525608}
   - {fileID: 8513622279716316321}
+  - {fileID: 7836066011949525608}
   - {fileID: 6316421081484768529}
   - {fileID: 2309931209327357530}
   _componentsToEnable: []
