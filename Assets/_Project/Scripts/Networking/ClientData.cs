@@ -18,12 +18,4 @@ public class ClientData
         ClientId = clientId;
     }
 
-    public ClientData(ulong clientId, RaceTemplate race, ClassTemplate @class, ArmorTemplate armor, TrinketTemplate trinket) : this(clientId)
-    {
-        Race = race;
-        Class = @class;
-        Armor = armor;
-        Trinket = trinket;
-    }
-
 }

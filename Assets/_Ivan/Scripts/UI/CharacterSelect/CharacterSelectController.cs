@@ -159,12 +159,12 @@ public class CharacterSelectController : NetworkBehaviour
         SelectTeamServerRpc(team.ID);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void SelectTeamServerRpc(int teamId, ServerRpcParams serverRpcParams = default)
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    private void SelectTeamServerRpc(int teamId, RpcParams rpcParams = default)
     {
         for (int i = 0; i < _players.Count; i++)
         {
-            if (_players[i].ClientId != serverRpcParams.Receive.SenderClientId) { continue; }
+            if (_players[i].ClientId != rpcParams.Receive.SenderClientId) { continue; }
 
             if (IsTeamFull(teamId, true)) { return; }
 
@@ -192,12 +192,12 @@ public class CharacterSelectController : NetworkBehaviour
         SelectBuildServerRpc(race.UID, @class.UID, armor.UID, trinket.UID);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void SelectBuildServerRpc(ulong raceId, ulong classId, ulong armorId, ulong trinketId, ServerRpcParams serverRpcParams = default)
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    private void SelectBuildServerRpc(ulong raceId, ulong classId, ulong armorId, ulong trinketId, RpcParams rpcParams = default)
     {
         for (int i = 0; i < _players.Count; i++)
         {
-            if (_players[i].ClientId != serverRpcParams.Receive.SenderClientId) { continue; }
+            if (_players[i].ClientId != rpcParams.Receive.SenderClientId) { continue; }
 
             if (!_buildController.RaceDatabase.IsValidId(raceId)) { return; }
             if (!_buildController.ClassDatabase.IsValidId(classId)) { return; }
@@ -235,12 +235,12 @@ public class CharacterSelectController : NetworkBehaviour
         SelectCharacterServerRpc(character.ID);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void SelectCharacterServerRpc(int characterId, ServerRpcParams serverRpcParams = default)
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    private void SelectCharacterServerRpc(int characterId, RpcParams rpcParams = default)
     {
         for (int i = 0; i < _players.Count; i++)
         {
-            if (_players[i].ClientId != serverRpcParams.Receive.SenderClientId) { continue; }
+            if (_players[i].ClientId != rpcParams.Receive.SenderClientId) { continue; }
 
             if (!_characterDatabase.IsValidId(characterId)) { return; }
 
@@ -260,12 +260,12 @@ public class CharacterSelectController : NetworkBehaviour
         LockInServerRpc();
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void LockInServerRpc(ServerRpcParams serverRpcParams = default)
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    private void LockInServerRpc(RpcParams rpcParams = default)
     {
         for (int i = 0; i < _players.Count; i++)
         {
-            if (_players[i].ClientId != serverRpcParams.Receive.SenderClientId) { continue; }
+            if (_players[i].ClientId != rpcParams.Receive.SenderClientId) { continue; }
 
             if (!_characterDatabase.IsValidId(_players[i].CharacterId)) { return; }
 

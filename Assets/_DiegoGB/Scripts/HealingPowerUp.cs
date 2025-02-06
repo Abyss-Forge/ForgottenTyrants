@@ -20,7 +20,7 @@ public class HealingPowerUp : NetworkBehaviour
             Destroy(gameObject);
         }
     }
-    [ClientRpc]
+    [Rpc(SendTo.ClientsAndHost)]
     private void PlayVisualEffectClientRpc()
     {
         _test.GetComponentInChildren<ParticleSystem>().Play();

@@ -69,7 +69,7 @@ public class RandomStatsPowerUp : NetworkBehaviour
             Destroy(gameObject);
         }
     }
-    [ClientRpc]
+    [Rpc(SendTo.ClientsAndHost)]
     private void PlayVisualEffectClientRpc()//TODO hacer con el eventbus
     {
         _test.GetComponent<PlayerController>().StartGlowingEffect(_duration);

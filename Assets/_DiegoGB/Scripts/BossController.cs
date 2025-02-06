@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using Unity.Netcode;
 using Systems.BehaviourTree;
-using Random = UnityEngine.Random;
-using UnityEngine.UI;
-using Vector3 = UnityEngine.Vector3;
+using Unity.Netcode;
+using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 using DecalProjector = UnityEngine.Rendering.Universal.DecalProjector;
+using Random = UnityEngine.Random;
+using Vector3 = UnityEngine.Vector3;
 
 public class BossController : Entity
 {
@@ -323,14 +323,14 @@ public class BossController : Entity
 
     #region 1- DAMAGE BOOST EVENT
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, RequireOwnership = false)]
     public void TriggerDamageBoostServerRpc()
     {
         Debug.Log("Evento de boosteo de damage activado por un cliente.");
         TriggerDamageBoostClientRpc();
     }
 
-    [ClientRpc]
+    [Rpc(SendTo.ClientsAndHost)]
     private void TriggerDamageBoostClientRpc()
     {
         StartCoroutine(EventDamageBoost());
@@ -352,7 +352,7 @@ public class BossController : Entity
 
     #region 2- DISAPPEAR EVENT
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, RequireOwnership = false)]
 
     public void TriggerDissapearServerRpc()
     {
@@ -360,7 +360,7 @@ public class BossController : Entity
         TriggerDisappearClientRpc();
     }
 
-    [ClientRpc]
+    [Rpc(SendTo.ClientsAndHost)]
     private void TriggerDisappearClientRpc()
     {
         StartCoroutine(EventDissapear());
@@ -446,7 +446,7 @@ public class BossController : Entity
 
     #region 3- POWER UPS EVENT
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, RequireOwnership = false)]
     public void RequestPowerUpsServerRpc()
     {
         Debug.Log("Solicitud de power-ups recibida desde un cliente.");
@@ -481,14 +481,14 @@ public class BossController : Entity
 
     #region 4.1 - CLIMATE CHANGES (STORM) EVENT
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, RequireOwnership = false)]
     public void TriggerStormServerRpc()
     {
         Debug.Log("Evento de tormenta activado por un cliente.");
         StartCoroutine(EventStorm());
     }
 
-    [ClientRpc]
+    [Rpc(SendTo.ClientsAndHost)]
     private void SpawnLightningAtPositionClientRpc(Vector3 position)
     {
         if (_lightningPrefab != null)
@@ -532,7 +532,7 @@ public class BossController : Entity
 
     #region 4.2 - CLIMATE CHANGES (WIND) EVENT
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, RequireOwnership = false)]
     public void TriggerWindEventServerRpc()
     {
         StartCoroutine(EventWind());
@@ -577,7 +577,7 @@ public class BossController : Entity
 
     #region 4.2 - CLIMATE CHANGES (BLOOD) EVENT
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, RequireOwnership = false)]
     public void TriggerBloodEventServerRpc()
     {
         // 1. El Servidor inicia la curación.
@@ -587,7 +587,7 @@ public class BossController : Entity
         TriggerBloodEventClientRpc();
     }
 
-    [ClientRpc]
+    [Rpc(SendTo.ClientsAndHost)]
     private void TriggerBloodEventClientRpc()
     {
         // Cada cliente inicia su corrutina local de lluvia de sangre.
@@ -620,7 +620,7 @@ public class BossController : Entity
 
     #region 5- LOW GRAVITY EVENT
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, RequireOwnership = false)]
     public void TriggerLowGravityServerRpc()
     {
         Debug.Log("Evento de baja gravedad activado por un cliente.");
@@ -637,14 +637,14 @@ public class BossController : Entity
     }
 
 
-    [ClientRpc]
+    [Rpc(SendTo.ClientsAndHost)]
     private void SetGravityClientRpc(Vector3 newGravity)
     {
         Physics.gravity = newGravity;
     }
 
-    [ClientRpc]
-    private void SetPlayerJumpForceClientRpc(float newJumpForce, ClientRpcParams clientRpcParams = default)
+    [Rpc(SendTo.ClientsAndHost, AllowTargetOverride = true)]
+    private void SetPlayerJumpForceClientRpc(float newJumpForce, RpcParams rpcParams = default)
     {
         var playerController = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerController>();
         if (playerController != null)
@@ -684,11 +684,11 @@ public class BossController : Entity
             var networkObject = player.GetComponent<NetworkObject>();
             if (networkObject != null)
             {
-                var clientRpcParams = new ClientRpcParams
+                var rpcParams = new RpcSendParams
                 {
-                    Send = new ClientRpcSendParams { TargetClientIds = new[] { networkObject.OwnerClientId } }
+                    Target = RpcTarget.Single(networkObject.OwnerClientId, RpcTargetUse.Temp)
                 };
-                SetPlayerJumpForceClientRpc(newJumpForce, clientRpcParams);
+                SetPlayerJumpForceClientRpc(newJumpForce, rpcParams);
             }
         }
     }
@@ -705,11 +705,11 @@ public class BossController : Entity
             var networkObject = player.GetComponent<NetworkObject>();
             if (networkObject != null)
             {
-                var clientRpcParams = new ClientRpcParams
+                var rpcParams = new RpcParams
                 {
-                    Send = new ClientRpcSendParams { TargetClientIds = new[] { networkObject.OwnerClientId } }
+                    Send = new RpcSendParams { Target = RpcTarget.Single(networkObject.OwnerClientId, RpcTargetUse.Temp) }
                 };
-                SetPlayerJumpForceClientRpc(originalJumpForce, clientRpcParams);
+                SetPlayerJumpForceClientRpc(originalJumpForce, rpcParams);
             }
         }
     }
@@ -737,14 +737,14 @@ public class BossController : Entity
 
     #region 6- SWAP POSITIONS EVENT
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, RequireOwnership = false)]
     public void TriggerSwapPositionsServerRpc()
     {
         Debug.Log("Evento de intercambio de posiciones activado por un cliente.");
         TriggerSwapPositionsClientRpc();
     }
 
-    [ClientRpc]
+    [Rpc(SendTo.ClientsAndHost)]
     private void TriggerSwapPositionsClientRpc()
     {
         SwapPositionsRandomly();

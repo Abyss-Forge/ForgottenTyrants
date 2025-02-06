@@ -74,7 +74,7 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
     }
     #endregion
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
     private void SpawnProjectileServerRpc()
     {
         Vector3 position = SpawnPoint.position;

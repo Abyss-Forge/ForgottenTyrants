@@ -25,7 +25,7 @@ public class GameController : NetworkBehaviour
 
     //private List<Player> _allies = new List<Player>();
     //private List<Player> _enemies = new List<Player>();
-    private NetworkList<SyncedPlayerData> _syncedPlayers = new NetworkList<SyncedPlayerData>();
+    private NetworkList<SyncedPlayerData> _syncedPlayers;
     private NetworkVariable<float> currentTime = new NetworkVariable<float>(
         0f,
         NetworkVariableReadPermission.Everyone,
@@ -43,23 +43,9 @@ public class GameController : NetworkBehaviour
         NetworkVariableWritePermission.Server
     );
 
-    private void Start()
+    void Awake()
     {
-        if (IsClient)
-        {
-            _syncedPlayers.OnListChanged += OnSyncedPlayersChanged;
-        }
-    }
-    public override void OnDestroy()
-    {
-        if (IsClient)
-        {
-            _syncedPlayers.OnListChanged -= OnSyncedPlayersChanged;
-        }
-    }
-    private void OnSyncedPlayersChanged(NetworkListEvent<SyncedPlayerData> changeEvent)
-    {
-        PopulateContainer();
+        _syncedPlayers = new();
     }
 
     public override void OnNetworkSpawn()
@@ -86,9 +72,26 @@ public class GameController : NetworkBehaviour
             BlockAnyMovementClientRpc();
             PopulateContainerClientRpc();
         }
+        if (IsClient)
+        {
+            _syncedPlayers.OnListChanged += OnSyncedPlayersChanged;
+        }
     }
 
-    private void Update()
+    public override void OnNetworkDespawn()
+    {
+        if (IsClient)
+        {
+            _syncedPlayers.OnListChanged -= OnSyncedPlayersChanged;
+        }
+    }
+
+    private void OnSyncedPlayersChanged(NetworkListEvent<SyncedPlayerData> changeEvent)
+    {
+        PopulateContainer();
+    }
+
+    void Update()
     {
         TimerClock();
         GameStartingAnimation();
@@ -111,13 +114,13 @@ public class GameController : NetworkBehaviour
         EventBus<PlayerMovementEvent>.Raise(new PlayerMovementEvent { Activate = false });
     }
 
-    [ClientRpc]
+    [Rpc(SendTo.ClientsAndHost)]
     void BlockAnyMovementClientRpc()
     {
         StartCoroutine(BlockAnyMovement());
     }
 
-    [ClientRpc]
+    [Rpc(SendTo.ClientsAndHost)]
     void PopulateContainerClientRpc()
     {
         StartCoroutine(PopulateContainer());
@@ -144,7 +147,7 @@ public class GameController : NetworkBehaviour
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, RequireOwnership = false)]
     public void UpdatePlayerHealthServerRpc(ulong clientId, float newHealth)
     {
         for (int i = 0; i < _syncedPlayers.Count; i++)
@@ -197,7 +200,7 @@ public class GameController : NetworkBehaviour
         slider.value = targetValue;
     }
 
-    void TimerClock()
+    private void TimerClock()
     {
         // Solo el Servidor actualiza la cuenta regresiva
         if (IsServer && countingDown.Value)
@@ -217,7 +220,7 @@ public class GameController : NetworkBehaviour
         _timer.text = SecondsToTimeString(currentTime.Value);
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, RequireOwnership = false)]
     private void StartGameServerRpc()
     {
         gameStarted.Value = true;
@@ -238,19 +241,19 @@ public class GameController : NetworkBehaviour
         }
     }*/
 
-    void FinishGame()
+    private void FinishGame()
     {
         currentTime.Value = 0f;
         countingDown.Value = false;
     }
 
-    [ClientRpc]
+    [Rpc(SendTo.ClientsAndHost)]
     private void HideStartingTextClientRpc()
     {
         StartCoroutine(HideStartingText());
     }
 
-    [ClientRpc]
+    [Rpc(SendTo.ClientsAndHost)]
     public void ActivateMovementPlayersClientRpc()
     {
         EventBus<PlayerMovementEvent>.Raise(new PlayerMovementEvent { Activate = true });

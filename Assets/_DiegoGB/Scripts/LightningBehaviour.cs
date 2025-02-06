@@ -45,7 +45,7 @@ public class LightningBehaviour : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
+    [Rpc(SendTo.ClientsAndHost)]
     private void UpdateLineRendererClientRpc(Vector3[] points)
     {
         if (_line == null) return;
@@ -69,7 +69,7 @@ public class LightningBehaviour : NetworkBehaviour
         return new Vector3(x + terrainPosition.x, y + terrainPosition.y, z + terrainPosition.z);
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Server)]
     private void SpawnMarkerOnTerrainServerRpc(Vector3 position)
     {
         // Solo el servidor spawnea las esferas
@@ -181,7 +181,7 @@ public class LightningBehaviour : NetworkBehaviour
         DestroyServerRpc();
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Server)]
     private void DestroyServerRpc()
     {
         if (IsServer)

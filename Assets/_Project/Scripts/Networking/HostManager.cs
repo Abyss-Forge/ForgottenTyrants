@@ -62,7 +62,11 @@ public class HostManager : Singleton<HostManager>
             if (!ClientDataDict.TryGetValue(id, out ClientData clientData))
             {
                 // Si no existe, se crea y se agrega
-                clientData = new ClientData(id, Race, Class, Armor, Trinket);
+                clientData = new ClientData(id);
+                clientData.Race = Race;
+                clientData.Class = Class;
+                clientData.Armor = Armor;
+                clientData.Trinket = Trinket;
                 ClientDataDict[id] = clientData;
                 Debug.Log("la seleccion de clase ES MENTIRA");
             }

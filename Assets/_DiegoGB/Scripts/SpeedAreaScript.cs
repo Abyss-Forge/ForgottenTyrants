@@ -35,7 +35,7 @@ public class SpeedAreaScript : NetworkBehaviour
         _activeBoostsGlobal.Remove(0);//playerController.OwnerClientId
     }
 
-    [ClientRpc]
+    [Rpc(SendTo.ClientsAndHost)]
     private void SetSpeedClientRpc(ulong targetClientId, float speedDelta)
     {
         // Si este no es el cliente objetivo, no hacemos nada
