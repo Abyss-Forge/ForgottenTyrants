@@ -653,7 +653,6 @@ public class BossController : Entity
         }
     }
 
-
     private IEnumerator RestoreGravityAfterDuration()
     {
         yield return new WaitForSeconds(_gravityEventEffectDuration);

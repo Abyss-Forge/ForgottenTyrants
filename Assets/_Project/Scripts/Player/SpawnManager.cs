@@ -1,53 +1,39 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using Utils.Extensions;
 
 public class SpawnManager : NetworkSingleton<SpawnManager>
 {
-    public void SpawnProjectile(string prefabAddress, Vector3 position, Quaternion rotation, Vector3 scale, Vector3 launchVelocity, List<AbilityInfoTest> infoList)
+
+    public void SpawnProjectile(GameObject prefab, Vector3 position, Quaternion rotation, Vector3 scale, Vector3 launchVelocity, List<AbilityInfoTest> infoList)
     {
-        SpawnProjectile_ServerRpc(prefabAddress, position, rotation, scale, launchVelocity, infoList);
+        SpawnProjectile_ServerRpc(prefab.name, position, rotation, scale, launchVelocity, infoList);
     }
 
-    [Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
-    private void SpawnProjectile_ServerRpc(string prefabAddress, Vector3 position, Quaternion rotation, Vector3 scale, Vector3 launchVelocity, List<AbilityInfoTest> infoList)
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    private void SpawnProjectile_ServerRpc(string prefabId, Vector3 position, Quaternion rotation, Vector3 scale, Vector3 launchVelocity, List<AbilityInfoTest> infoList)
     {
-        // Usamos Addressables para cargar el prefab
-        LoadPrefabAsync(prefabAddress, position, rotation, scale, launchVelocity, infoList);
-    }
 
-    private void LoadPrefabAsync(string prefabAddress, Vector3 position, Quaternion rotation, Vector3 scale, Vector3 launchVelocity, List<AbilityInfoTest> infoList)
-    {
-        // Cargamos el prefab de forma asíncrona usando su "Address"
-        AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(prefabAddress);
-
-        handle.Completed += (op) =>
+        GameObject prefab = null;
+        foreach (var list in NetworkManager.Singleton.NetworkConfig.Prefabs.NetworkPrefabsLists)
         {
-            if (op.Status == AsyncOperationStatus.Succeeded)
-            {
-                GameObject prefab = op.Result;
-                Debug.Log(prefab.name);
+            prefab = list.PrefabList.FirstOrDefault(x => x.Prefab.name == prefabId)?.Prefab;
+            if (prefab != null) break;
+        }
+        if (prefab == null) return;
 
-                // Instanciamos el proyectil
-                Projectile projectile = ExtensionMethods.InstantiateAndGet<Projectile>(prefab, position, rotation, scale, transform, true);
-                projectile.gameObject.GetComponent<NetworkObject>().Spawn(true);
+        Projectile projectile = ExtensionMethods.InstantiateAndGet<Projectile>(prefab, position, rotation, scale, transform, true);
+        projectile.gameObject.GetComponent<NetworkObject>().Spawn(true);
 
-                foreach (var item in infoList)
-                {
-                    projectile.InfoContainer.Add(item);
-                }
+        foreach (var item in infoList)
+        {
+            projectile.InfoContainer.Add(item);
+        }
 
-                Rigidbody rb = projectile.gameObject.GetComponent<Rigidbody>();
-                rb.AddForce(launchVelocity * rb.mass, ForceMode.Impulse);
-            }
-            else
-            {
-                Debug.LogError("No se pudo cargar el prefab desde Addressables.");
-            }
-        };
+        Rigidbody rb = projectile.gameObject.GetComponent<Rigidbody>();
+        rb.AddForce(launchVelocity * rb.mass, ForceMode.Impulse);
     }
+
 }

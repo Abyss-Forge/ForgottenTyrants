@@ -11,7 +11,7 @@ public enum EAbilityState
     READY, PREVIEW, ACTIVE, COOLDOWN, LOCKED
 }
 
-public abstract class AbilityStateMachine : NetworkBehaviour, IAbilityBase
+public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
 {
     protected List<AbilityInfoTest> _infoList = new();
 
@@ -70,6 +70,8 @@ public abstract class AbilityStateMachine : NetworkBehaviour, IAbilityBase
 
     protected virtual void CalculateInfo()
     {
+        _infoList.Clear();
+
         ServiceLocator.Global.Get(out PlayerInfo player);
         ServiceLocator.Global.Get(out BuffableBehaviour buffable);
 
