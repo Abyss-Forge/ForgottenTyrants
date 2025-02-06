@@ -15,7 +15,7 @@ MonoBehaviour:
   <UID>k__BackingField: 8337999094681174016
   <DisplayName>k__BackingField: 
   <Stats>k__BackingField:
-    _health: 0
+    _health: 100
     _physicalDamage: 0
     _magicalDamage: 0
     _physicalDefense: 0

@@ -8,6 +8,8 @@ using Unity.Netcode;
 using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.Netcode.Transports.UTP;
+using Systems.ServiceLocator;
 
 public class GameController : NetworkBehaviour
 {
@@ -18,10 +20,17 @@ public class GameController : NetworkBehaviour
     [SerializeField] private float _velocity = 1f;
     [SerializeField] private string _prepareTime = "00:30";
     [SerializeField] private string _gameTime = "15:00";
+    [SerializeField] private Slider _playerHealth;
+    [SerializeField] private Slider _bossHealth;
 
     [SerializeField] private Transform _alliesContainer; // Contenedor para aliados
     [SerializeField] private Transform _enemiesContainer; // Contenedor para enemigos
     [SerializeField] private GameObject _characterFramePrefab; // Prefab del cuadro
+
+    [SerializeField] private TextMeshProUGUI _fpsStats;
+    [SerializeField] private TextMeshProUGUI _pingStats;
+    private float _updateInterval = 1f; // Actualiza cada 0.5 segundos
+    private float _deltaTime = 0.0f;
 
     //private List<Player> _allies = new List<Player>();
     //private List<Player> _enemies = new List<Player>();
@@ -43,9 +52,17 @@ public class GameController : NetworkBehaviour
         NetworkVariableWritePermission.Server
     );
 
+    void Start()
+    {
+        InvokeRepeating(nameof(ShowFps), 1f, _updateInterval);
+        InvokeRepeating(nameof(ShowPing), 1f, _updateInterval);
+        ShowPlayerHealth();
+        ShowBossHealth();
+    }
+
     void Awake()
     {
-        _syncedPlayers = new();
+        _syncedPlayers = new NetworkList<SyncedPlayerData>();
     }
 
     public override void OnNetworkSpawn()
@@ -56,27 +73,97 @@ public class GameController : NetworkBehaviour
             countingDown.Value = true;
             gameStarted.Value = false;
 
+            CreateSyncList();
             // Poblar la lista de jugadores al inicio
-            foreach (var kvp in HostManager.Instance.ClientDataDict)
-            {
-                var clientId = kvp.Key;
-                var clientData = kvp.Value;
 
-                SyncedPlayerData playerData = new SyncedPlayerData
-                {
-                    ClientId = clientId,
-                    TeamId = clientData.TeamId,
-                };
-                _syncedPlayers.Add(playerData);
-            }
             BlockAnyMovementClientRpc();
             PopulateContainerClientRpc();
         }
         if (IsClient)
         {
+            //UpdateClientUIHealth_ClientRpc();
             _syncedPlayers.OnListChanged += OnSyncedPlayersChanged;
+            UpdateMyHealthServerRpc();
         }
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    void UpdateMyHealthServerRpc(ServerRpcParams rpcParams = default)
+    {
+        ulong senderClientId = rpcParams.Receive.SenderClientId;
+
+        ServiceLocator.Global.Get(out DamageableBehaviour damage);
+        // Aquí el servidor actualizará la salud del jugador en la NetworkList.
+        // Usamos el LocalClientId (o el id del jugador que envía) para identificar a quién actualizar.
+        for (int i = 0; i < _syncedPlayers.Count; i++)
+        {
+            if (_syncedPlayers[i].ClientId == senderClientId)
+            {
+                SyncedPlayerData data = _syncedPlayers[i];
+                data.Health = damage.Health;
+                _syncedPlayers[i] = data;
+                Debug.Log($"Actualizada la salud del cliente {senderClientId} a {damage.Health}");
+                break;
+            }
+        }
+    }
+
+    void CreateSyncList()
+    {
+        foreach (var kvp in HostManager.Instance.ClientDataDict)
+        {
+            var clientId = kvp.Key;
+            var clientData = kvp.Value;
+
+            SyncedPlayerData playerData = new SyncedPlayerData
+            {
+                ClientId = clientId,
+                TeamId = clientData.TeamId,
+                Health = 85
+            };
+            _syncedPlayers.Add(playerData);
+        }
+    }
+
+    /* [Rpc(SendTo.Server, RequireOwnership = false)]
+    void SendClientHealth_ServerRpc(ulong playerId, int health)
+    {
+        DataSync(playerId, health);
+    }
+
+    void ClientHealthUpdate()
+    {
+        ServiceLocator.Global.Get(out DamageableBehaviour damage);
+        ServiceLocator.Global.Get(out PlayerInfo player);
+        Debug.Log("TODO");
+        SendClientHealth_ServerRpc(player.ClientData.ClientId, damage.Health);
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    void UpdateClientUIHealth_ClientRpc()
+    {
+        ActivateClientHealthUpdate();
+    }
+
+    IEnumerator ActivateClientHealthUpdate()
+    {
+        yield return new WaitForSeconds(.5f);
+        ClientHealthUpdate();
+    }
+
+    void DataSync(ulong playerId, int health)
+    {
+        for (int i = 0; i < _syncedPlayers.Count; i++)
+        {
+            if (_syncedPlayers[i].ClientId == playerId)
+            {
+                var x = _syncedPlayers[i];
+                x.Health = health;
+                _syncedPlayers[i] = x;
+            }
+        }
+    } */
+
 
     public override void OnNetworkDespawn()
     {
@@ -95,18 +182,42 @@ public class GameController : NetworkBehaviour
     {
         TimerClock();
         GameStartingAnimation();
+        _deltaTime += (Time.unscaledDeltaTime - _deltaTime) * 0.1f;
     }
 
-    private void AddPlayerToSyncedList(ulong clientId, ClientData clientData)
+
+    void ShowFps()
     {
-        SyncedPlayerData playerData = new SyncedPlayerData
-        {
-            ClientId = clientId,
-            TeamId = clientData.TeamId
-
-        };
-        _syncedPlayers.Add(playerData);
+        float fps = 1.0f / _deltaTime;
+        _fpsStats.text = $"FPS: {Mathf.Ceil(fps)}";
     }
+
+    void ShowPing()
+    {
+        if (NetworkManager.Singleton.IsConnectedClient)
+        {
+            var transport = NetworkManager.Singleton.NetworkConfig.NetworkTransport as UnityTransport;
+            if (transport != null)
+            {
+                float ping = transport.GetCurrentRtt(0); // Obtener RTT en ms (NetworkManager.Singleton.NetworkConfig.NetworkTransport.ServerClientId)
+                _pingStats.text = $"Ping: {Mathf.Round(ping)} ms";
+            }
+            else
+            {
+                _pingStats.text = "Ping: N/A";
+            }
+        }
+    }
+
+    /*    private void AddPlayerToSyncedList(ulong clientId, ClientData clientData)
+       {
+           SyncedPlayerData playerData = new SyncedPlayerData
+           {
+               ClientId = clientId,
+               TeamId = clientData.TeamId,
+           };
+           _syncedPlayers.Add(playerData);
+       } */
 
     IEnumerator BlockAnyMovement()
     {
@@ -130,6 +241,11 @@ public class GameController : NetworkBehaviour
     {
         yield return new WaitForSeconds(.5f);
 
+        foreach (Transform child in _alliesContainer)
+            Destroy(child.gameObject);
+        foreach (Transform child in _enemiesContainer)
+            Destroy(child.gameObject);
+
         //List<Player> players = FindObjectsByType<Player>(FindObjectsSortMode.None).ToList();
 
         // Itera sobre la lista sincronizada
@@ -140,6 +256,9 @@ public class GameController : NetworkBehaviour
             // Instancia un nuevo cuadro
             GameObject frame = Instantiate(_characterFramePrefab, container);
 
+            Slider healthSlider = frame.transform.Find("Player health")?.GetComponent<Slider>();
+            healthSlider.value = playerData.Health;
+
             // Asignar los datos al cuadro
             //frame.transform.Find("CharacterImage").GetComponent<Image>().sprite = GetCharacterSprite(clientData.CharacterId);
             //frame.transform.Find("HealthSlider").GetComponent<Slider>().value = clientData.Health;
@@ -148,7 +267,7 @@ public class GameController : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    public void UpdatePlayerHealthServerRpc(ulong clientId, float newHealth)
+    public void UpdatePlayerHealthServerRpc(ulong clientId)
     {
         for (int i = 0; i < _syncedPlayers.Count; i++)
         {
@@ -160,6 +279,26 @@ public class GameController : NetworkBehaviour
                 break;
             }
         }
+    }
+
+    void ShowPlayerHealth()
+    {
+        ServiceLocator.Global.Get(out DamageableBehaviour damage);
+        _playerHealth.value = damage.Health;
+
+        //ServiceLocator.Global.Get(out PlayerInfo player);
+
+        //player.ClientData.ClientId
+    }
+
+    void ShowBossHealth()
+    {
+        float health = FindObjectOfType<BossController>().GetComponent<BossController>().CurrentHp;
+        _bossHealth.value = health;
+
+        //ServiceLocator.Global.Get(out PlayerInfo player);
+
+        //player.ClientData.ClientId
     }
 
     /*foreach (var player in players)
@@ -317,14 +456,14 @@ public struct SyncedPlayerData : INetworkSerializable, IEquatable<SyncedPlayerDa
 {
     public ulong ClientId;
     public int TeamId; // Team (0: Allies, 1: Enemies)
-    //public float Health; // Player's health (0 to 1)
+    public float Health;
     //public int CharacterId; // ID for the character's sprite
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref ClientId);
         serializer.SerializeValue(ref TeamId);
-        //serializer.SerializeValue(ref Health);
+        serializer.SerializeValue(ref Health);
         ///serializer.SerializeValue(ref CharacterId);
     }
 
@@ -332,8 +471,8 @@ public struct SyncedPlayerData : INetworkSerializable, IEquatable<SyncedPlayerDa
     public bool Equals(SyncedPlayerData other)
     {
         return ClientId == other.ClientId &&
-               TeamId == other.TeamId;
-        //Health == other.Health &&
+               TeamId == other.TeamId &&
+         Mathf.Approximately(Health, other.Health);
         //CharacterId == other.CharacterId;
     }
 
@@ -345,6 +484,6 @@ public struct SyncedPlayerData : INetworkSerializable, IEquatable<SyncedPlayerDa
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(ClientId, TeamId);
+        return HashCode.Combine(ClientId, TeamId, Health);
     }
 }

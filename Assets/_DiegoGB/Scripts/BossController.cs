@@ -79,7 +79,7 @@ public class BossController : Entity
             // Solo el servidor (o el host, si eres host) inicializa la lógica
             // si quieres que sea autoritativa. Si NO, puedes ponerlo en Start() normal.
             //InitializeBehaviorTree();
-            CurrentHp = BaseStats.Health;
+            //CurrentHp = BaseStats.Health;
 
             GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
             foreach (GameObject obj in playerObjects)
@@ -101,7 +101,7 @@ public class BossController : Entity
     void Start()
     {
         InitializeBehaviorTree();
-        CurrentHp = BaseStats.Health;
+        //CurrentHp = BaseStats.Health;
         _decalProjector.fadeFactor = 0;
         _decalProjector.gameObject.transform.position = new Vector3(this.gameObject.transform.position.x, _decalProjector.transform.position.y, this.gameObject.transform.position.z);
 
