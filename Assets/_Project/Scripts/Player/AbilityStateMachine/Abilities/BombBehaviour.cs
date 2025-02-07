@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Systems.FSM;
+using UnityEngine;
 
 public class BombBehaviour : ExplosiveProjectile
 {
@@ -32,52 +32,39 @@ public class BombBehaviour : ExplosiveProjectile
 
     protected virtual void InitializeStates()
     {
-        _fsm.Add(new BombLiveState(this));
-        _fsm.Add(new BombExplodingState(this));
-        _fsm.Add(new BombDestroyedState(this));
+        _fsm.Add(new ProjectileLiveState(this));
+        _fsm.Add(new ProjectileExplodingState(this));
+        _fsm.Add(new ProjectileDestroyedState(this));
     }
 
     #endregion
 
-    private class BombLiveState : State<EProjectileState>
+    private class ProjectileLiveState : State<EProjectileState>
     {
-        readonly BombBehaviour _bomb;
-        public BombLiveState(BombBehaviour bomb) : base(EProjectileState.LIVE) => _bomb = bomb;
+        readonly Projectile _projectile;
+        public ProjectileLiveState(Projectile projectile) : base(EProjectileState.LIVE) => _projectile = projectile;
 
         public override void Enter()
         {
             base.Enter();
 
-            _bomb.gameObject.SetActive(true);
+            _projectile.gameObject.SetActive(true);
         }
     }
 
-    private class BombExplodingState : State<EProjectileState>
+    private class ProjectileExplodingState : State<EProjectileState>
     {
-        readonly BombBehaviour _bomb;
-        public BombExplodingState(BombBehaviour bomb) : base(EProjectileState.HIT) => _bomb = bomb;
-
-        void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(_bomb.transform.position, _bomb._explosionRadius);
-        }
+        readonly Projectile _projectile;
+        public ProjectileExplodingState(Projectile projectile) : base(EProjectileState.HIT) => _projectile = projectile;
 
 
     }
 
-    private class BombDestroyedState : State<EProjectileState>
+    private class ProjectileDestroyedState : State<EProjectileState>
     {
-        readonly BombBehaviour _bomb;
-        public BombDestroyedState(BombBehaviour bomb) : base(EProjectileState.DESTROYED) => _bomb = bomb;
+        readonly Projectile _projectile;
+        public ProjectileDestroyedState(Projectile projectile) : base(EProjectileState.DESTROYED) => _projectile = projectile;
 
-        public override void Enter()
-        {
-            base.Enter();
-
-            //Destroy(_bomb.gameObject);
-            _bomb.gameObject.SetActive(false);
-        }
     }
 
 }

@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Threading.Tasks;
 using ForgottenTyrants;
+using Systems.GameManagers;
 using Unity.Netcode;
+using UnityEngine;
 using Utils.Extensions;
 
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider), typeof(InfoContainer))]
@@ -11,7 +13,6 @@ public abstract class Projectile : NetworkBehaviour
 {
     protected Rigidbody _rigidbody { get; set; }
     protected CapsuleCollider _collider { get; set; }
-
     public InfoContainer InfoContainer { get; set; }
 
     public enum EProjectileState
@@ -49,7 +50,6 @@ public abstract class Projectile : NetworkBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _collider = GetComponent<CapsuleCollider>();
-
         InfoContainer = GetComponent<InfoContainer>();
 
         _lifetimeTimer = _lifetime;
@@ -107,13 +107,14 @@ public abstract class Projectile : NetworkBehaviour
         }
     }
 
-    protected virtual void OnHit()
+    protected virtual async void OnHit()
     {
         //vfx & sound
         _rigidbody.isKinematic = true;
+        _collider.enabled = false;
         _modelRoot.gameObject.SetActive(false);
-        StartCoroutine(_vfx.PlayAndDestroy());
-        // Destroy(gameObject);
+        await CoroutineManager.Instance.StartTask(_vfx.PlayAndDestroy());
+        Destroy(gameObject);
     }
 
     protected virtual void OnLifetimeEnd()
