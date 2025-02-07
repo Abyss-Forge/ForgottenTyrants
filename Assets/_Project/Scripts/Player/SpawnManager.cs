@@ -15,7 +15,6 @@ public class SpawnManager : NetworkSingleton<SpawnManager>
     [Rpc(SendTo.Server, RequireOwnership = false)]
     private void SpawnProjectile_ServerRpc(string prefabId, Vector3 position, Quaternion rotation, Vector3 scale, Vector3 launchVelocity, List<AbilityInfoTest> infoList)
     {
-
         GameObject prefab = null;
         foreach (var list in NetworkManager.Singleton.NetworkConfig.Prefabs.NetworkPrefabsLists)
         {

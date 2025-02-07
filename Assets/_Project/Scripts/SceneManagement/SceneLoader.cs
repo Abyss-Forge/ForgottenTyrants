@@ -35,7 +35,6 @@ namespace Systems.SceneManagement
             EventBus<LoadSceneEvent>.Deregister(_sceneEventBinding);
         }
 
-
         private async void HandleSceneEvent(LoadSceneEvent @event)
         {
             if (_sceneGroups.IsInRange(@event.SceneGroupToLoad))

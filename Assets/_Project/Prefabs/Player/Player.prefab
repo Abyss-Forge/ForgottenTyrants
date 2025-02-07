@@ -3024,6 +3024,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _characterController: {fileID: 6373535343249460430}
   _camera: {fileID: 4930676258958694151}
+  _animator: {fileID: 7673370260004093441}
+  _trail: {fileID: 5608466173938518035}
   _dashFovCurve:
     serializedVersion: 2
     m_Curve:
@@ -3057,7 +3059,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 0
     m_RotationOrder: 4
-  _trail: {fileID: 5608466173938518035}
   _lookSensitivityX: 0.1
   _walkSpeed: 5
   _gravityMultiplier: 1

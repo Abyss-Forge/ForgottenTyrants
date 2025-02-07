@@ -16,17 +16,17 @@ namespace Utils.Extensions
         /// <returns>True if the index is within the bounds of the array; otherwise, false.</returns>
         public static bool IsInRange<T>(this T[] array, int index) => index >= 0 && index < array.Length;
 
-        public static void Enable(this GameObject gameObject) => gameObject.SetActive(true);
-        public static void Disable(this GameObject gameObject) => gameObject.SetActive(false);
+        public static void Enable(this GameObject go) => go.SetActive(true);
+        public static void Disable(this GameObject go) => go.SetActive(false);
+        public static void Destroy(this GameObject go) => MonoBehaviour.Destroy(go);
+        public static void Unparent(this Transform tr) => tr.SetParent(null);
 
-        public static void Unparent(this Transform transform) => transform.SetParent(null);
-
-        public static void AlignToGround(this Transform transform)
+        public static void AlignToGround(this Transform tr)
         {
-            Vector3 position = transform.position;
-            float halfHeight = transform.localScale.y / 2;
+            Vector3 position = tr.position;
+            float halfHeight = tr.localScale.y / 2;
             position.y = halfHeight;
-            transform.position = position;
+            tr.position = position;
         }
 
         public static void CopyTransform(this Transform target, Transform source)
@@ -35,7 +35,6 @@ namespace Utils.Extensions
             target.rotation = source.rotation;
             target.localScale = source.localScale;
         }
-
 
         /// <summary>
         /// Instantiates a prefab at the specified position and rotation, optionally under a parent transform,

@@ -505,7 +505,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05c9623da50ac9e41822e69ab126cafd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pinga: {fileID: 256056090793051824, guid: 73ecb5544a02d3249a5369c8778b0ec4, type: 3}
 --- !u!4 &2130916452
 Transform:
   m_ObjectHideFlags: 0
@@ -1039,6 +1038,6 @@ SceneRoots:
   - {fileID: 8950656888486211936}
   - {fileID: 9024595479823716806}
   - {fileID: 7476178347008298467}
+  - {fileID: 2130916452}
   - {fileID: 1930227201}
   - {fileID: 1330187121}
-  - {fileID: 2130916452}

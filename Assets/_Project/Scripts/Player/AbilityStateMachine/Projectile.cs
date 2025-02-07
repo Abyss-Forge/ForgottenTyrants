@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ForgottenTyrants;
 using Unity.Netcode;
+using Utils.Extensions;
 
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider), typeof(InfoContainer))]
 public abstract class Projectile : NetworkBehaviour
@@ -17,6 +18,9 @@ public abstract class Projectile : NetworkBehaviour
     {
         LIVE, HIT, DESTROYED
     }
+
+    [SerializeField] private Transform _modelRoot;
+    [SerializeField] private ParticleSystem _vfx;
 
     [SerializeField] protected float _lifetime = 5, _gravityMultiplier = 1;
 
@@ -54,14 +58,13 @@ public abstract class Projectile : NetworkBehaviour
 
     protected virtual void Update()
     {
-        if (_lifetimeTimer > 0) _lifetimeTimer -= Time.deltaTime;
-        else OnLifetimeEnd();
+        CheckLifetime();
     }
 
     protected virtual void FixedUpdate()
     {
-        if (_rigidbody.useGravity) _rigidbody.AddForce(Physics.gravity * (_gravityMultiplier - 1f), ForceMode.Acceleration);
-    }   // Al multiplicador se le resta 1 porque  por defecto la gravedad ya se aplica una vez al tener rigidbody
+        if (_rigidbody.useGravity) ApplyGravity();
+    }
 
     protected virtual void OnCollisionEnter(Collision other)
     {
@@ -87,12 +90,30 @@ public abstract class Projectile : NetworkBehaviour
         OnHit();
     }
 
+    private void ApplyGravity()
+    {
+        _rigidbody.AddForce(Physics.gravity * (_gravityMultiplier - 1f), ForceMode.Acceleration);
+    }    // Al multiplicador se le resta 1 porque  por defecto la gravedad ya se aplica una vez al tener rigidbodys
+
+    private void CheckLifetime()
+    {
+        if (_lifetimeTimer > 0)
+        {
+            _lifetimeTimer -= Time.deltaTime;
+        }
+        else
+        {
+            OnLifetimeEnd();
+        }
+    }
 
     protected virtual void OnHit()
     {
         //vfx & sound
-        Debug.Log("Hit");
-        Destroy(gameObject);
+        _rigidbody.isKinematic = true;
+        _modelRoot.gameObject.SetActive(false);
+        StartCoroutine(_vfx.PlayAndDestroy());
+        // Destroy(gameObject);
     }
 
     protected virtual void OnLifetimeEnd()

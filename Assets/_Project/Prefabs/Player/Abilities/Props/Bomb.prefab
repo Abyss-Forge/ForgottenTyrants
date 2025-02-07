@@ -39,6 +39,7 @@ Transform:
   m_Children:
   - {fileID: 1615747081206092417}
   - {fileID: 8934251066705006728}
+  - {fileID: 930775704122378889}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5054681258302847932
@@ -53,7 +54,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3432303159
+  GlobalObjectIdHash: 4111737744
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -200,6 +201,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18f844aaace66cc49a1878061acb95af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _modelRoot: {fileID: 1615747081206092417}
+  _vfx: {fileID: 930775704108224457}
   _lifetime: 5
   _gravityMultiplier: 1
   _hasKnockback: 1
@@ -287,6 +290,75 @@ MonoBehaviour:
   nameOverride: Proximity Detector (Sphere Collider)
   tooltipOverride: 
   target: {fileID: 1920388880183465873}
+--- !u!1001 &930775704121987075
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3170630573036394075}
+    m_Modifications:
+    - target: {fileID: 100008, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7, type: 3}
+      propertyPath: m_Name
+      value: VFX
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7, type: 3}
+--- !u!198 &930775704108224457 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 19800010, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7,
+    type: 3}
+  m_PrefabInstance: {fileID: 930775704121987075}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &930775704122378889 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400010, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7,
+    type: 3}
+  m_PrefabInstance: {fileID: 930775704121987075}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1289982318833087850
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -349,6 +421,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Model
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7e61d1136f30d304d8805f7f8ddaf6d0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
