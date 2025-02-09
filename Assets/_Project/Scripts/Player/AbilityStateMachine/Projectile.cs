@@ -1,27 +1,26 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using ForgottenTyrants;
-using Systems.GameManagers;
+using Systems.FSM;
 using Unity.Netcode;
 using UnityEngine;
 using Utils.Extensions;
 
-[RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider), typeof(InfoContainer))]
+[RequireComponent(typeof(Rigidbody), typeof(Collider), typeof(InfoContainer))]
 public abstract class Projectile : NetworkBehaviour
 {
     protected Rigidbody _rigidbody { get; set; }
-    protected CapsuleCollider _collider { get; set; }
-    public InfoContainer InfoContainer { get; set; }
+    protected Collider _collider { get; set; }
+    public InfoContainer InfoContainer { get; protected set; }
 
     public enum EProjectileState
     {
-        LIVE, HIT, DESTROYED
+        LIVE, IMPACTING, DESTROYED
     }
 
-    [SerializeField] private Transform _modelRoot;
-    [SerializeField] private ParticleSystem _vfx;
+    [SerializeField] protected Transform _modelRoot;
+    [SerializeField] protected ParticleSystem _vfx;
+    [SerializeField] protected AudioSource _sfx;
 
     [SerializeField] protected float _lifetime = 5, _gravityMultiplier = 1;
 
@@ -34,45 +33,38 @@ public abstract class Projectile : NetworkBehaviour
     [SerializeField] protected float _damage = 100;
 
     [Header("Ricochet")]
-    [SerializeField] protected bool _canRicochet;
+    [SerializeField] protected bool _hasRicochet;
     [SerializeField] protected int _ricochets = 5;
     [SerializeField, Range(0, 90)] protected float _maxRicochetAngle = 45;
 
     protected float _lifetimeTimer;
     protected int _remainingRicochets;
 
-    public override void OnNetworkSpawn()
-    {
-        //Awake();
-    }
-
     protected virtual void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
-        _collider = GetComponent<CapsuleCollider>();
+        _collider = GetComponent<Collider>();
         InfoContainer = GetComponent<InfoContainer>();
 
         _lifetimeTimer = _lifetime;
         _remainingRicochets = _ricochets;
+
+        _fsm = new();
+        InitializeStates();
+        _fsm.TransitionTo(EProjectileState.LIVE);
     }
 
-    protected virtual void Update()
+    void OnCollisionEnter(Collision other)
     {
-        CheckLifetime();
-    }
-
-    protected virtual void FixedUpdate()
-    {
-        if (_rigidbody.useGravity) ApplyGravity();
-    }
-
-    protected virtual void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.CompareTag(Tag.Enemy))
+        if (_fsm.CurrentState is ProjectileLiveState)
         {
-            OnHit();
+            (_fsm.CurrentState as ProjectileLiveState)?.OnCollide(other);
         }
-        else if (_canRicochet && _remainingRicochets > 0)
+    }
+
+    protected virtual void OnCollide(Collision other)
+    {
+        if (!IsDirectHit(other.gameObject) && _hasRicochet && _remainingRicochets > 0)
         {
             Vector3 collisionNormal = other.contacts[0].normal;
             Vector3 incomingDirection = _rigidbody.velocity.normalized;
@@ -82,20 +74,38 @@ public abstract class Projectile : NetworkBehaviour
             {
                 _remainingRicochets--;
                 return;
+                // Si hubiese que rebotar a mano:
                 //  Vector3 reflectedDirection = Vector3.Reflect(incomingDirection, collisionNormal);
                 //  _rigidbody.velocity = reflectedDirection * _rigidbody.velocity.magnitude;
             }
         }
+        _fsm.TransitionTo(EProjectileState.IMPACTING);
+    }
 
-        OnHit();
+    protected virtual bool IsDirectHit(GameObject go)
+    {
+        return go.CompareTag(Tag.Player);
+    }
+
+    protected virtual async Task OnHit()
+    {
+        _rigidbody.isKinematic = true;
+        _collider.enabled = false;
+        _modelRoot.gameObject.SetActive(false);
+
+        Task sfx = _sfx.PlayAndAwaitFinish();
+        Task vfx = _vfx.PlayAndAwaitFinish();
+        await Task.WhenAll(vfx, sfx);
+
+        _fsm.TransitionTo(EProjectileState.DESTROYED);
     }
 
     private void ApplyGravity()
     {
-        _rigidbody.AddForce(Physics.gravity * (_gravityMultiplier - 1f), ForceMode.Acceleration);
+        if (_rigidbody.useGravity) _rigidbody.AddForce(Physics.gravity * (_gravityMultiplier - 1f), ForceMode.Acceleration);
     }    // Al multiplicador se le resta 1 porque  por defecto la gravedad ya se aplica una vez al tener rigidbodys
 
-    private void CheckLifetime()
+    private void CalculateLifetime()
     {
         if (_lifetimeTimer > 0)
         {
@@ -107,19 +117,83 @@ public abstract class Projectile : NetworkBehaviour
         }
     }
 
-    protected virtual async void OnHit()
-    {
-        //vfx & sound
-        _rigidbody.isKinematic = true;
-        _collider.enabled = false;
-        _modelRoot.gameObject.SetActive(false);
-        await CoroutineManager.Instance.StartTask(_vfx.PlayAndDestroy());
-        Destroy(gameObject);
-    }
-
     protected virtual void OnLifetimeEnd()
     {
-        OnHit();
+        _fsm.TransitionTo(EProjectileState.IMPACTING);
     }
 
+    #region State Machine
+
+    public FiniteStateMachine<EProjectileState> _fsm { get; private set; }
+
+    void Update() => _fsm.Update();
+    void FixedUpdate() => _fsm.FixedUpdate();
+    void LateUpdate() => _fsm.LateUpdate();
+
+    protected virtual void InitializeStates()
+    {
+        _fsm.Add(new ProjectileLiveState(this));
+        _fsm.Add(new ProjectileImpactingState(this));
+        _fsm.Add(new ProjectileDestroyedState(this));
+    }
+
+    protected class ProjectileLiveState : State<EProjectileState>
+    {
+        readonly Projectile _projectile;
+        public ProjectileLiveState(Projectile projectile) : base(EProjectileState.LIVE) => _projectile = projectile;
+
+        public override void Enter()
+        {
+            base.Enter();
+
+            _projectile.gameObject.SetActive(true);
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            _projectile.CalculateLifetime();
+        }
+
+        public override void FixedUpdate()
+        {
+            base.FixedUpdate();
+
+            _projectile.ApplyGravity();
+        }
+
+        public void OnCollide(Collision other)
+        {
+            _projectile.OnCollide(other);
+        }
+    }
+
+    protected class ProjectileImpactingState : State<EProjectileState>
+    {
+        readonly Projectile _projectile;
+        public ProjectileImpactingState(Projectile projectile) : base(EProjectileState.IMPACTING) => _projectile = projectile;
+
+        public override async void Enter()
+        {
+            base.Enter();
+
+            await _projectile.OnHit();
+        }
+    }
+
+    protected class ProjectileDestroyedState : State<EProjectileState>
+    {
+        readonly Projectile _projectile;
+        public ProjectileDestroyedState(Projectile projectile) : base(EProjectileState.DESTROYED) => _projectile = projectile;
+
+        public override void Enter()
+        {
+            base.Enter();
+
+            SpawnManager.Instance.Despawn(_projectile.gameObject);
+        }
+    }
+
+    #endregion
 }

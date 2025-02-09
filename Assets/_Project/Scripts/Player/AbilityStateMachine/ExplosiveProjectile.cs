@@ -1,65 +1,88 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using ForgottenTyrants;
 using System.Linq;
-using System.ComponentModel;
+using System.Threading.Tasks;
+using UnityEngine;
 
-[RequireComponent(typeof(SphereCollider))]
+[Serializable]
+public struct ExplosionData
+{
+    public float Radius;
+    public float PropagationTime;
+    [Tooltip("Used for speed, damage or knockback at a certain point of the explosion")]
+    public AnimationCurve Propagation;
+}
+
 public abstract class ExplosiveProjectile : Projectile, IDamageable
 {
     [Header("Explosive")]
-    [SerializeField] protected AnimationCurve _explosionAreaCurve;
-    [SerializeField] protected float _explosionRadius = 5;
+    [SerializeField] protected ExplosionData _explosion;
+    [SerializeField] protected bool _explodeOnContact, _explodeOnLifetimeEnd;
     [SerializeField] protected string[] _explosionAffectedTags; //TODO [Tag]
-    [SerializeField] protected bool _explodeOnLifetimeEnd;
 
     [Header("Proximity")]
-    [SerializeField] protected float _proximityExplosionDelay = 1;
+    [SerializeField] protected bool _isProximityEnabled;
+    [SerializeField] protected BodyPart _proximityDetector;
+    [SerializeField] protected float _detonationDelaySeconds = 1;
 
     [Header("Damageable")]
     [SerializeField] protected bool _isDamageable;
-    [SerializeField] public int Health { get; private set; } = 10;
+    [field: SerializeField] public int Health { get; protected set; } = 10;
     [SerializeField] protected bool _explodeOnDestroy;
 
-    protected GameObject _directHit;
-
-    void OnTriggerEnter(Collider other)
+    private void OnEnable()
     {
-        foreach (string tag in _explosionAffectedTags)
-        {
-            Debug.Log(tag);
-            if (other.gameObject.CompareTag(tag)) OnProximityTriggered();
-        }
+        if (_isProximityEnabled) _proximityDetector.OnTriggerEnterEvent += OnProximityTriggered;
     }
 
-    private void OnProximityTriggered()
+    private void OnDisable()
     {
-        Debug.Log("sdfsdfs");
-        //await Task.Delay((int)(_proximityExplosionDelay * 1000));
-        OnHit();
+        if (_isProximityEnabled) _proximityDetector.OnTriggerEnterEvent -= OnProximityTriggered;
     }
 
-    protected override void OnHit()
+    private async void OnProximityTriggered(Collider other)
     {
-        Explode();
-        base.OnHit();
+        if (_fsm.CurrentState is not ProjectileLiveState) return;
+
+        Debug.Log("proximity triggered");
+        await Task.Delay(TimeSpan.FromSeconds(_detonationDelaySeconds));
+        await OnHit();
     }
 
     protected override void OnLifetimeEnd()
     {
-        if (_explodeOnLifetimeEnd) Explode();
-        base.OnHit();
+        if (_explodeOnLifetimeEnd)
+        {
+            base.OnLifetimeEnd();
+        }
+        else
+        {
+            _fsm.TransitionTo(EProjectileState.DESTROYED);
+        }
     }
 
+    protected override bool IsDirectHit(GameObject go)
+    {
+        return base.IsDirectHit(go) && _explodeOnContact;
+    }
+
+    protected override async Task OnHit()
+    {
+        Explode();
+        await base.OnHit();
+    }
+
+
     public void Explode() => Explode(out _, out _);
-    public void Explode(out List<GameObject> targetsHit, out float damageDealt)
+    public void Explode(out List<GameObject> targetsHit, out float totalDamageDealt)
     {
         targetsHit = new();
-        damageDealt = 0;
+        totalDamageDealt = 0;
 
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, _explosionRadius);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, _explosion.Radius);
+
+        /*SphereCollider explosion = gameObject.AddComponent<SphereCollider>();
+        explosion.radius = _explosion.Radius;*/
 
         foreach (Collider hitCollider in hitColliders)
         {
@@ -71,11 +94,9 @@ public abstract class ExplosiveProjectile : Projectile, IDamageable
 
                     float effectPercentage = CalculateDistanceBasedEffect(hitCollider.transform.position);
 
-                    InfoContainer container = gameObject.GetComponent<InfoContainer>(); //ñapa
-
-                    if (_hasDamage && container != null)
+                    if (_hasDamage && InfoContainer != null)
                     {
-                        foreach (var info in container.InfoList.OfType<DamageInfo>())
+                        foreach (var info in InfoContainer.InfoList.OfType<DamageInfo>())
                         {
                             info.DamageAmount *= effectPercentage;
                         }
@@ -83,12 +104,12 @@ public abstract class ExplosiveProjectile : Projectile, IDamageable
                         float damage = _damage * effectPercentage;
                         Debug.Log($"Enemy takes {damage} damage");
 
-                        damageDealt += damage;
+                        totalDamageDealt += damage;
                     }
                     if (_hasKnockback)
                     {
                         float knockback = _knockbackForce * effectPercentage;
-                        hitCollider.gameObject.GetComponentInChildren<Rigidbody>()?.AddExplosionForce(knockback, transform.position, _explosionRadius, 3f);
+                        hitCollider.gameObject.GetComponentInChildren<Rigidbody>()?.AddExplosionForce(knockback, transform.position, _explosion.Radius, 3f);
                     }
 
                     break;
@@ -100,8 +121,8 @@ public abstract class ExplosiveProjectile : Projectile, IDamageable
     private float CalculateDistanceBasedEffect(Vector3 targetPosition)
     {
         float distance = Vector3.Distance(targetPosition, transform.position);
-        float normalizedDistance = 1 - Mathf.Clamp01(distance / _explosionRadius);
-        return _explosionAreaCurve.Evaluate(normalizedDistance);
+        float normalizedDistance = 1 - Mathf.Clamp01(distance / _explosion.Radius);
+        return _explosion.Propagation.Evaluate(normalizedDistance);
     }
 
     #region Damageable

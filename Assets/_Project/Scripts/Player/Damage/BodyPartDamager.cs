@@ -13,20 +13,22 @@ public class BodyPartDamager : MonoBehaviour
     DamageableBehaviour _damageable;
     BuffableBehaviour _buffable;
 
+    private enum EBodySection
+    {
+        HEAD, TORSO, ARMS, LEGS
+    }
+
     [Serializable]
     private struct BodyPartData
     {
+        [SerializeField, Tooltip("Only visual")] string _name;
         public EBodySection BodySection;
+
         public BodyPart[] BodyPart;
         public float DamageMultiplier;
     }
 
     [SerializeField] private BodyPartData[] _bodyPartsData;
-
-    private enum EBodySection
-    {
-        HEAD, TORSO, ARMS, LEGS
-    }
 
     private Dictionary<EBodySection, (BodyPart[], float)> _bodyPartsDictionary = new();
     private List<AbilityInfoTest> _alreadyApliedInfos = new();    //TODO: dynamyc empty
@@ -53,7 +55,8 @@ public class BodyPartDamager : MonoBehaviour
         {
             foreach (BodyPart bodyPart in data.BodyPart)
             {
-                bodyPart.OnCollision += HandleCollision;
+                bodyPart.OnCollisionEnterEvent += (collision) => HandleCollision(collision, bodyPart);
+
             }
         }
     }
@@ -66,7 +69,7 @@ public class BodyPartDamager : MonoBehaviour
         {
             foreach (BodyPart bodyPart in data.BodyPart)
             {
-                bodyPart.OnCollision -= HandleCollision;
+                bodyPart.OnCollisionEnterEvent -= (collision) => HandleCollision(collision, bodyPart);
             }
         }
     }
@@ -84,7 +87,7 @@ public class BodyPartDamager : MonoBehaviour
         }
     }
 
-    private void HandleCollision(Collision other)
+    private void HandleCollision(Collision other, BodyPart bodyPartHit)
     {
         Debug.Log("Hola");
         if (!other.gameObject.TryGetComponent<NetworkObject>(out NetworkObject networkObject)) return;
@@ -96,14 +99,19 @@ public class BodyPartDamager : MonoBehaviour
         foreach (var info in infoContainer.InfoList.Where(x => x.CanApply(player.ClientData) && !_alreadyApliedInfos.Contains(x)))
         {
             _alreadyApliedInfos.Add(info);
+
             Debug.Log("2");
-            EBodySection? bodyPart = GetBodyPartHit(other.contacts);
-            if (bodyPart.HasValue) ApplyDamage(bodyPart.Value, info.DamageAmount);
+            BodyPartData data = FindBodyPartData(bodyPartHit);
+            float damage = info.DamageAmount * infoContainer.Multiplier * data.DamageMultiplier;
+            _damageable.Damage((int)damage);
+            Debug.Log("Recibiste " + damage + " de daño en " + data.BodySection);
+
             /*if (info is DamageInfo damageInfo)
             {
                 Debug.Log("3");
-                EBodySection? bodyPart = GetBodyPartHit(other.contacts);
-                if (bodyPart.HasValue) ApplyDamage(bodyPart.Value, damageInfo.DamageAmount);
+                BodyPartData data = FindBodyPartSection(bodyPartHit);
+                float damage = damageInfo.DamageAmount * infoContainer.Multiplier * data.DamageMultiplier;
+                _damageable.Damage((int)damage);
             }
             else if (info is HealInfo healInfo)
             {
@@ -116,33 +124,9 @@ public class BodyPartDamager : MonoBehaviour
         }
     }
 
-    private EBodySection? GetBodyPartHit(ContactPoint[] contacts)
+    private BodyPartData FindBodyPartData(BodyPart hitBodyPart)
     {
-        foreach (ContactPoint contact in contacts)
-        {
-            foreach (var entry in _bodyPartsDictionary)
-            {
-                foreach (BodyPart bodyPart in entry.Value.Item1)
-                {
-                    if (bodyPart.Collider.bounds.Contains(contact.point))
-                    {
-                        return entry.Key;
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private void ApplyDamage(EBodySection bodyPart, float damage)
-    {
-        if (_bodyPartsDictionary.TryGetValue(bodyPart, out var bodyPartData))
-        {
-            damage *= bodyPartData.Item2;
-            _damageable.Damage((int)damage);
-            Debug.Log("Recibiste " + damage + " de daño en " + bodyPart);
-        }
+        return _bodyPartsData.First(x => x.BodyPart.Contains(hitBodyPart));
     }
 
 }

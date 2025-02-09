@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Utils.Extensions
@@ -6,19 +8,10 @@ namespace Utils.Extensions
     public static class ParticleSystemExtensions
     {
 
-        public static IEnumerator PlayAndDestroy(this ParticleSystem particles, bool disableInsteadOfDestroy = false)
+        public static Task PlayAndAwaitFinish(this ParticleSystem particles)
         {
             particles.Play();
-            yield return new WaitForSeconds(particles.main.duration);
-
-            if (disableInsteadOfDestroy)
-            {
-                particles.gameObject.SetActive(false);
-            }
-            else
-            {
-                particles.gameObject.Destroy();
-            }
+            return Task.Delay(TimeSpan.FromSeconds(particles.main.duration));
         }
 
     }

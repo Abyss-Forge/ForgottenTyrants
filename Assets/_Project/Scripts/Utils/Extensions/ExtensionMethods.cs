@@ -1,6 +1,6 @@
 using System;
-using UnityEngine;
 using System.Reflection;
+using UnityEngine;
 
 namespace Utils.Extensions
 {
@@ -71,11 +71,6 @@ namespace Utils.Extensions
             return instance?.GetComponent<T>() ?? null;
         }
 
-        public static T GetComponentInParentOrChildren<T>(this GameObject target) where T : Component
-        {
-            return target.GetComponentInParent<T>().OrNull() ?? target.GetComponentInChildren<T>().OrNull();
-        }
-
         /// <summary>
         /// Deletes the specified component from the target GameObject. If no component is specified,
         /// it will attempt to find and delete the component of type T from the target GameObject.
@@ -140,6 +135,25 @@ namespace Utils.Extensions
             }
 
             return copy as T;
+        }
+
+        public static bool TryGetComponentInParent<T>(this GameObject go, out T component) where T : Component
+        {
+            component = null;
+            go.GetComponentInParent<T>().OrNull();
+            return component != null;
+        }
+
+        public static bool TryGetComponentInChildren<T>(this GameObject go, out T component) where T : Component
+        {
+            component = null;
+            go.GetComponentInChildren<T>().OrNull();
+            return component != null;
+        }
+
+        public static T GetComponentInParentOrChildren<T>(this GameObject go) where T : Component
+        {
+            return go.GetComponentInParent<T>().OrNull() ?? go.GetComponentInChildren<T>().OrNull();
         }
 
     }
