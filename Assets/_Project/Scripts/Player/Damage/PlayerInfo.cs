@@ -11,7 +11,7 @@ public class PlayerInfo : MonoBehaviour
         InitializeBaseBuildData(ClientData);
     }
 
-    private void InitializeBaseBuildData(ClientData data)
+    public void InitializeBaseBuildData(ClientData data)
     {
         Stats = new();
         Stats.Add(data.Race.Stats);
