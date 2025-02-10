@@ -8,6 +8,8 @@ namespace Systems.EventBus
 
     public struct PlayerDeathEvent : IBusEvent { }
 
+    public struct PlayerRespawnEvent : IBusEvent { }
+
     public struct PlayerMovementEvent : IBusEvent
     {
         public bool Activate;

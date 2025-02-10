@@ -10,7 +10,7 @@ public class DamageableBehaviour : MonoBehaviour, IDamageable
     public event Action OnDeath;
     public event Action<int> OnDamage, OnHeal;
 
-    bool _isInitialized;
+    //bool _isInitialized;
 
     void Awake()
     {
@@ -19,8 +19,8 @@ public class DamageableBehaviour : MonoBehaviour, IDamageable
 
     public void Initialize(int health)
     {
-        if (_isInitialized) return;
-        _isInitialized = true;
+        //if (_isInitialized) return;
+        //_isInitialized = true;
 
         _health = health;
     }

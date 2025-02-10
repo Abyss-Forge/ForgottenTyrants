@@ -30,6 +30,7 @@ public class BodyPartDamager : MonoBehaviour
 
     private Dictionary<EBodySection, (BodyPart[], float)> _bodyPartsDictionary = new();
     private List<AbilityInfoTest> _alreadyApliedInfos = new();    //TODO: dynamyc empty
+    private EventBinding<PlayerRespawnEvent> _playerRespawnEventBinding;
 
     void Awake()
     {
@@ -47,6 +48,9 @@ public class BodyPartDamager : MonoBehaviour
 
     void OnEnable()
     {
+        _playerRespawnEventBinding = new EventBinding<PlayerRespawnEvent>(HandleRespawn);
+        EventBus<PlayerRespawnEvent>.Register(_playerRespawnEventBinding);
+
         _damageable.OnDeath += HandleDeath;
 
         foreach (BodyPartData data in _bodyPartsData)
@@ -60,6 +64,8 @@ public class BodyPartDamager : MonoBehaviour
 
     void OnDisable()
     {
+        EventBus<PlayerRespawnEvent>.Deregister(_playerRespawnEventBinding);
+
         _damageable.OnDeath -= HandleDeath;
 
         foreach (BodyPartData data in _bodyPartsData)
@@ -82,6 +88,20 @@ public class BodyPartDamager : MonoBehaviour
                 bodyPart.Rigidbody.isKinematic = false;
             }
         }
+    }
+
+    void HandleRespawn()
+    {
+        foreach (var entry in _bodyPartsDictionary) //Ragdoll
+        {
+            foreach (BodyPart bodyPart in entry.Value.Item1)
+            {
+                bodyPart.Rigidbody.isKinematic = true;
+            }
+        }
+        ServiceLocator.Global.Get(out PlayerInfo player);
+        _damageable.Initialize((int)player.Stats.Health);
+        _buffable.Initialize(player.Stats);
     }
 
     private void HandleCollision(Collision other)
