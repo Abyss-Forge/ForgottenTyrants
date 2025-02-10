@@ -67,6 +67,7 @@ public class HostManager : Singleton<HostManager>
                 clientData.Class = Class;
                 clientData.Armor = Armor;
                 clientData.Trinket = Trinket;
+                clientData.TeamId = 0;
                 ClientDataDict[id] = clientData;
                 Debug.Log("la seleccion de clase ES MENTIRA");
             }

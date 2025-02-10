@@ -14,6 +14,8 @@ public class GameController : NetworkBehaviour
 {
     [SerializeField] private TMP_Text _timer;
     [SerializeField] private TMP_Text _starting;
+    [SerializeField] private TMP_Text _team1PointsText;
+    [SerializeField] private TMP_Text _team2PointsText;
     [SerializeField] private float _minAlpha = 0.3f;
     [SerializeField] private float _maxAlpha = 1f;
     [SerializeField] private float _velocity = 1f;
@@ -30,6 +32,8 @@ public class GameController : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI _pingStats;
     private float _updateInterval = 1f; // Actualiza cada 0.5 segundos
     private float _deltaTime = 0.0f;
+    private int _team1Points;
+    private int _team2Points;
 
     //private List<Player> _allies = new List<Player>();
     //private List<Player> _enemies = new List<Player>();
@@ -115,6 +119,21 @@ public class GameController : NetworkBehaviour
         else
         {
             Debug.LogWarning("No se encontró DamageableBehaviour en el ServiceLocator.");
+        }
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void UpdateTeamPoints_ClientRpc(int teamId, int damage)
+    {
+        if (teamId == 0)
+        {
+            _team1Points += damage;
+            _team1PointsText.text = _team1Points.ToString();
+        }
+        else
+        {
+            _team2Points += damage;
+            _team2PointsText.text = _team2Points.ToString();
         }
     }
 
