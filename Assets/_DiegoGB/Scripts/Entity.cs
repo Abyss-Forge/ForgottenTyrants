@@ -6,7 +6,8 @@ using Unity.Netcode;
 public abstract class Entity : NetworkBehaviour
 {
     [field: SerializeField] public string Name { get; protected set; }
-    protected Stats _baseStats = new(), _modifiedStats = new();
+    [SerializeField] protected Stats _baseStats = new();
+    protected Stats _modifiedStats = new();
     public Stats BaseStats => _baseStats;
     public Stats ModifiedStats => _modifiedStats;
 
