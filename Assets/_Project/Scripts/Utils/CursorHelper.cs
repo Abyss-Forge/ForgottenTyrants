@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Utils
 {
-    public static class CursorUtils
+    public static class CursorHelper
     {
         public static bool IsCaptured => GetCaptured();
 

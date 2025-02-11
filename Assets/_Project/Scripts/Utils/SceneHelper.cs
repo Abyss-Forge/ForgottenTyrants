@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 namespace Utils
 {
-    public static class SceneUtils
+    public static class SceneHelper
     {
         public static int Next => GetNext();
         public static int Current => GetCurrent();

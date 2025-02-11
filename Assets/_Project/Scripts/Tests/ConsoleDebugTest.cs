@@ -1,3 +1,4 @@
+using Systems.SingletonPattern;
 using UnityEngine;
 
 public class ConsoleDebugTest : Singleton<ConsoleDebugTest>

@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using Systems.SingletonPattern;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System;
 
 namespace Systems.GameManagers
 {

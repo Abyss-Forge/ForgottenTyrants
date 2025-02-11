@@ -16,6 +16,14 @@ namespace Utils.Extensions
         /// <returns>True if the index is within the bounds of the array; otherwise, false.</returns>
         public static bool IsInRange<T>(this T[] array, int index) => index >= 0 && index < array.Length;
 
+        public static void SwapTuple<T>(ref T value1, ref T value2) where T : struct => (value1, value2) = (value2, value1);
+        public static void Swap<T>(ref T lhs, ref T rhs)
+        {
+            T temp = lhs;
+            lhs = rhs;
+            rhs = temp;
+        }
+
         public static void Enable(this GameObject go) => go.SetActive(true);
         public static void Disable(this GameObject go) => go.SetActive(false);
         public static void Destroy(this GameObject go) => MonoBehaviour.Destroy(go);

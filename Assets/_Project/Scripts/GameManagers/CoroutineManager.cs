@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Threading.Tasks;
+using Systems.SingletonPattern;
 
 namespace Systems.GameManagers
 {

@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Systems.SingletonPattern;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;

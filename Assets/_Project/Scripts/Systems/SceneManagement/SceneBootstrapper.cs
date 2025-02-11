@@ -1,4 +1,6 @@
 using UnityEngine;
+using Systems.SingletonPattern;
+
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
