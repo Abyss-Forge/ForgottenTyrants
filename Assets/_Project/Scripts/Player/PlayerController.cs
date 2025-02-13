@@ -10,10 +10,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] CharacterController _characterController;
 
     [SerializeField] private Camera _camera;
+    [SerializeField] private Animator _animator;
 
     [Header("Aesthetic")]
-    [SerializeField] private AnimationCurve _dashFovCurve;
     [SerializeField] private TrailRenderer _trail;
+    [SerializeField] private AnimationCurve _dashFovCurve;
 
     [Header("Config")]
     [SerializeField] private float _lookSensitivityX;    //en 2 lineas separadas para que no clone el header por cada field
@@ -85,7 +86,6 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()  //physics belong inside fixed update
     {
-
         if (CanMove) Move();
         if (IsGravityEnabled) ApplyGravity();
 
@@ -182,6 +182,7 @@ public class PlayerController : MonoBehaviour
     private void HandlePlayerDeath()
     {
         FreezeMovement(true);
+        _animator.SetTrigger("Ragdoll");
     }
 
     private void HandleMovementEvent(PlayerMovementEvent @event)

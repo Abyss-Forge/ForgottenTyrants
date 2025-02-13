@@ -1,11 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Systems.EventBus;
 using Systems.ServiceLocator;
 using Unity.Netcode;
 using UnityEngine;
+using Utils.Extensions;
 
 [RequireComponent(typeof(DamageableBehaviour), typeof(BuffableBehaviour))]
 public class BodyPartDamager : MonoBehaviour
@@ -16,19 +16,15 @@ public class BodyPartDamager : MonoBehaviour
     [Serializable]
     private struct BodyPartData
     {
-        public EBodySection BodySection;
+        [Tooltip("Only visual")]
+        public string Name;
+
         public BodyPart[] BodyPart;
         public float DamageMultiplier;
     }
 
     [SerializeField] private BodyPartData[] _bodyPartsData;
 
-    private enum EBodySection
-    {
-        HEAD, TORSO, ARMS, LEGS
-    }
-
-    private Dictionary<EBodySection, (BodyPart[], float)> _bodyPartsDictionary = new();
     private List<AbilityInfoTest> _alreadyApliedInfos = new();    //TODO: dynamyc empty
     private EventBinding<PlayerRespawnEvent> _playerRespawnEventBinding;
 
@@ -39,11 +35,6 @@ public class BodyPartDamager : MonoBehaviour
         _buffable = GetComponent<BuffableBehaviour>();
         _damageable.Initialize((int)player.Stats.Health);
         _buffable.Initialize(player.Stats);
-
-        foreach (BodyPartData data in _bodyPartsData)
-        {
-            _bodyPartsDictionary[data.BodySection] = (data.BodyPart, data.DamageMultiplier);
-        }
     }
 
     void OnEnable()
@@ -57,7 +48,7 @@ public class BodyPartDamager : MonoBehaviour
         {
             foreach (BodyPart bodyPart in data.BodyPart)
             {
-                bodyPart.OnCollision += HandleCollision;
+                bodyPart.OnCollisionEnterEvent += (collision) => HandleCollision(collision, bodyPart);
             }
         }
     }
@@ -72,42 +63,15 @@ public class BodyPartDamager : MonoBehaviour
         {
             foreach (BodyPart bodyPart in data.BodyPart)
             {
-                bodyPart.OnCollision -= HandleCollision;
+                bodyPart.OnCollisionEnterEvent -= (collision) => HandleCollision(collision, bodyPart);
             }
         }
     }
 
-    private void HandleDeath()
-    {
-        EventBus<PlayerDeathEvent>.Raise(new PlayerDeathEvent());
-
-        foreach (var entry in _bodyPartsDictionary) //Ragdoll
-        {
-            foreach (BodyPart bodyPart in entry.Value.Item1)
-            {
-                bodyPart.Rigidbody.isKinematic = false;
-            }
-        }
-    }
-
-    void HandleRespawn()
-    {
-        foreach (var entry in _bodyPartsDictionary) //Ragdoll
-        {
-            foreach (BodyPart bodyPart in entry.Value.Item1)
-            {
-                bodyPart.Rigidbody.isKinematic = true;
-            }
-        }
-        ServiceLocator.Global.Get(out PlayerInfo player);
-        _damageable.Initialize((int)player.Stats.Health);
-        _buffable.Initialize(player.Stats);
-    }
-
-    private void HandleCollision(Collision other)
+    private void HandleCollision(Collision other, BodyPart bodyPartHit)
     {
         Debug.Log("Hola");
-        if (!other.gameObject.TryGetComponent<NetworkObject>(out NetworkObject networkObject)) return;
+        if (!other.gameObject.TryGetComponentInParent<NetworkObject>(out NetworkObject networkObject)) return;
         Debug.Log("0");
         if (!networkObject.TryGetComponent<InfoContainer>(out InfoContainer infoContainer)) return;
 
@@ -116,14 +80,19 @@ public class BodyPartDamager : MonoBehaviour
         foreach (var info in infoContainer.InfoList.Where(x => x.CanApply(player.ClientData) && !_alreadyApliedInfos.Contains(x)))
         {
             _alreadyApliedInfos.Add(info);
+
             Debug.Log("2");
-            EBodySection? bodyPart = GetBodyPartHit(other.contacts);
-            if (bodyPart.HasValue) ApplyDamage(bodyPart.Value, info.DamageAmount);
+            BodyPartData data = _bodyPartsData.First(x => x.BodyPart.Contains(bodyPartHit));
+            float damage = info.DamageAmount * infoContainer.Multiplier * data.DamageMultiplier;
+            _damageable.Damage((int)damage);
+            Debug.Log("Recibiste " + damage + " de daño en " + data.Name);
+
             /*if (info is DamageInfo damageInfo)
             {
                 Debug.Log("3");
-                EBodySection? bodyPart = GetBodyPartHit(other.contacts);
-                if (bodyPart.HasValue) ApplyDamage(bodyPart.Value, damageInfo.DamageAmount);
+                BodyPartData data = _bodyPartsData.First(x => x.BodyPart.Contains(bodyPartHit));
+                float damage = damageInfo.DamageAmount * infoContainer.Multiplier * data.DamageMultiplier;
+                _damageable.Damage((int)damage);
             }
             else if (info is HealInfo healInfo)
             {
@@ -136,32 +105,30 @@ public class BodyPartDamager : MonoBehaviour
         }
     }
 
-    private EBodySection? GetBodyPartHit(ContactPoint[] contacts)
+    private void HandleDeath()
     {
-        foreach (ContactPoint contact in contacts)
-        {
-            foreach (var entry in _bodyPartsDictionary)
-            {
-                foreach (BodyPart bodyPart in entry.Value.Item1)
-                {
-                    if (bodyPart.Collider.bounds.Contains(contact.point))
-                    {
-                        return entry.Key;
-                    }
-                }
-            }
-        }
+        EventBus<PlayerDeathEvent>.Raise(new PlayerDeathEvent());
 
-        return null;
+        SetRagdollActive(true);
     }
 
-    private void ApplyDamage(EBodySection bodyPart, float damage)
+    void HandleRespawn()
     {
-        if (_bodyPartsDictionary.TryGetValue(bodyPart, out var bodyPartData))
+        ServiceLocator.Global.Get(out PlayerInfo player);
+        _damageable.Initialize((int)player.Stats.Health);
+        _buffable.Initialize(player.Stats);
+
+        SetRagdollActive(false);
+    }
+
+    private void SetRagdollActive(bool enable = true)
+    {
+        foreach (BodyPartData data in _bodyPartsData)
         {
-            damage *= bodyPartData.Item2;
-            _damageable.Damage((int)damage);
-            Debug.Log("Recibiste " + damage + " de daño en " + bodyPart);
+            foreach (BodyPart bodyPart in data.BodyPart)
+            {
+                bodyPart.Rigidbody.isKinematic = !enable;
+            }
         }
     }
 

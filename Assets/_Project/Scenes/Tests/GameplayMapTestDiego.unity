@@ -1809,7 +1809,7 @@ Terrain:
   m_HeightmapPixelError: 5
   m_SplatMapDistance: 1000
   m_HeightmapMinimumLODSimplification: 0
-  m_HeightmapMaximumLOD: 0
+  m_HeightmapMaximumLOD: 5
   m_ShadowCastingMode: 2
   m_DrawHeightmap: 1
   m_DrawInstanced: 1
@@ -3011,6 +3011,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Fps
+      objectReference: {fileID: 0}
+    - target: {fileID: 7807685630737410227, guid: ce7fb81c2282e5049862dd3d56c052e3,
+        type: 3}
+      propertyPath: m_VertexColorAlwaysGammaSpace
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8058124822043273528, guid: ce7fb81c2282e5049862dd3d56c052e3,
         type: 3}

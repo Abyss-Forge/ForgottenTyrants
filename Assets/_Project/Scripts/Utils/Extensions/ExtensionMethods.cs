@@ -1,6 +1,6 @@
 using System;
-using UnityEngine;
 using System.Reflection;
+using UnityEngine;
 
 namespace Utils.Extensions
 {
@@ -16,17 +16,25 @@ namespace Utils.Extensions
         /// <returns>True if the index is within the bounds of the array; otherwise, false.</returns>
         public static bool IsInRange<T>(this T[] array, int index) => index >= 0 && index < array.Length;
 
-        public static void Enable(this GameObject gameObject) => gameObject.SetActive(true);
-        public static void Disable(this GameObject gameObject) => gameObject.SetActive(false);
-
-        public static void Unparent(this Transform transform) => transform.SetParent(null);
-
-        public static void AlignToGround(this Transform transform)
+        public static void SwapTuple<T>(ref T value1, ref T value2) where T : struct => (value1, value2) = (value2, value1);
+        public static void Swap<T>(ref T lhs, ref T rhs)
         {
-            Vector3 position = transform.position;
-            float halfHeight = transform.localScale.y / 2;
+            T temp = lhs;
+            lhs = rhs;
+            rhs = temp;
+        }
+
+        public static void Enable(this GameObject go) => go.SetActive(true);
+        public static void Disable(this GameObject go) => go.SetActive(false);
+        public static void Destroy(this GameObject go) => MonoBehaviour.Destroy(go);
+        public static void Unparent(this Transform tr) => tr.SetParent(null);
+
+        public static void AlignToGround(this Transform tr)
+        {
+            Vector3 position = tr.position;
+            float halfHeight = tr.localScale.y / 2;
             position.y = halfHeight;
-            transform.position = position;
+            tr.position = position;
         }
 
         public static void CopyTransform(this Transform target, Transform source)
@@ -35,7 +43,6 @@ namespace Utils.Extensions
             target.rotation = source.rotation;
             target.localScale = source.localScale;
         }
-
 
         /// <summary>
         /// Instantiates a prefab at the specified position and rotation, optionally under a parent transform,
@@ -70,11 +77,6 @@ namespace Utils.Extensions
         {
             GameObject instance = MonoBehaviour.Instantiate(prefab, parent, false);
             return instance?.GetComponent<T>() ?? null;
-        }
-
-        public static T GetComponentInParentOrChildren<T>(this GameObject target) where T : Component
-        {
-            return target.GetComponentInParent<T>().OrNull() ?? target.GetComponentInChildren<T>().OrNull();
         }
 
         /// <summary>
@@ -141,6 +143,25 @@ namespace Utils.Extensions
             }
 
             return copy as T;
+        }
+
+        public static bool TryGetComponentInParent<T>(this GameObject go, out T component) where T : Component
+        {
+            component = null;
+            go.GetComponentInParent<T>().OrNull();
+            return component != null;
+        }
+
+        public static bool TryGetComponentInChildren<T>(this GameObject go, out T component) where T : Component
+        {
+            component = null;
+            go.GetComponentInChildren<T>().OrNull();
+            return component != null;
+        }
+
+        public static T GetComponentInParentOrChildren<T>(this GameObject go) where T : Component
+        {
+            return go.GetComponentInParent<T>().OrNull() ?? go.GetComponentInChildren<T>().OrNull();
         }
 
     }

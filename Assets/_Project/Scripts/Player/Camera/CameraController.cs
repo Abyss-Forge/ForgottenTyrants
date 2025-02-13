@@ -42,7 +42,7 @@ public class CameraController : MonoBehaviour
         _moveAngleX = transform.localPosition.x;
         _moveAngleY = transform.localPosition.y;
 
-        CursorUtils.Capture();
+        CursorHelper.Capture();
     }
 
     protected virtual void InitializeStates()
@@ -59,7 +59,7 @@ public class CameraController : MonoBehaviour
         CalculateRotation(_look.x * _horizontalSensitivity, -_look.y * _verticalSensitivity);
         CalculateMovement(_move.x * _horizontalSensitivity, -_move.y * _verticalSensitivity);
 
-        if (CursorUtils.IsCaptured) _fsm.LateUpdate();
+        if (CursorHelper.IsCaptured) _fsm.LateUpdate();
     }
 
     #endregion
@@ -97,11 +97,11 @@ public class CameraController : MonoBehaviour
 
     private void OnFocusLost(InputAction.CallbackContext context)
     {
-        if (context.performed) CursorUtils.Toggle();
+        if (context.performed) CursorHelper.Toggle();
     }
     private void OnFocusRegained(InputAction.CallbackContext context)
     {
-        if (context.performed && !CursorUtils.IsCaptured) CursorUtils.Capture();
+        if (context.performed && !CursorHelper.IsCaptured) CursorHelper.Capture();
     }
 
     private void CalculateRotation(float horizontalInput, float verticalInput)

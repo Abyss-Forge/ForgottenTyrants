@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Threading.Tasks;
 
 public class LoadingScreenController : MonoBehaviour
 {
@@ -50,9 +51,9 @@ public class LoadingScreenController : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private async Task Sleep()
+    private Task Sleep()
     {
-        await Task.Delay((int)(_transitionDuration * 1000));
+        return Task.Delay(TimeSpan.FromSeconds(_transitionDuration));
     }
 
 }

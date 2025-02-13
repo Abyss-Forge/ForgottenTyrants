@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
@@ -12,8 +12,12 @@ public class EnableIfOwner : NetworkBehaviour
     void OnValidate()
     {
         // Remove duplicates from list
-        _gameObjectsToEnable = _gameObjectsToEnable.ToList().Distinct().ToArray();
-        _componentsToEnable = _componentsToEnable.ToList().Distinct().ToArray();
+        try
+        {
+            _gameObjectsToEnable = _gameObjectsToEnable.ToList().Distinct().ToArray();
+            _componentsToEnable = _componentsToEnable.ToList().Distinct().ToArray();
+        }
+        catch (ArgumentNullException) { }
     }
 
     public override void OnNetworkSpawn()

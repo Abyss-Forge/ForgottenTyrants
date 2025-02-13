@@ -1,6 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using Systems.SingletonPattern;
 using UnityEngine.InputSystem;
 
 namespace Systems.GameManagers
