@@ -7,8 +7,8 @@ public class BodyPart : MonoBehaviour
     public Rigidbody Rigidbody { get; private set; }
     public Collider Collider { get; private set; }
 
-    public Action<Collision> OnCollision;
-    public Action<Collider> OnTrigger;
+    public event Action<Collision> OnCollisionEnterEvent, OnCollisionStayEvent, OnCollisionExitEvent;
+    public event Action<Collider> OnTriggerEnterEvent, OnTriggerStayEvent, OnTriggerExitEvent;
 
     void Awake()
     {
@@ -16,14 +16,12 @@ public class BodyPart : MonoBehaviour
         Collider = GetComponent<Collider>();
     }
 
-    void OnCollisionEnter(Collision other)
-    {
-        OnCollision?.Invoke(other);
-    }
+    void OnCollisionEnter(Collision other) => OnCollisionEnterEvent?.Invoke(other);
+    void OnCollisionStay(Collision other) => OnCollisionStayEvent?.Invoke(other);
+    void OnCollisionExit(Collision other) => OnCollisionExitEvent?.Invoke(other);
 
-    void OnTriggerEnter(Collider other)
-    {
-        OnTrigger?.Invoke(other);
-    }
+    void OnTriggerEnter(Collider other) => OnTriggerEnterEvent?.Invoke(other);
+    void OnTriggerStay(Collider other) => OnTriggerStayEvent?.Invoke(other);
+    void OnTriggerExit(Collider other) => OnTriggerExitEvent?.Invoke(other);
 
 }

@@ -1,6 +1,6 @@
-using UnityEngine;
-using System.Threading.Tasks;
 using System.Collections;
+using System.Threading.Tasks;
+using Systems.SingletonPattern;
 
 namespace Systems.GameManagers
 {
@@ -19,5 +19,6 @@ namespace Systems.GameManagers
             yield return StartCoroutine(coroutine);
             tcs.SetResult(null);
         }
+
     }
 }

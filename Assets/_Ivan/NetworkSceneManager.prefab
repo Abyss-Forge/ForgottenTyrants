@@ -709,7 +709,7 @@ MonoBehaviour:
   GlobalObjectIdHash: 2882366605
   InScenePlacedSourceGlobalObjectIdHash: 4170207433
   AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
+  SynchronizeTransform: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1

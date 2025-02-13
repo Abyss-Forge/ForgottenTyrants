@@ -8,7 +8,10 @@ public class InfoContainer : NetworkBehaviour, INetworkSerializable, IEquatable<
     private List<AbilityInfoTest> _infoList = new();
     public List<AbilityInfoTest> InfoList => _infoList;
 
-    public void Add(AbilityInfoTest info)
+    private float _multiplier = 1f;
+    public float Multiplier => _multiplier;
+
+    public void AddInfo(AbilityInfoTest info)
     {
         _infoList.Add(info);
         UpdateInfoList_ClientRpc(_infoList);
@@ -21,14 +24,20 @@ public class InfoContainer : NetworkBehaviour, INetworkSerializable, IEquatable<
         _infoList = new List<AbilityInfoTest>(updatedList);
     }
 
-    [Rpc(SendTo.Server, RequireOwnership = false)]
-    private void UpdateInfoList_ServerRpc(List<AbilityInfoTest> updatedList)
+    public void SetMultiplier(float multiplier)
     {
-        _infoList = new List<AbilityInfoTest>(updatedList);
+        UpdateMultiplier_ClientRpc(multiplier);
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void UpdateMultiplier_ClientRpc(float multiplier)
+    {
+        _multiplier = multiplier;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
+        serializer.SerializeValue(ref _multiplier);
         if (serializer.IsWriter)
         {
             serializer.GetFastBufferWriter().WriteValueSafe(_infoList);
@@ -43,15 +52,12 @@ public class InfoContainer : NetworkBehaviour, INetworkSerializable, IEquatable<
     {
         if (other == null) return false;
 
-        return _infoList.SequenceEqual(other._infoList);
+        return _infoList.SequenceEqual(other._infoList) && _multiplier == other._multiplier;
     }
 
     public override bool Equals(object obj)
     {
-        if (obj is InfoContainer other)
-        {
-            return Equals(other);
-        }
+        if (obj is InfoContainer other) return Equals(other);
 
         return false;
     }

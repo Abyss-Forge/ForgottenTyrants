@@ -3024,6 +3024,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _characterController: {fileID: 6373535343249460430}
   _camera: {fileID: 4930676258958694151}
+  _animator: {fileID: 7673370260004093441}
+  _trail: {fileID: 5608466173938518035}
   _dashFovCurve:
     serializedVersion: 2
     m_Curve:
@@ -3057,7 +3059,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 0
     m_RotationOrder: 4
-  _trail: {fileID: 5608466173938518035}
   _lookSensitivityX: 0.1
   _walkSpeed: 5
   _gravityMultiplier: 1
@@ -4108,23 +4109,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bodyPartsData:
-  - BodySection: 0
+  - Name: Head
     BodyPart:
     - {fileID: 8356111086557172767}
     DamageMultiplier: 1.5
-  - BodySection: 1
+  - Name: Torso
     BodyPart:
     - {fileID: 5899182628021170237}
     - {fileID: 4982263266992587223}
     DamageMultiplier: 1
-  - BodySection: 2
+  - Name: Arms
     BodyPart:
     - {fileID: 5529720026183293226}
     - {fileID: 950618474667012799}
     - {fileID: 4536391086194164803}
     - {fileID: 3683879162402828164}
     DamageMultiplier: 0.75
-  - BodySection: 3
+  - Name: Legs
     BodyPart:
     - {fileID: 1029533047040730047}
     - {fileID: 2325753037359413949}
