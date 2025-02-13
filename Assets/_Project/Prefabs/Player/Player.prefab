@@ -4109,23 +4109,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bodyPartsData:
-  - BodySection: 0
+  - Name: Head
     BodyPart:
     - {fileID: 8356111086557172767}
     DamageMultiplier: 1.5
-  - BodySection: 1
+  - Name: Torso
     BodyPart:
     - {fileID: 5899182628021170237}
     - {fileID: 4982263266992587223}
     DamageMultiplier: 1
-  - BodySection: 2
+  - Name: Arms
     BodyPart:
     - {fileID: 5529720026183293226}
     - {fileID: 950618474667012799}
     - {fileID: 4536391086194164803}
     - {fileID: 3683879162402828164}
     DamageMultiplier: 0.75
-  - BodySection: 3
+  - Name: Legs
     BodyPart:
     - {fileID: 1029533047040730047}
     - {fileID: 2325753037359413949}

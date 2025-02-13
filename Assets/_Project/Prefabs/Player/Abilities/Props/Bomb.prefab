@@ -39,8 +39,6 @@ Transform:
   - {fileID: 653673623198264021}
   - {fileID: 6539022836204626342}
   - {fileID: 2963277918181056707}
-  - {fileID: 930775704122378889}
-  - {fileID: 7298440682330213639}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5054681258302847932
@@ -180,48 +178,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _modelRoot: {fileID: 2963277918181056707}
-  _vfx: {fileID: 930775704108224457}
-  _sfx: {fileID: 2833475500799442735}
+  _vfx: {fileID: 0}
+  _sfx: {fileID: 0}
   _lifetime: 5
   _gravityMultiplier: 1
-  _hasKnockback: 1
-  _knockbackForce: 200
-  _hasDamage: 1
-  _damage: 100
   _hasRicochet: 1
   _ricochets: 5
   _maxRicochetAngle: 90
-  _explosion:
-    Radius: 5
-    PropagationTime: 1
-    Propagation:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 1
-        outSlope: 1
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 1
-        outSlope: 1
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
+  _explosion: {fileID: 0}
   _explodeOnContact: 1
   _explodeOnLifetimeEnd: 1
-  _explosionAffectedTags:
-  - Player
   _isProximityEnabled: 0
   _proximityDetector: {fileID: 2954807700785221026}
   _detonationDelaySeconds: 1
@@ -258,7 +224,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3170630573036394075}
+  m_Father: {fileID: 6539022836204626342}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &2833475500799442735
 AudioSource:
@@ -493,7 +459,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6539022836204626342}
   - component: {fileID: 247300098480672245}
-  - component: {fileID: 5880817329127544667}
   - component: {fileID: 7120469233543256903}
   m_Layer: 0
   m_Name: Explosion
@@ -514,7 +479,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 930775704122378889}
+  - {fileID: 7298440682330213639}
   m_Father: {fileID: 3170630573036394075}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &247300098480672245
@@ -538,18 +505,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5880817329127544667
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8517649259084638794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9dc77739fbc7c1242b56ae44d9940138, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7120469233543256903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -562,6 +517,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a0b8519e2d3d8f4c9a9c2b0a78d2410, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _vfx: {fileID: 930775704108224457}
+  _sfx: {fileID: 2833475500799442735}
   _radius: 5
   _propagationTime: 1
   _propagationCurve:
@@ -588,13 +545,15 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  _hasKnockback: 1
+  _knockbackForce: 500
 --- !u!1001 &930775704121987075
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 3170630573036394075}
+    m_TransformParent: {fileID: 6539022836204626342}
     m_Modifications:
     - target: {fileID: 100008, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7, type: 3}
       propertyPath: m_Name
@@ -618,15 +577,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400010, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 400010, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 400010, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 400010, guid: 3455fe69f7ddc4604b95bf9b0a1e88d7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

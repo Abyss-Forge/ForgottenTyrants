@@ -24,14 +24,6 @@ public abstract class Projectile : NetworkBehaviour
 
     [SerializeField] protected float _lifetime = 5, _gravityMultiplier = 1;
 
-    [Header("Knockback")]
-    [SerializeField] protected bool _hasKnockback;
-    [SerializeField] protected float _knockbackForce = 500;
-
-    [Header("Damage")]
-    [SerializeField] protected bool _hasDamage;
-    [SerializeField] protected float _damage = 100;
-
     [Header("Ricochet")]
     [SerializeField] protected bool _hasRicochet;
     [SerializeField] protected int _ricochets = 5;
@@ -87,15 +79,11 @@ public abstract class Projectile : NetworkBehaviour
         return go.CompareTag(Tag.Player);
     }
 
-    protected virtual async Task OnHit()
+    protected virtual async Task OnHit()    //TODO vfx & sfx on impact, ref to ExplosiveProjectile
     {
         _rigidbody.isKinematic = true;
         _collider.enabled = false;
         _modelRoot.gameObject.SetActive(false);
-
-        Task sfx = _sfx.PlayAndAwaitFinish();
-        Task vfx = _vfx.PlayAndAwaitFinish();
-        await Task.WhenAll(vfx, sfx);
 
         _fsm.TransitionTo(EProjectileState.DESTROYED);
     }

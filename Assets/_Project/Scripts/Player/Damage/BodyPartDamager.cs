@@ -1,11 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Systems.EventBus;
 using Systems.ServiceLocator;
 using Unity.Netcode;
 using UnityEngine;
+using Utils.Extensions;
 
 [RequireComponent(typeof(DamageableBehaviour), typeof(BuffableBehaviour))]
 public class BodyPartDamager : MonoBehaviour
@@ -13,16 +13,11 @@ public class BodyPartDamager : MonoBehaviour
     DamageableBehaviour _damageable;
     BuffableBehaviour _buffable;
 
-    private enum EBodySection
-    {
-        HEAD, TORSO, ARMS, LEGS
-    }
-
     [Serializable]
     private struct BodyPartData
     {
-        [SerializeField, Tooltip("Only visual")] string _name;
-        public EBodySection BodySection;
+        [Tooltip("Only visual")]
+        public string Name;
 
         public BodyPart[] BodyPart;
         public float DamageMultiplier;
@@ -30,7 +25,6 @@ public class BodyPartDamager : MonoBehaviour
 
     [SerializeField] private BodyPartData[] _bodyPartsData;
 
-    private Dictionary<EBodySection, (BodyPart[], float)> _bodyPartsDictionary = new();
     private List<AbilityInfoTest> _alreadyApliedInfos = new();    //TODO: dynamyc empty
 
     void Awake()
@@ -40,11 +34,6 @@ public class BodyPartDamager : MonoBehaviour
         _buffable = GetComponent<BuffableBehaviour>();
         _damageable.Initialize((int)player.Stats.Health);
         _buffable.Initialize(player.Stats);
-
-        foreach (BodyPartData data in _bodyPartsData)
-        {
-            _bodyPartsDictionary[data.BodySection] = (data.BodyPart, data.DamageMultiplier);
-        }
     }
 
     void OnEnable()
@@ -78,9 +67,9 @@ public class BodyPartDamager : MonoBehaviour
     {
         EventBus<PlayerDeathEvent>.Raise(new PlayerDeathEvent());
 
-        foreach (var entry in _bodyPartsDictionary) //Ragdoll
+        foreach (BodyPartData data in _bodyPartsData)   //Ragdoll
         {
-            foreach (BodyPart bodyPart in entry.Value.Item1)
+            foreach (BodyPart bodyPart in data.BodyPart)
             {
                 bodyPart.Rigidbody.isKinematic = false;
             }
@@ -90,7 +79,7 @@ public class BodyPartDamager : MonoBehaviour
     private void HandleCollision(Collision other, BodyPart bodyPartHit)
     {
         Debug.Log("Hola");
-        if (!other.gameObject.TryGetComponent<NetworkObject>(out NetworkObject networkObject)) return;
+        if (!other.gameObject.TryGetComponentInParent<NetworkObject>(out NetworkObject networkObject)) return;
         Debug.Log("0");
         if (!networkObject.TryGetComponent<InfoContainer>(out InfoContainer infoContainer)) return;
 
@@ -104,7 +93,7 @@ public class BodyPartDamager : MonoBehaviour
             BodyPartData data = FindBodyPartData(bodyPartHit);
             float damage = info.DamageAmount * infoContainer.Multiplier * data.DamageMultiplier;
             _damageable.Damage((int)damage);
-            Debug.Log("Recibiste " + damage + " de daño en " + data.BodySection);
+            Debug.Log("Recibiste " + damage + " de daño en " + data.Name);
 
             /*if (info is DamageInfo damageInfo)
             {

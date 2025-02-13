@@ -1,24 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-
-[Serializable]
-public struct ExplosionData
-{
-    public float Radius;
-    public float PropagationTime;
-    [Tooltip("Used for speed, damage or knockback at a certain point of the explosion")]
-    public AnimationCurve Propagation;
-}
 
 public abstract class ExplosiveProjectile : Projectile, IDamageable
 {
     [Header("Explosive")]
-    [SerializeField] protected ExplosionData _explosion;
+    [SerializeField] protected Explosion _explosion;
     [SerializeField] protected bool _explodeOnContact, _explodeOnLifetimeEnd;
-    [SerializeField] protected string[] _explosionAffectedTags; //TODO [Tag]
 
     [Header("Proximity")]
     [SerializeField] protected bool _isProximityEnabled;
@@ -68,21 +56,50 @@ public abstract class ExplosiveProjectile : Projectile, IDamageable
 
     protected override async Task OnHit()
     {
-        Explode();
-        await base.OnHit();
+        _rigidbody.isKinematic = true;
+        _collider.enabled = false;
+        _modelRoot.gameObject.SetActive(false);
+
+        await _explosion.Explode();
+        _fsm.TransitionTo(EProjectileState.DESTROYED);
     }
 
+    #region Damageable
 
-    public void Explode() => Explode(out _, out _);
+    public event Action OnDeath;
+    public event Action<int> OnDamage, OnHeal;
+
+    public void Damage(int damageAmount)
+    {
+        if (!_isDamageable) return;
+
+        Health -= damageAmount;
+        OnDamage?.Invoke(damageAmount);
+
+        if (Health <= 0) OnDeath?.Invoke();
+    }
+
+    public void Heal(int healAmount)
+    {
+        if (!_isDamageable) return;
+
+        Health += healAmount;
+        OnHeal?.Invoke(healAmount);
+    }
+
+    #endregion
+
+}
+
+//  NO TOCAR (ㆆ_ㆆ)
+/*  
+public void Explode() => Explode(out _, out _);
     public void Explode(out List<GameObject> targetsHit, out float totalDamageDealt)
     {
         targetsHit = new();
         totalDamageDealt = 0;
 
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, _explosion.Radius);
-
-        /*SphereCollider explosion = gameObject.AddComponent<SphereCollider>();
-        explosion.radius = _explosion.Radius;*/
 
         foreach (Collider hitCollider in hitColliders)
         {
@@ -118,36 +135,11 @@ public abstract class ExplosiveProjectile : Projectile, IDamageable
         }
     }
 
+    
     private float CalculateDistanceBasedEffect(Vector3 targetPosition)
     {
         float distance = Vector3.Distance(targetPosition, transform.position);
         float normalizedDistance = 1 - Mathf.Clamp01(distance / _explosion.Radius);
         return _explosion.Propagation.Evaluate(normalizedDistance);
     }
-
-    #region Damageable
-
-    public event Action OnDeath;
-    public event Action<int> OnDamage, OnHeal;
-
-    public void Damage(int damageAmount)
-    {
-        if (!_isDamageable) return;
-
-        Health -= damageAmount;
-        OnDamage?.Invoke(damageAmount);
-
-        if (Health <= 0) OnDeath?.Invoke();
-    }
-
-    public void Heal(int healAmount)
-    {
-        if (!_isDamageable) return;
-
-        Health += healAmount;
-        OnHeal?.Invoke(healAmount);
-    }
-
-    #endregion
-
-}
+    */

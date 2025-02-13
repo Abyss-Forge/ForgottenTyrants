@@ -7,13 +7,16 @@ namespace Utils.Extensions
 {
     public static class AudioSourceExtensions
     {
+
         /// <summary>
-        /// Plays the audio and awaits until it finishes playing.
+        /// Plays the audio clip attached to the AudioSource after an optional delay and returns a Task that completes when the audio clip finishes playing.
         /// </summary>
-        /// <param name="audio">The AudioSource to play.</param>
-        /// <returns>A Task that completes when the audio finishes playing.</returns>
-        public static Task PlayAndAwaitFinish(this AudioSource audio)
+        /// <param name="audio">The AudioSource to play the audio clip from.</param>
+        /// <param name="delay">The optional delay in seconds before playing the audio clip. Default is 0 seconds.</param>
+        /// <returns>A Task that completes when the audio clip finishes playing.</returns>
+        public static Task PlayAndAwaitFinish(this AudioSource audio, float delay = 0f)
         {
+            if (delay > 0) Task.Delay(TimeSpan.FromSeconds(delay));
             audio.Play();
             return Task.Delay(TimeSpan.FromSeconds(audio.clip.length));
         }

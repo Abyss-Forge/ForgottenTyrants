@@ -48,10 +48,19 @@ namespace Utils
         public static void ToggleFullscreen() => SetFullscreen(!Screen.fullScreen);
         public static void SetFullscreen(bool enable)
         {
-            FullScreenMode mode = enable ? FullScreenMode.FullScreenWindow : FullScreenMode.Windowed;
-            // Screen.fullScreenMode = mode;
+            bool isWindows = Application.platform is RuntimePlatform.WindowsPlayer or
+                         RuntimePlatform.WindowsEditor or RuntimePlatform.WindowsServer;
 
-            Screen.fullScreen = enable;
+            bool isOSX = Application.platform is RuntimePlatform.OSXPlayer or
+                         RuntimePlatform.OSXEditor or RuntimePlatform.OSXServer;
+
+            FullScreenMode fullScreenMode = FullScreenMode.FullScreenWindow;
+            if (isWindows) fullScreenMode = FullScreenMode.ExclusiveFullScreen;
+            if (isOSX) fullScreenMode = FullScreenMode.MaximizedWindow;
+
+            Screen.fullScreenMode = enable ? fullScreenMode : FullScreenMode.Windowed;
+
+            //Screen.fullScreen = enable;
             if (!enable) CenterWindow();
 
             PlayerPrefsExtensions.SetBool(PlayerPrefsKeys.DISPLAY_FULLSCREEN_MODE, enable);
