@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class BeginDisabled : MonoBehaviour
+public class DisabledByDefault : MonoBehaviour
 {
     public bool PauseForTesting;
 
@@ -15,12 +15,12 @@ public class BeginDisabled : MonoBehaviour
 }
 
 #if UNITY_EDITOR
-[CustomEditor(typeof(BeginDisabled))]
-public class AutoDisableEditor : Editor
+[CustomEditor(typeof(DisabledByDefault))]
+public class DisabledByDefaultEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        BeginDisabled autoDisable = (BeginDisabled)target;
+        DisabledByDefault autoDisable = (DisabledByDefault)target;
 
         EditorGUILayout.HelpBox("I will start in a disabled state", MessageType.Info);
 

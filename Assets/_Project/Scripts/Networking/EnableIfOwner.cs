@@ -6,7 +6,7 @@ using UnityEngine;
 public class EnableIfOwner : NetworkBehaviour
 {
     //TODO unique attribute tag to unallow duplicates
-    [SerializeField,] private BeginDisabled[] _gameObjectsToEnable;
+    [SerializeField,] private DisabledByDefault[] _gameObjectsToEnable;
     [SerializeField,] private Component[] _componentsToEnable;
 
     void OnValidate()
