@@ -9,7 +9,8 @@ public class CharacterSpawner : NetworkBehaviour
 {
     [SerializeField] private NetworkObject _playerPrefab;
     [SerializeField] private Transform[] _spawnPointsTeamA, _spawnPointsTeamB;
-    [SerializeField] private float _timeForRespawn = 5f;
+    [SerializeField] private float _respawnTime = 5f;
+
     private EventBinding<PlayerDeathEvent> _playerDeathEventBinding;
     private int _teamACount = 0, _teamBCount = 0;
 
@@ -18,6 +19,17 @@ public class CharacterSpawner : NetworkBehaviour
         if (!IsServer) return;
 
         SpawnAllPlayers();
+    }
+
+    void OnEnable()
+    {
+        _playerDeathEventBinding = new EventBinding<PlayerDeathEvent>(() => StartCoroutine(Respawn()));
+        EventBus<PlayerDeathEvent>.Register(_playerDeathEventBinding);
+    }
+
+    void OnDisable()
+    {
+        EventBus<PlayerDeathEvent>.Deregister(_playerDeathEventBinding);
     }
 
     private void SpawnAllPlayers()
@@ -40,49 +52,37 @@ public class CharacterSpawner : NetworkBehaviour
         Transform tr;
         if (teamId == 0)
         {
-            tr = _spawnPointsTeamA[_teamACount];
-            _teamACount++;
+            tr = _spawnPointsTeamA[_teamACount++];
         }
-        else
+        else    // if (teamId == 1)
         {
-            tr = _spawnPointsTeamB[_teamBCount];
-            _teamBCount++;
+            tr = _spawnPointsTeamB[_teamBCount++];
         }
         return tr;
     }
 
-    IEnumerator Respawn()
+    private IEnumerator Respawn()
     {
-        yield return new WaitForSeconds(_timeForRespawn);
-        ServiceLocator.Global.Get(out CharacterController characterController);
+        yield return new WaitForSeconds(_respawnTime);
         EventBus<PlayerRespawnEvent>.Raise(new PlayerRespawnEvent());
+
         ServiceLocator.Global.Get(out PlayerInfo player);
+        ServiceLocator.Global.Get(out CharacterController characterController);
+
+        player.InitializeBaseBuildData(player.ClientData);
 
         characterController.enabled = false;
-
+        Transform tr;
         if (player.ClientData.TeamId == 0)
         {
-            characterController.transform.CopyTransform(_spawnPointsTeamA[Random.Range(0, 2)]);
+            tr = _spawnPointsTeamA[Random.Range(0, 2)];
         }
         else
         {
-            characterController.transform.CopyTransform(_spawnPointsTeamB[Random.Range(0, 2)]);
+            tr = _spawnPointsTeamB[Random.Range(0, 2)];
         }
+        characterController.transform.CopyTransform(tr);
         characterController.enabled = true;
-
-        player.InitializeBaseBuildData(player.ClientData);
-        //TODO reactivar player animator
-    }
-
-    private void OnEnable()
-    {
-        _playerDeathEventBinding = new EventBinding<PlayerDeathEvent>(() => StartCoroutine(Respawn()));
-        EventBus<PlayerDeathEvent>.Register(_playerDeathEventBinding);
-    }
-
-    private void OnDisable()
-    {
-        EventBus<PlayerDeathEvent>.Deregister(_playerDeathEventBinding);
     }
 
 }

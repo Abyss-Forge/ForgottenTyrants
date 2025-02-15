@@ -11,20 +11,10 @@ public class BuffableBehaviour : MonoBehaviour//, IBuffable
 
     public event Action<bool> OnBuff;
 
-    bool _isInitialized;
-
-    void Awake()
-    {
-        if (!_baseStats.Equals(new Stats())) Initialize(_baseStats);
-    }
-
     public void Initialize(Stats defaultStats)
     {
-        if (_isInitialized) return;
-        _isInitialized = true;
-
-        _baseStats.Add(defaultStats);
-        _modifiedStats.Add(defaultStats);
+        _baseStats = new(defaultStats);
+        _modifiedStats = new(defaultStats);
     }
 
     public void ApplyBuffFromInfo(BuffInfo info) => ApplyBuff(info.Stat, info.Value, info.Duration, info.IsPercentual, info.IsDebuff);

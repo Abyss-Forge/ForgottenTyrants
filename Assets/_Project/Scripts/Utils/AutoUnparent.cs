@@ -1,11 +1,11 @@
 using UnityEngine;
-using Utils.Extensions;
 
 public class AutoUnparent : MonoBehaviour
 {
+    [Tooltip("This GameObject will be unparented to the scene hierarchy root on Awake")]
 
     void Awake()
     {
-        transform.Unparent();
+        transform.SetParent(null);
     }
 }

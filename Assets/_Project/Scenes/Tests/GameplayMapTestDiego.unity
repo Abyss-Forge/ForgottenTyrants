@@ -2175,7 +2175,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1550470408}
   m_Layer: 0
-  m_Name: Hide position
+  m_Name: Boss hidden position
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2642,6 +2642,11 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 4171152395
       objectReference: {fileID: 0}
+    - target: {fileID: 487004260658543759, guid: ce7fb81c2282e5049862dd3d56c052e3,
+        type: 3}
+      propertyPath: SynchronizeTransform
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2379968140220625280, guid: ce7fb81c2282e5049862dd3d56c052e3,
         type: 3}
       propertyPath: m_Value
@@ -3057,6 +3062,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8924344315619813142, guid: ce7fb81c2282e5049862dd3d56c052e3,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.010009766
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -3132,6 +3142,11 @@ PrefabInstance:
         type: 3}
       propertyPath: GlobalObjectIdHash
       value: 2788005972
+      objectReference: {fileID: 0}
+    - target: {fileID: 7539522792693849211, guid: a4c43bf8901061a40a02054aba85ff81,
+        type: 3}
+      propertyPath: SynchronizeTransform
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7539522792964821713, guid: a4c43bf8901061a40a02054aba85ff81,
         type: 3}
@@ -3211,17 +3226,17 @@ SceneRoots:
   - {fileID: 290544992}
   - {fileID: 124469837}
   - {fileID: 7539522792693849209}
+  - {fileID: 4701203295925240100}
   - {fileID: 723692394}
-  - {fileID: 1084550679}
+  - {fileID: 330878237}
   - {fileID: 1550470408}
   - {fileID: 647434065}
+  - {fileID: 1084550679}
   - {fileID: 1063550953493979928}
   - {fileID: 974346971}
   - {fileID: 25083726}
   - {fileID: 1873421116}
   - {fileID: 1272364757}
-  - {fileID: 4701203295925240100}
-  - {fileID: 330878237}
   - {fileID: 1362916705}
   - {fileID: 732063564}
   - {fileID: 7282121}

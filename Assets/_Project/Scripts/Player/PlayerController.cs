@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour
 
     void OnEnable()
     {
-        _playerDeathEventBinding = new EventBinding<PlayerDeathEvent>(HandlePlayerDeath);
+        _playerDeathEventBinding = new EventBinding<PlayerDeathEvent>(HandleDeathEvent);
         EventBus<PlayerDeathEvent>.Register(_playerDeathEventBinding);
 
         _playerMovementEventBinding = new EventBinding<PlayerMovementEvent>(HandleMovementEvent);
@@ -179,10 +179,11 @@ public class PlayerController : MonoBehaviour
         _isDashOnCooldown = false;
     }
 
-    private void HandlePlayerDeath()
+    private void HandleDeathEvent()
     {
         FreezeMovement(true);
-        _animator.SetTrigger("Ragdoll");
+        /*_animator.SetTrigger("Ragdoll");
+        _animator.enabled = false;*/
     }
 
     private void HandleMovementEvent(PlayerMovementEvent @event)
@@ -266,7 +267,6 @@ public class PlayerController : MonoBehaviour
     {
         if (_objectMaterial != null) _objectMaterial.DisableKeyword("_EMISSION");
     }
-
 
     #endregion
 }

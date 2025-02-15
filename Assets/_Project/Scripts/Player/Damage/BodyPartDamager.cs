@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Systems.EventBus;
 using Systems.ServiceLocator;
 using Unity.Netcode;
@@ -16,16 +18,17 @@ public class BodyPartDamager : MonoBehaviour
     [Serializable]
     private struct BodyPartData
     {
-        [Tooltip("Only visual")]
-        public string Name;
-
+        [Tooltip("Only visual")] public string Name;
         public BodyPart[] BodyPart;
         public float DamageMultiplier;
     }
-
     [SerializeField] private BodyPartData[] _bodyPartsData;
 
-    private List<AbilityInfoTest> _alreadyApliedInfos = new();    //TODO: dynamyc empty
+    [SerializeField] private float _spawnInvincibilityTime;
+    private bool _isInvincible;
+
+    private List<int> _alreadyAppliedInfosHashes = new();    //TODO: dynamyc empty
+
     private EventBinding<PlayerRespawnEvent> _playerRespawnEventBinding;
 
     void Awake()
@@ -48,7 +51,8 @@ public class BodyPartDamager : MonoBehaviour
         {
             foreach (BodyPart bodyPart in data.BodyPart)
             {
-                bodyPart.OnCollisionEnterEvent += (collision) => HandleCollision(collision, bodyPart);
+                bodyPart.OnCollisionEnterEvent += (collision) => HandleCollision(collision.gameObject, bodyPart);
+                bodyPart.OnTriggerEnterEvent += (collision) => HandleCollision(collision.gameObject, bodyPart);
             }
         }
     }
@@ -63,23 +67,26 @@ public class BodyPartDamager : MonoBehaviour
         {
             foreach (BodyPart bodyPart in data.BodyPart)
             {
-                bodyPart.OnCollisionEnterEvent -= (collision) => HandleCollision(collision, bodyPart);
+                bodyPart.OnCollisionEnterEvent -= (collision) => HandleCollision(collision.gameObject, bodyPart);
+                bodyPart.OnTriggerEnterEvent -= (collision) => HandleCollision(collision.gameObject, bodyPart);
             }
         }
     }
 
-    private void HandleCollision(Collision other, BodyPart bodyPartHit)
+    private void HandleCollision(GameObject other, BodyPart bodyPartHit)
     {
         Debug.Log("Hola");
-        if (!other.gameObject.TryGetComponentInParent<NetworkObject>(out NetworkObject networkObject)) return;
+        if (!_isInvincible) return;
+        Debug.Log("vamos con el daño");
+        if (!other.TryGetComponentInParent<NetworkObject>(out NetworkObject networkObject)) return;
         Debug.Log("0");
         if (!networkObject.TryGetComponent<InfoContainer>(out InfoContainer infoContainer)) return;
 
         ServiceLocator.Global.Get(out PlayerInfo player);
         Debug.Log("1");
-        foreach (var info in infoContainer.InfoList.Where(x => x.CanApply(player.ClientData) && !_alreadyApliedInfos.Contains(x)))
+        foreach (var info in infoContainer.InfoList.Where(x => x.CanApply(player.ClientData) && !_alreadyAppliedInfosHashes.Contains(x.GetHashCode())))
         {
-            _alreadyApliedInfos.Add(info);
+            _alreadyAppliedInfosHashes.Add(info.GetHashCode());
 
             Debug.Log("2");
             BodyPartData data = _bodyPartsData.First(x => x.BodyPart.Contains(bodyPartHit));
@@ -112,13 +119,14 @@ public class BodyPartDamager : MonoBehaviour
         SetRagdollActive(true);
     }
 
-    void HandleRespawn()
+    private void HandleRespawn()
     {
         ServiceLocator.Global.Get(out PlayerInfo player);
         _damageable.Initialize((int)player.Stats.Health);
         _buffable.Initialize(player.Stats);
 
         SetRagdollActive(false);
+        StartCoroutine(ApplyInvincibility());
     }
 
     private void SetRagdollActive(bool enable = true)
@@ -130,6 +138,20 @@ public class BodyPartDamager : MonoBehaviour
                 bodyPart.Rigidbody.isKinematic = !enable;
             }
         }
+    }
+
+    private IEnumerator ApplyInvincibility()
+    {
+        _isInvincible = true;
+
+        float timer = 0f;
+        while (timer < _spawnInvincibilityTime)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        _isInvincible = false;
     }
 
 }

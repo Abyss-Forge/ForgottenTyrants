@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum EStat
@@ -31,9 +29,21 @@ public class Stats
 
     public Stats() { }
 
-    public Stats(int hp, int physicalDamage, int magicalDamage, float movementSpeed, float attackSpeed, int physicalDefense, int magicalDefense, float cooldownReduction) : base()
+    public Stats(Stats stats) : base()
     {
-        _health = hp;
+        _health = stats.Health;
+        _physicalDamage = stats.PhysicalDamage;
+        _magicalDamage = stats.MagicalDamage;
+        _physicalDefense = stats.PhysicalDefense;
+        _magicalDefense = stats.MagicalDefense;
+        _movementSpeed = stats.MovementSpeed;
+        _attackSpeed = stats.AttackSpeed;
+        _cooldownReduction = stats.CooldownReduction;
+    }
+
+    public Stats(int health, int physicalDamage, int magicalDamage, float movementSpeed, float attackSpeed, int physicalDefense, int magicalDefense, float cooldownReduction) : base()
+    {
+        _health = health;
         _physicalDamage = physicalDamage;
         _magicalDamage = magicalDamage;
         _physicalDefense = physicalDefense;
@@ -116,7 +126,7 @@ public class Stats
 
 
 
-    //mierdas del diego
+    //mierdas del diego que deberian estar hechas con el buffable behaviour
     public void ChangePhysicalDamage(float newPhysicalDamage)
     {
         _physicalDamage = newPhysicalDamage;
