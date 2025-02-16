@@ -8,7 +8,12 @@ namespace Systems.EventBus
 
     public struct PlayerDeathEvent : IBusEvent { }
 
-    public struct PlayerRespawnEvent : IBusEvent { }
+    public struct PlayerRespawnEvent : IBusEvent
+    {
+        public bool IsFirstSpawn;
+        public float SpawnInvincibilityTime;
+        public float RespawnTime;
+    }
 
     public struct PlayerMovementEvent : IBusEvent
     {

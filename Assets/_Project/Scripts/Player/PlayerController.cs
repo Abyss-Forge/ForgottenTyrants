@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Threading.Tasks;
 using Systems.EventBus;
 using Systems.GameManagers;
 using UnityEngine;
@@ -31,6 +33,7 @@ public class PlayerController : MonoBehaviour
     public bool CanDash { get; set; } = true;
 
     private EventBinding<PlayerDeathEvent> _playerDeathEventBinding;
+    private EventBinding<PlayerRespawnEvent> _playerRespawnEventBinding;
     private EventBinding<PlayerMovementEvent> _playerMovementEventBinding;
 
     private void OnMove(InputAction.CallbackContext context)
@@ -63,6 +66,8 @@ public class PlayerController : MonoBehaviour
     {
         _playerDeathEventBinding = new EventBinding<PlayerDeathEvent>(HandleDeathEvent);
         EventBus<PlayerDeathEvent>.Register(_playerDeathEventBinding);
+        _playerRespawnEventBinding = new EventBinding<PlayerRespawnEvent>(HandleRespawnEvent);
+        EventBus<PlayerRespawnEvent>.Register(_playerRespawnEventBinding);
 
         _playerMovementEventBinding = new EventBinding<PlayerMovementEvent>(HandleMovementEvent);
         EventBus<PlayerMovementEvent>.Register(_playerMovementEventBinding);
@@ -76,6 +81,8 @@ public class PlayerController : MonoBehaviour
     void OnDisable()
     {
         EventBus<PlayerDeathEvent>.Deregister(_playerDeathEventBinding);
+        EventBus<PlayerRespawnEvent>.Deregister(_playerRespawnEventBinding);
+
         EventBus<PlayerMovementEvent>.Deregister(_playerMovementEventBinding);
 
         MyInputManager.Instance.Unsubscribe(EInputAction.MOVE, OnMove);
@@ -182,8 +189,11 @@ public class PlayerController : MonoBehaviour
     private void HandleDeathEvent()
     {
         FreezeMovement(true);
-        /*_animator.SetTrigger("Ragdoll");
-        _animator.enabled = false;*/
+    }
+
+    private void HandleRespawnEvent()
+    {
+        FreezeMovement(false);
     }
 
     private void HandleMovementEvent(PlayerMovementEvent @event)

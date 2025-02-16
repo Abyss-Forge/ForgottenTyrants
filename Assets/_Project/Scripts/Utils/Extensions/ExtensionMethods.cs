@@ -147,15 +147,13 @@ namespace Utils.Extensions
 
         public static bool TryGetComponentInParent<T>(this GameObject go, out T component) where T : Component
         {
-            component = null;
-            go.GetComponentInParent<T>().OrNull();
+            component = go.GetComponentInParent<T>().OrNull();
             return component != null;
         }
 
         public static bool TryGetComponentInChildren<T>(this GameObject go, out T component) where T : Component
         {
-            component = null;
-            go.GetComponentInChildren<T>().OrNull();
+            component = go.GetComponentInChildren<T>().OrNull();
             return component != null;
         }
 

@@ -270,10 +270,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3670409817
+  GlobalObjectIdHash: 1296353163
   InScenePlacedSourceGlobalObjectIdHash: 1017110012
   AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
+  SynchronizeTransform: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
@@ -291,7 +291,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d45e60d6ae61f244fb539d9b4e3f5f41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _characterDatabase: {fileID: 11400000, guid: ec8b1e2238d23db41a016f6fc4ed931b, type: 2}
   _playerPrefab: {fileID: -7936775410058264635, guid: 5f77e369e2c445340866d55e2917973d,
     type: 3}
   _spawnPointsTeamA:
@@ -302,6 +301,7 @@ MonoBehaviour:
   - {fileID: 3897556454048418331}
   - {fileID: 1337082177462273023}
   - {fileID: 7101431949681530862}
+  _respawnTime: 5
 --- !u!1 &8196075435086021598
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Systems.EventBus;
 using Systems.ServiceLocator;
 using Unity.Netcode;
@@ -24,9 +23,7 @@ public class BodyPartDamager : MonoBehaviour
     }
     [SerializeField] private BodyPartData[] _bodyPartsData;
 
-    [SerializeField] private float _spawnInvincibilityTime;
     private bool _isInvincible;
-
     private List<int> _alreadyAppliedInfosHashes = new();    //TODO: dynamyc empty
 
     private EventBinding<PlayerRespawnEvent> _playerRespawnEventBinding;
@@ -76,14 +73,14 @@ public class BodyPartDamager : MonoBehaviour
     private void HandleCollision(GameObject other, BodyPart bodyPartHit)
     {
         Debug.Log("Hola");
-        if (!_isInvincible) return;
+        if (_isInvincible) return;
         Debug.Log("vamos con el daño");
         if (!other.TryGetComponentInParent<NetworkObject>(out NetworkObject networkObject)) return;
         Debug.Log("0");
         if (!networkObject.TryGetComponent<InfoContainer>(out InfoContainer infoContainer)) return;
 
         ServiceLocator.Global.Get(out PlayerInfo player);
-        Debug.Log("1");
+        Debug.Log("1 " + infoContainer.InfoList.ElementAt(0).GetHashCode());
         foreach (var info in infoContainer.InfoList.Where(x => x.CanApply(player.ClientData) && !_alreadyAppliedInfosHashes.Contains(x.GetHashCode())))
         {
             _alreadyAppliedInfosHashes.Add(info.GetHashCode());
@@ -119,14 +116,14 @@ public class BodyPartDamager : MonoBehaviour
         SetRagdollActive(true);
     }
 
-    private void HandleRespawn()
+    private void HandleRespawn(PlayerRespawnEvent @event)
     {
         ServiceLocator.Global.Get(out PlayerInfo player);
         _damageable.Initialize((int)player.Stats.Health);
         _buffable.Initialize(player.Stats);
 
         SetRagdollActive(false);
-        StartCoroutine(ApplyInvincibility());
+        StartCoroutine(ApplyInvincibility(@event.SpawnInvincibilityTime));
     }
 
     private void SetRagdollActive(bool enable = true)
@@ -140,17 +137,10 @@ public class BodyPartDamager : MonoBehaviour
         }
     }
 
-    private IEnumerator ApplyInvincibility()
+    private IEnumerator ApplyInvincibility(float invincibilityTime)
     {
         _isInvincible = true;
-
-        float timer = 0f;
-        while (timer < _spawnInvincibilityTime)
-        {
-            timer += Time.deltaTime;
-            yield return null;
-        }
-
+        yield return new WaitForSeconds(invincibilityTime);
         _isInvincible = false;
     }
 

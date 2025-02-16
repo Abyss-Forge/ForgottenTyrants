@@ -4106,7 +4106,6 @@ MonoBehaviour:
     - {fileID: 7533328619992459842}
     - {fileID: 7448037011955016311}
     DamageMultiplier: 0.75
-  _spawnInvincibilityTime: 5
 --- !u!114 &7836066011949525608
 MonoBehaviour:
   m_ObjectHideFlags: 0

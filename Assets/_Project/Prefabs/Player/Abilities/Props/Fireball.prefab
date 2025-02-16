@@ -171,12 +171,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1587317276
+  GlobalObjectIdHash: 280767020
   InScenePlacedSourceGlobalObjectIdHash: 280767020
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
+  ActiveSceneSynchronization: 1
+  SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
@@ -300,25 +300,12 @@ MonoBehaviour:
   _sfx: {fileID: 3986479716953532485}
   _lifetime: 5
   _gravityMultiplier: 0
-  _hasKnockback: 0
-  _knockbackForce: 500
-  _hasDamage: 1
-  _damage: 100
   _hasRicochet: 0
   _ricochets: 5
   _maxRicochetAngle: 45
-  _explosion:
-    Radius: 0
-    PropagationTime: 0
-    Propagation:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
+  _explosion: {fileID: 0}
   _explodeOnContact: 1
   _explodeOnLifetimeEnd: 0
-  _explosionAffectedTags: []
   _isProximityEnabled: 0
   _proximityDetector: {fileID: 0}
   _detonationDelaySeconds: 1

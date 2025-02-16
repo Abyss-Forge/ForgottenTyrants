@@ -9,10 +9,11 @@ public class CharacterSpawner : NetworkBehaviour
 {
     [SerializeField] private NetworkObject _playerPrefab;
     [SerializeField] private Transform[] _spawnPointsTeamA, _spawnPointsTeamB;
-    [SerializeField] private float _respawnTime = 5f;
+    [SerializeField] private float _respawnTime = 5f, _spawnInvincibilityTime = 3f;
+
+    private int _teamACount = 0, _teamBCount = 0;
 
     private EventBinding<PlayerDeathEvent> _playerDeathEventBinding;
-    private int _teamACount = 0, _teamBCount = 0;
 
     public override void OnNetworkSpawn()
     {
@@ -64,7 +65,12 @@ public class CharacterSpawner : NetworkBehaviour
     private IEnumerator Respawn()
     {
         yield return new WaitForSeconds(_respawnTime);
-        EventBus<PlayerRespawnEvent>.Raise(new PlayerRespawnEvent());
+        EventBus<PlayerRespawnEvent>.Raise(new PlayerRespawnEvent
+        {
+            IsFirstSpawn = false,
+            SpawnInvincibilityTime = _spawnInvincibilityTime,
+            RespawnTime = _respawnTime
+        });
 
         ServiceLocator.Global.Get(out PlayerInfo player);
         ServiceLocator.Global.Get(out CharacterController characterController);
