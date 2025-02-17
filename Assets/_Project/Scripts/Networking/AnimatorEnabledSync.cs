@@ -15,8 +15,10 @@ public class AnimatorEnabledSync : NetworkBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    void OnEnable()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) return;
+
         _playerDeathEventBinding = new EventBinding<PlayerDeathEvent>(HandleDeath);
         EventBus<PlayerDeathEvent>.Register(_playerDeathEventBinding);
 
@@ -24,8 +26,10 @@ public class AnimatorEnabledSync : NetworkBehaviour
         EventBus<PlayerRespawnEvent>.Register(_playerRespawnEventBinding);
     }
 
-    void OnDisable()
+    public override void OnNetworkDespawn()
     {
+        if (!IsOwner) return;
+
         EventBus<PlayerDeathEvent>.Deregister(_playerDeathEventBinding);
         EventBus<PlayerRespawnEvent>.Deregister(_playerRespawnEventBinding);
     }

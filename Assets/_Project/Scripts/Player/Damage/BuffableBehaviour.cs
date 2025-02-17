@@ -17,7 +17,7 @@ public class BuffableBehaviour : MonoBehaviour//, IBuffable
         _modifiedStats = new(defaultStats);
     }
 
-    public void ApplyBuffFromInfo(BuffInfo info) => ApplyBuff(info.Stat, info.Value, info.Duration, info.IsPercentual, info.IsDebuff);
+    public void ApplyBuffFromData(BuffData info) => ApplyBuff(info.Stat, info.Value, info.Duration, info.IsPercentual, info.IsDebuff);
 
     public void ApplyBuff(EStat stat, float value, float duration = -1, bool isPercentual = true, bool isDebuff = false)
     {

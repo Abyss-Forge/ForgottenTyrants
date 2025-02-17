@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MinimapFollow : MonoBehaviour
@@ -20,6 +18,9 @@ public class MinimapFollow : MonoBehaviour
     {
         _minimapCamera.transform.position = _defaultPositionRespectTarget;
         _minimapIconsCamera.transform.position = _defaultPositionRespectTarget;
+        //we do this to avoid flickering
+        _minimapCamera.farClipPlane = _defaultPositionRespectTarget.y + 10f;
+        _minimapIconsCamera.farClipPlane = _defaultPositionRespectTarget.y + 10f;
     }
 
     void OnEnable()

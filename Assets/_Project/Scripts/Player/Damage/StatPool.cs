@@ -39,7 +39,7 @@ public class StatPool : MonoBehaviour
             _minimumValue = minimumValue;
         }
 
-        public void ApplyBuffFromInfo(BuffInfo info) => ApplyBuff(info.Value, info.Duration, info.IsPercentual, info.IsDebuff);
+        public void ApplyBuffFromInfo(BuffData info) => ApplyBuff(info.Value, info.Duration, info.IsPercentual, info.IsDebuff);
 
         public void ApplyBuff(float value, float duration = -1, bool isPercentual = true, bool isDebuff = false)
         {

@@ -6,12 +6,12 @@ using Unity.Netcode;
 using UnityEngine;
 using Utils.Extensions;
 
-[RequireComponent(typeof(Rigidbody), typeof(Collider), typeof(InfoContainer))]
+[RequireComponent(typeof(Rigidbody), typeof(Collider), typeof(AbilityDataContainer))]
 public abstract class Projectile : NetworkBehaviour
 {
     protected Rigidbody _rigidbody { get; set; }
     protected Collider _collider { get; set; }
-    public InfoContainer InfoContainer { get; protected set; }
+    public AbilityDataContainer InfoContainer { get; protected set; }
 
     public enum EProjectileState
     {
@@ -36,7 +36,7 @@ public abstract class Projectile : NetworkBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _collider = GetComponent<Collider>();
-        InfoContainer = GetComponent<InfoContainer>();
+        InfoContainer = GetComponent<AbilityDataContainer>();
 
         _lifetimeTimer = _lifetime;
         _remainingRicochets = _ricochets;

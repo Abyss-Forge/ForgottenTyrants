@@ -87,6 +87,6 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
         playerVelocity.y = 0;
         Vector3 launchVelocity = adjustedDirection * _launchForce + playerVelocity;
 
-        SpawnManager.Instance.SpawnProjectile(_projectilePrefab.gameObject, position, rotation, scale, launchVelocity, _infoList);
+        SpawnManager.Instance.SpawnProjectile(_projectilePrefab.gameObject, position, rotation, scale, launchVelocity, _abilityDataList);
     }
 }

@@ -24,7 +24,7 @@ public class BodyPartDamager : MonoBehaviour
     [SerializeField] private BodyPartData[] _bodyPartsData;
 
     private bool _isInvincible;
-    private List<int> _alreadyAppliedInfosHashes = new();    //TODO: dynamyc empty
+    private List<int> _alreadyAppliedHashes = new();    //TODO: dynamyc empty
 
     private EventBinding<PlayerRespawnEvent> _playerRespawnEventBinding;
 
@@ -72,40 +72,34 @@ public class BodyPartDamager : MonoBehaviour
 
     private void HandleCollision(GameObject other, BodyPart bodyPartHit)
     {
-        Debug.Log("Hola");
         if (_isInvincible) return;
-        Debug.Log("vamos con el daño");
         if (!other.TryGetComponentInParent<NetworkObject>(out NetworkObject networkObject)) return;
-        Debug.Log("0");
-        if (!networkObject.TryGetComponent<InfoContainer>(out InfoContainer infoContainer)) return;
+        if (!networkObject.TryGetComponent<AbilityDataContainer>(out AbilityDataContainer container)) return;
+        Debug.Log("Damage detected");
 
         ServiceLocator.Global.Get(out PlayerInfo player);
-        Debug.Log("1 " + infoContainer.InfoList.ElementAt(0).GetHashCode());
-        foreach (var info in infoContainer.InfoList.Where(x => x.CanApply(player.ClientData) && !_alreadyAppliedInfosHashes.Contains(x.GetHashCode())))
+        foreach (var data in container.DataList.Where(x => x.AbilityData.CanApply(player.ClientData) && !_alreadyAppliedHashes.Contains(x.AbilityData.Hash)))
         {
-            _alreadyAppliedInfosHashes.Add(info.GetHashCode());
+            _alreadyAppliedHashes.Add(data.AbilityData.Hash);
+            Debug.Log("Damage applied");
 
-            Debug.Log("2");
-            BodyPartData data = _bodyPartsData.First(x => x.BodyPart.Contains(bodyPartHit));
-            float damage = info.DamageAmount * infoContainer.Multiplier * data.DamageMultiplier;
-            _damageable.Damage((int)damage);
-            Debug.Log("Recibiste " + damage + " de daño en " + data.Name);
-
-            /*if (info is DamageInfo damageInfo)
+            if (data is DamageData damageData)
             {
-                Debug.Log("3");
-                BodyPartData data = _bodyPartsData.First(x => x.BodyPart.Contains(bodyPartHit));
-                float damage = damageInfo.DamageAmount * infoContainer.Multiplier * data.DamageMultiplier;
+                BodyPartData bodyPart = _bodyPartsData.First(x => x.BodyPart.Contains(bodyPartHit));
+                float damage = damageData.DamageAmount * container.Multiplier * bodyPart.DamageMultiplier;
                 _damageable.Damage((int)damage);
+                Debug.Log("Damaging " + bodyPart.Name);
             }
-            else if (info is HealInfo healInfo)
+            else if (data is HealData healData)
             {
-                _damageable.Heal((int)healInfo.HealAmount);
+                Debug.Log("Healing");
+                _damageable.Heal((int)healData.HealAmount);
             }
-            else if (info is BuffInfo buffInfo)
+            else if (data is BuffData buffData)
             {
-                _buffable.ApplyBuffFromInfo(buffInfo);
-            }*/
+                Debug.Log("Buffing");
+                _buffable.ApplyBuffFromData(buffData);
+            }
         }
     }
 
