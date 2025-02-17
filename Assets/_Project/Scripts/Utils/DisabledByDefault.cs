@@ -5,6 +5,7 @@ using UnityEditor;
 
 public class DisabledByDefault : MonoBehaviour
 {
+    [Tooltip("This GameObject will be disabled on Validate before the game runs")]
     public bool PauseForTesting;
 
     void OnValidate()
@@ -20,11 +21,11 @@ public class DisabledByDefaultEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        DisabledByDefault autoDisable = (DisabledByDefault)target;
+        DisabledByDefault script = (DisabledByDefault)target;
 
-        EditorGUILayout.HelpBox("I will start in a disabled state", MessageType.Info);
+        EditorGUILayout.HelpBox("I will be instantiated on disabled state", MessageType.Info);
 
-        if (autoDisable.PauseForTesting)
+        if (script.PauseForTesting)
         {
             EditorGUILayout.HelpBox("Remember to uncheck test mode before building", MessageType.Warning);
         }

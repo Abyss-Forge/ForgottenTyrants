@@ -46,7 +46,7 @@ namespace Systems.ServiceLocator
                 Debug.LogError($"ServiceManager.Register: Service of type {type.FullName} already registered");
             }
 
-            Debug.Log($"ServiceManager.Register: Registered service of type {type.FullName}");
+            //Debug.Log($"ServiceManager.Register: Registered service of type {type.FullName}");
             return this;
         }
     }

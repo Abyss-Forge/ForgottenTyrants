@@ -496,11 +496,6 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 1296353163
       objectReference: {fileID: 0}
-    - target: {fileID: 7539522792693849211, guid: a4c43bf8901061a40a02054aba85ff81,
-        type: 3}
-      propertyPath: InScenePlacedSourceGlobalObjectIdHash
-      value: 1017110012
-      objectReference: {fileID: 0}
     - target: {fileID: 7539522792964821713, guid: a4c43bf8901061a40a02054aba85ff81,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -551,46 +546,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7539522792964821726, guid: a4c43bf8901061a40a02054aba85ff81,
-        type: 3}
-      propertyPath: _spawnPointsTeamA.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7539522792964821726, guid: a4c43bf8901061a40a02054aba85ff81,
-        type: 3}
-      propertyPath: _spawnPointsTeamB.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7539522792964821726, guid: a4c43bf8901061a40a02054aba85ff81,
-        type: 3}
-      propertyPath: _spawnPointsTeamA.Array.data[0]
-      value: 
-      objectReference: {fileID: 7539522792693849215}
-    - target: {fileID: 7539522792964821726, guid: a4c43bf8901061a40a02054aba85ff81,
-        type: 3}
-      propertyPath: _spawnPointsTeamA.Array.data[1]
-      value: 
-      objectReference: {fileID: 7539522792693849214}
-    - target: {fileID: 7539522792964821726, guid: a4c43bf8901061a40a02054aba85ff81,
-        type: 3}
-      propertyPath: _spawnPointsTeamA.Array.data[2]
-      value: 
-      objectReference: {fileID: 7539522792693849213}
-    - target: {fileID: 7539522792964821726, guid: a4c43bf8901061a40a02054aba85ff81,
-        type: 3}
-      propertyPath: _spawnPointsTeamB.Array.data[0]
-      value: 
-      objectReference: {fileID: 7539522792693849212}
-    - target: {fileID: 7539522792964821726, guid: a4c43bf8901061a40a02054aba85ff81,
-        type: 3}
-      propertyPath: _spawnPointsTeamB.Array.data[1]
-      value: 
-      objectReference: {fileID: 7539522792693849211}
-    - target: {fileID: 7539522792964821726, guid: a4c43bf8901061a40a02054aba85ff81,
-        type: 3}
-      propertyPath: _spawnPointsTeamB.Array.data[2]
-      value: 
-      objectReference: {fileID: 7539522792693849210}
     - target: {fileID: 7539522792964821727, guid: a4c43bf8901061a40a02054aba85ff81,
         type: 3}
       propertyPath: m_Name
@@ -601,42 +556,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a4c43bf8901061a40a02054aba85ff81, type: 3}
---- !u!4 &7539522792693849210 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7101431949681530862, guid: a4c43bf8901061a40a02054aba85ff81,
-    type: 3}
-  m_PrefabInstance: {fileID: 7539522792693849209}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &7539522792693849211 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1337082177462273023, guid: a4c43bf8901061a40a02054aba85ff81,
-    type: 3}
-  m_PrefabInstance: {fileID: 7539522792693849209}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &7539522792693849212 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3897556454048418331, guid: a4c43bf8901061a40a02054aba85ff81,
-    type: 3}
-  m_PrefabInstance: {fileID: 7539522792693849209}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &7539522792693849213 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2631654881555864933, guid: a4c43bf8901061a40a02054aba85ff81,
-    type: 3}
-  m_PrefabInstance: {fileID: 7539522792693849209}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &7539522792693849214 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 120725285289519439, guid: a4c43bf8901061a40a02054aba85ff81,
-    type: 3}
-  m_PrefabInstance: {fileID: 7539522792693849209}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &7539522792693849215 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6270517000305060911, guid: a4c43bf8901061a40a02054aba85ff81,
-    type: 3}
-  m_PrefabInstance: {fileID: 7539522792693849209}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

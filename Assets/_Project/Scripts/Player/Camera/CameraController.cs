@@ -1,6 +1,7 @@
 using Systems.EventBus;
 using Systems.FSM;
 using Systems.GameManagers;
+using Systems.ServiceLocator;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Utils;
@@ -19,6 +20,12 @@ public class CameraController : MonoBehaviour
     private float _lookAngleX, _lookAngleY;
     private float _moveAngleX, _moveAngleY;
 
+    private Transform _followedTarget;
+    private Vector3 _defaultPosition, _initialLocalPosition;
+
+    EventBinding<PlayerDeathEvent> _playerDeathEventBinding;
+    EventBinding<PlayerRespawnEvent> _playerRespawnEventBinding;
+
     #region Setup
 
     public enum ECameraMode
@@ -27,8 +34,6 @@ public class CameraController : MonoBehaviour
     }
 
     public FiniteStateMachine<ECameraMode> _fsm { get; private set; }
-
-    EventBinding<PlayerDeathEvent> _playerDeathEventBinding;
 
     void Awake()
     {
@@ -41,6 +46,8 @@ public class CameraController : MonoBehaviour
         _lookAngleY = transform.localRotation.eulerAngles.y;
         _moveAngleX = transform.localPosition.x;
         _moveAngleY = transform.localPosition.y;
+
+        _defaultPosition = transform.localPosition;
 
         CursorHelper.Capture();
     }
@@ -68,6 +75,8 @@ public class CameraController : MonoBehaviour
     {
         _playerDeathEventBinding = new EventBinding<PlayerDeathEvent>(HandlePlayerDeath);
         EventBus<PlayerDeathEvent>.Register(_playerDeathEventBinding);
+        _playerRespawnEventBinding = new EventBinding<PlayerRespawnEvent>(HandlePlayerRespawn);
+        EventBus<PlayerRespawnEvent>.Register(_playerRespawnEventBinding);
 
         MyInputManager.Instance.Subscribe(EInputAction.LOOK, OnLook);
         MyInputManager.Instance.Subscribe(EInputAction.MOVE, OnMove);
@@ -79,6 +88,7 @@ public class CameraController : MonoBehaviour
     void OnDisable()
     {
         EventBus<PlayerDeathEvent>.Deregister(_playerDeathEventBinding);
+        EventBus<PlayerRespawnEvent>.Deregister(_playerRespawnEventBinding);
 
         MyInputManager.Instance.Unsubscribe(EInputAction.LOOK, OnLook);
         MyInputManager.Instance.Unsubscribe(EInputAction.MOVE, OnMove);
@@ -90,6 +100,11 @@ public class CameraController : MonoBehaviour
     private void HandlePlayerDeath()
     {
         _fsm.TransitionTo(ECameraMode.ORBITAL);
+    }
+
+    private void HandlePlayerRespawn()
+    {
+        _fsm.TransitionTo(ECameraMode.THIRD_PERSON);
     }
 
     private void OnLook(InputAction.CallbackContext context) => _look = context.ReadValue<Vector2>();
@@ -145,11 +160,35 @@ public class CameraController : MonoBehaviour
         readonly CameraController _camera;
         public CameraOrbital(CameraController camera) : base(ECameraMode.ORBITAL) => _camera = camera;
 
+        public override void Enter()
+        {
+            base.Enter();
+
+            ServiceLocator.Global.Get(out Animator playerAnimator);
+            if (playerAnimator.isHuman)
+            {
+                Transform hipsTransform = playerAnimator.GetBoneTransform(HumanBodyBones.Hips);
+                if (hipsTransform != null)
+                {
+                    _camera._followedTarget = hipsTransform;
+                    _camera._initialLocalPosition = hipsTransform.InverseTransformPoint(_camera.transform.position);
+                }
+            }
+        }
+
         public override void LateUpdate()
         {
             base.LateUpdate();
 
+            _camera.transform.position = _camera._followedTarget.TransformPoint(_camera._initialLocalPosition);
             _camera.transform.localRotation = Quaternion.Euler(_camera._lookAngleX, _camera._lookAngleY, 0);
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+
+            _camera.transform.localPosition = _camera._defaultPosition;
         }
     }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Systems.EventBus;
@@ -16,16 +17,15 @@ public class BodyPartDamager : MonoBehaviour
     [Serializable]
     private struct BodyPartData
     {
-        [Tooltip("Only visual")]
-        public string Name;
-
+        [Tooltip("Only visual")] public string Name;
         public BodyPart[] BodyPart;
         public float DamageMultiplier;
     }
-
     [SerializeField] private BodyPartData[] _bodyPartsData;
 
-    private List<AbilityInfoTest> _alreadyApliedInfos = new();    //TODO: dynamyc empty
+    private bool _isInvincible;
+    private List<int> _alreadyAppliedHashes = new();    //TODO: dynamyc empty
+
     private EventBinding<PlayerRespawnEvent> _playerRespawnEventBinding;
 
     void Awake()
@@ -48,7 +48,8 @@ public class BodyPartDamager : MonoBehaviour
         {
             foreach (BodyPart bodyPart in data.BodyPart)
             {
-                bodyPart.OnCollisionEnterEvent += (collision) => HandleCollision(collision, bodyPart);
+                bodyPart.OnCollisionEnterEvent += (collision) => HandleCollision(collision.gameObject, bodyPart);
+                bodyPart.OnTriggerEnterEvent += (collision) => HandleCollision(collision.gameObject, bodyPart);
             }
         }
     }
@@ -63,45 +64,42 @@ public class BodyPartDamager : MonoBehaviour
         {
             foreach (BodyPart bodyPart in data.BodyPart)
             {
-                bodyPart.OnCollisionEnterEvent -= (collision) => HandleCollision(collision, bodyPart);
+                bodyPart.OnCollisionEnterEvent -= (collision) => HandleCollision(collision.gameObject, bodyPart);
+                bodyPart.OnTriggerEnterEvent -= (collision) => HandleCollision(collision.gameObject, bodyPart);
             }
         }
     }
 
-    private void HandleCollision(Collision other, BodyPart bodyPartHit)
+    private void HandleCollision(GameObject other, BodyPart bodyPartHit)
     {
-        Debug.Log("Hola");
-        if (!other.gameObject.TryGetComponentInParent<NetworkObject>(out NetworkObject networkObject)) return;
-        Debug.Log("0");
-        if (!networkObject.TryGetComponent<InfoContainer>(out InfoContainer infoContainer)) return;
+        if (_isInvincible) return;
+        if (!other.TryGetComponentInParent<NetworkObject>(out NetworkObject networkObject)) return;
+        if (!networkObject.TryGetComponent<AbilityDataContainer>(out AbilityDataContainer container)) return;
+        Debug.Log("Damage detected");
 
         ServiceLocator.Global.Get(out PlayerInfo player);
-        Debug.Log("1");
-        foreach (var info in infoContainer.InfoList.Where(x => x.CanApply(player.ClientData) && !_alreadyApliedInfos.Contains(x)))
+        foreach (var data in container.DataList.Where(x => x.AbilityData.CanApply(player.ClientData) && !_alreadyAppliedHashes.Contains(x.AbilityData.Hash)))
         {
-            _alreadyApliedInfos.Add(info);
+            _alreadyAppliedHashes.Add(data.AbilityData.Hash);
+            Debug.Log("Damage applied");
 
-            Debug.Log("2");
-            BodyPartData data = _bodyPartsData.First(x => x.BodyPart.Contains(bodyPartHit));
-            float damage = info.DamageAmount * infoContainer.Multiplier * data.DamageMultiplier;
-            _damageable.Damage((int)damage);
-            Debug.Log("Recibiste " + damage + " de daño en " + data.Name);
-
-            /*if (info is DamageInfo damageInfo)
+            if (data is DamageData damageData)
             {
-                Debug.Log("3");
-                BodyPartData data = _bodyPartsData.First(x => x.BodyPart.Contains(bodyPartHit));
-                float damage = damageInfo.DamageAmount * infoContainer.Multiplier * data.DamageMultiplier;
+                BodyPartData bodyPart = _bodyPartsData.First(x => x.BodyPart.Contains(bodyPartHit));
+                float damage = damageData.DamageAmount * container.Multiplier * bodyPart.DamageMultiplier;
                 _damageable.Damage((int)damage);
+                Debug.Log("Damaging " + bodyPart.Name);
             }
-            else if (info is HealInfo healInfo)
+            else if (data is HealData healData)
             {
-                _damageable.Heal((int)healInfo.HealAmount);
+                Debug.Log("Healing");
+                _damageable.Heal((int)healData.HealAmount);
             }
-            else if (info is BuffInfo buffInfo)
+            else if (data is BuffData buffData)
             {
-                _buffable.ApplyBuffFromInfo(buffInfo);
-            }*/
+                Debug.Log("Buffing");
+                _buffable.ApplyBuffFromData(buffData);
+            }
         }
     }
 
@@ -112,13 +110,14 @@ public class BodyPartDamager : MonoBehaviour
         SetRagdollActive(true);
     }
 
-    void HandleRespawn()
+    private void HandleRespawn(PlayerRespawnEvent @event)
     {
         ServiceLocator.Global.Get(out PlayerInfo player);
         _damageable.Initialize((int)player.Stats.Health);
         _buffable.Initialize(player.Stats);
 
         SetRagdollActive(false);
+        StartCoroutine(ApplyInvincibility(@event.SpawnInvincibilityTime));
     }
 
     private void SetRagdollActive(bool enable = true)
@@ -130,6 +129,13 @@ public class BodyPartDamager : MonoBehaviour
                 bodyPart.Rigidbody.isKinematic = !enable;
             }
         }
+    }
+
+    private IEnumerator ApplyInvincibility(float invincibilityTime)
+    {
+        _isInvincible = true;
+        yield return new WaitForSeconds(invincibilityTime);
+        _isInvincible = false;
     }
 
 }

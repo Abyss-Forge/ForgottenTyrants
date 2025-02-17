@@ -39,12 +39,11 @@ public class StatPool : MonoBehaviour
             _minimumValue = minimumValue;
         }
 
-        public void ApplyBuffFromInfo(BuffInfo info) => ApplyBuff(info.Value, info.Duration, info.IsPercentual, info.IsDebuff);
+        public void ApplyBuffFromInfo(BuffData info) => ApplyBuff(info.Value, info.Duration, info.IsPercentual, info.IsDebuff);
 
         public void ApplyBuff(float value, float duration = -1, bool isPercentual = true, bool isDebuff = false)
         {
             if (isPercentual) value *= _defaultValue / 100;
-
             if (isDebuff) value *= -1;
 
             if (Value + value < _minimumValue) value = _minimumValue - Value;
@@ -52,19 +51,16 @@ public class StatPool : MonoBehaviour
 
             Value += value;
 
-            if (duration > 0) CoroutineManager.Instance.StartCoroutine(ResetBuff(value, duration));
+            if (duration > 0) ResetBuffAsync(value, duration);
 
-            Debug.Log("Buff apply ");
+            Debug.Log("Buff apply");
         }
 
-        private IEnumerator ResetBuff(float value, float duration)
+        private async void ResetBuffAsync(float value, float duration)
         {
-            yield return new WaitForSeconds(duration);
-
-            Value += -value;
+            await Task.Delay(TimeSpan.FromSeconds(duration));
+            Value -= value;
             Debug.Log("Buff reset");
-
-            yield return null;
         }
 
     }

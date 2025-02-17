@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 
-public class InfoContainer : NetworkBehaviour, INetworkSerializable, IEquatable<InfoContainer>
+public class AbilityDataContainer : NetworkBehaviour, INetworkSerializable, IEquatable<AbilityDataContainer>
 {
-    private List<AbilityInfoTest> _infoList = new();
-    public List<AbilityInfoTest> InfoList => _infoList;
+    List<IAbilityData> _dataList = new();
+    public List<IAbilityData> DataList => _dataList;
 
-    private float _multiplier = 1f;
+    float _multiplier = 1f;
     public float Multiplier => _multiplier;
 
-    public void AddInfo(AbilityInfoTest info)
+    public void AddInfo(IAbilityData info)
     {
-        _infoList.Add(info);
-        UpdateInfoList_ClientRpc(_infoList);
+        _dataList.Add(info);
+        UpdateInfoList_ClientRpc(_dataList);
         //UpdateInfoList_ServerRpc(_infoList);
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    private void UpdateInfoList_ClientRpc(List<AbilityInfoTest> updatedList)
+    private void UpdateInfoList_ClientRpc(List<IAbilityData> updatedList)
     {
-        _infoList = new List<AbilityInfoTest>(updatedList);
+        _dataList = new List<IAbilityData>(updatedList);
     }
 
     public void SetMultiplier(float multiplier)
@@ -40,24 +40,24 @@ public class InfoContainer : NetworkBehaviour, INetworkSerializable, IEquatable<
         serializer.SerializeValue(ref _multiplier);
         if (serializer.IsWriter)
         {
-            serializer.GetFastBufferWriter().WriteValueSafe(_infoList);
+            serializer.GetFastBufferWriter().WriteValueSafe(_dataList);
         }
         else
         {
-            serializer.GetFastBufferReader().ReadValueSafe(out _infoList);
+            serializer.GetFastBufferReader().ReadValueSafe(out _dataList);
         }
     }
 
-    public bool Equals(InfoContainer other)
+    public bool Equals(AbilityDataContainer other)
     {
         if (other == null) return false;
 
-        return _infoList.SequenceEqual(other._infoList) && _multiplier == other._multiplier;
+        return _dataList.SequenceEqual(other._dataList) && _multiplier == other._multiplier;
     }
 
     public override bool Equals(object obj)
     {
-        if (obj is InfoContainer other) return Equals(other);
+        if (obj is AbilityDataContainer other) return Equals(other);
 
         return false;
     }
@@ -65,7 +65,7 @@ public class InfoContainer : NetworkBehaviour, INetworkSerializable, IEquatable<
     public override int GetHashCode()
     {
         int hash = 17;
-        foreach (var info in _infoList)
+        foreach (var info in _dataList)
         {
             hash = hash * 31 + info.GetHashCode();
         }

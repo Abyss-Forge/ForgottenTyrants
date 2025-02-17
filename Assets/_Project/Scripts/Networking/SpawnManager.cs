@@ -9,13 +9,13 @@ public class SpawnManager : NetworkSingleton<SpawnManager>
 {
     Dictionary<ulong, GameObject> _clientServerHashMappings = new();
 
-    public void SpawnProjectile(GameObject prefab, Vector3 position, Quaternion rotation, Vector3 scale, Vector3 launchVelocity, List<AbilityInfoTest> infoList)
+    public void SpawnProjectile(GameObject prefab, Vector3 position, Quaternion rotation, Vector3 scale, Vector3 launchVelocity, List<IAbilityData> infoList)
     {
         SpawnProjectile_ServerRpc(prefab.name, position, rotation, scale, launchVelocity, infoList);
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    private void SpawnProjectile_ServerRpc(string prefabId, Vector3 position, Quaternion rotation, Vector3 scale, Vector3 launchVelocity, List<AbilityInfoTest> infoList)
+    private void SpawnProjectile_ServerRpc(string prefabId, Vector3 position, Quaternion rotation, Vector3 scale, Vector3 launchVelocity, List<IAbilityData> infoList)
     {
         GameObject prefab = null;
         foreach (var list in NetworkManager.Singleton.NetworkConfig.Prefabs.NetworkPrefabsLists)

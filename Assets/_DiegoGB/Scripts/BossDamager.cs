@@ -7,18 +7,20 @@ using Systems.ServiceLocator;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using Utils.Extensions;
 
 [RequireComponent(typeof(DamageableBehaviour), typeof(BuffableBehaviour))]
 public class BossDamager : MonoBehaviour
 {
     DamageableBehaviour _damageable;
     BuffableBehaviour _buffable;
-    [SerializeField] private BossController _bossController;
-    [SerializeField] private TMP_Text _team1PointsText;
-    [SerializeField] private TMP_Text _team2PointsText;
-    [SerializeField] GameController _gameController;
 
-    private List<AbilityInfoTest> _alreadyApliedInfos = new();    //TODO: dynamyc empty
+    [SerializeField] private BossController _bossController;
+    [SerializeField] private GameController _gameController;
+    [SerializeField] private TMP_Text _team1PointsText, _team2PointsText;
+
+    private bool _isInvincible;
+    private List<int> _alreadyAppliedDataHashes = new();    //TODO: dynamyc empty
 
     void Awake()
     {
@@ -26,21 +28,16 @@ public class BossDamager : MonoBehaviour
         _buffable = GetComponent<BuffableBehaviour>();
         _damageable.Initialize((int)_bossController.BaseStats.Health);
         _buffable.Initialize(_bossController.BaseStats);
-
-
     }
 
     void OnEnable()
     {
-
         _damageable.OnDeath += HandleDeath;
     }
 
     void OnDisable()
     {
-
         _damageable.OnDeath -= HandleDeath;
-
     }
 
     private void HandleDeath()
@@ -55,33 +52,32 @@ public class BossDamager : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        Debug.Log("Hola");
-        if (!other.gameObject.TryGetComponent<NetworkObject>(out NetworkObject networkObject)) return;
-        Debug.Log("0");
-        if (!networkObject.TryGetComponent<InfoContainer>(out InfoContainer infoContainer)) return;
+
+        if (_isInvincible) return;
+        if (!other.gameObject.TryGetComponentInParent<NetworkObject>(out NetworkObject networkObject)) return;
+        if (!networkObject.TryGetComponent<AbilityDataContainer>(out AbilityDataContainer container)) return;
 
         Debug.Log("1");
-        foreach (var info in infoContainer.InfoList.Where(x => !_alreadyApliedInfos.Contains(x)))
+        foreach (var data in container.DataList.Where(x => !_alreadyAppliedDataHashes.Contains(x.AbilityData.Hash)))
         {
-            //_alreadyApliedInfos.Add(info);
-            Debug.Log("2");
-            _damageable.Damage((int)info.DamageAmount);
-            Debug.Log("Equipo: " + info.TeamId);
-            UpdateScorePoints(info.TeamId, (int)info.DamageAmount);
-            /*if (info is DamageInfo damageInfo)
+            _alreadyAppliedDataHashes.Add(data.AbilityData.Hash);
+
+            if (data is DamageData damageData)
             {
-                Debug.Log("3");
-                EBodySection? bodyPart = GetBodyPartHit(other.contacts);
-                if (bodyPart.HasValue) ApplyDamage(bodyPart.Value, damageInfo.DamageAmount);
+                float damage = damageData.DamageAmount * container.Multiplier;
+                _damageable.Damage((int)damage);
+                Debug.Log("Damaging");
             }
-            else if (info is HealInfo healInfo)
+            else if (data is HealData healData)
             {
-                _damageable.Heal((int)healInfo.HealAmount);
+                Debug.Log("Healing");
+                _damageable.Heal((int)healData.HealAmount);
             }
-            else if (info is BuffInfo buffInfo)
+            else if (data is BuffData buffData)
             {
-                _buffable.ApplyBuffFromInfo(buffInfo);
-            }*/
+                Debug.Log("Buffing");
+                _buffable.ApplyBuffFromData(buffData);
+            }
         }
     }
 

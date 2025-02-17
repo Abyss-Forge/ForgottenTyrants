@@ -12,7 +12,7 @@ public enum EAbilityState
 
 public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
 {
-    protected List<AbilityInfoTest> _infoList = new();
+    protected List<IAbilityData> _abilityDataList = new();
 
     #region Default logic
 
@@ -69,7 +69,7 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
 
     protected virtual void CalculateInfo()
     {
-        _infoList.Clear();
+        _abilityDataList.Clear();
 
         ServiceLocator.Global.Get(out PlayerInfo player);
         ServiceLocator.Global.Get(out BuffableBehaviour buffable);
@@ -77,38 +77,37 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
         if (Stats.PhysicalDamage > 0)
         {
             float damage = buffable.CurrentStats.PhysicalDamage + Stats.PhysicalDamage;
-            _infoList.Add(new AbilityInfoTest(
+
+            _abilityDataList.Add(new DamageData(
                 playerId: player.ClientData.ClientId,
                 teamId: player.ClientData.TeamId,
-                affectedChannel: (int)EDamageApplyChannel.ENEMIES,
-                damageAmount: damage));
-            //damageType: EElementalType.PHYSIC));
-
-            Debug.Log("Info metida " + _infoList.Count);
+                affectedChannel: EDamageApplyChannel.ENEMIES,
+                damageAmount: damage,
+                damageType: EElementalType.PHYSIC));
         }
 
-        /*
         if (Stats.MagicalDamage > 0)
         {
             float damage = player.Stats.MagicalDamage + Stats.MagicalDamage;
-            _infoList.Add(new DamageInfo(
-                playerId: player.Data.ClientId,
-                teamId: player.Data.TeamId,
-                affectedChannel: (int)EDamageApplyChannel.ENEMIES,
+
+            _abilityDataList.Add(new DamageData(
+                playerId: player.ClientData.ClientId,
+                teamId: player.ClientData.TeamId,
+                affectedChannel: EDamageApplyChannel.ENEMIES,
                 damageAmount: damage,
                 damageType: EElementalType.MAGIC));
         }
 
-        if (Stats.Health > 0)
+        /*if (Stats.Health > 0)//esto deberia ser una stat distinta de curacion
         {
             float healAmount = Stats.Health;
-            _infoList.Add(new HealInfo(
-                playerId: player.Data.ClientId,
-                teamId: player.Data.TeamId,
-                affectedChannel: (int)EDamageApplyChannel.ALLIES,
-                healAmount: healAmount));
-        }
-        */
+
+            _abilityDataList.Add(new HealData(
+                 playerId: player.ClientData.ClientId,
+                 teamId: player.ClientData.TeamId,
+                 affectedChannel: EDamageApplyChannel.ENEMIES,
+                 healAmount: healAmount));
+        }*/
     }
 
     #endregion

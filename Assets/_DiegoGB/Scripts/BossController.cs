@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using Systems.BehaviourTree;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Rendering.HighDefinition;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 using DecalProjector = UnityEngine.Rendering.Universal.DecalProjector;
 using Random = UnityEngine.Random;
@@ -12,7 +10,6 @@ using Vector3 = UnityEngine.Vector3;
 
 public class BossController : Entity
 {
-
     [SerializeField] private float _targetSelectionInterval = 6f;
     [SerializeField] private float _attackInterval = 3f;
     [SerializeField] float _meleeRange = 10f;
@@ -21,7 +18,6 @@ public class BossController : Entity
     //[SerializeField] List<GameObject> _players = new List<GameObject>();
     [SerializeField] float _gravityEventEffectDuration = 10f;
     [SerializeField] float _damageBoostEffectDuration = 5f;
-
 
     [Header("Power Up settings")]
     [SerializeField] GameObject _powerUpPrefab;
@@ -37,7 +33,6 @@ public class BossController : Entity
     [SerializeField] float _lightningInterval = .5f;
 
     [Header("Disappear settings")]
-
     [SerializeField] Transform _hidePosition;
     [SerializeField] Transform _bossPosition;
     [SerializeField] private float _moveDuration = 5f;
@@ -65,7 +60,6 @@ public class BossController : Entity
     private BehaviorSequence _rootSequence;
     private Terrain _terrain;
     private Dictionary<GameObject, float> _originalJumpForces = new Dictionary<GameObject, float>();
-
 
     Dictionary<Player, float> _playerAggroList = new Dictionary<Player, float>();
     private Player _currentTarget = null;

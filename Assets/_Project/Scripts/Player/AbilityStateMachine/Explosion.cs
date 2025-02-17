@@ -8,7 +8,7 @@ using Utils.Extensions;
 public class Explosion : MonoBehaviour
 {
     SphereCollider _collider { get; set; }
-    InfoContainer _infoContainer { get; set; }
+    AbilityDataContainer _infoContainer { get; set; }
 
     [Header("References")]
     [SerializeField] private ParticleSystem _vfx;
@@ -29,7 +29,7 @@ public class Explosion : MonoBehaviour
     void Awake()
     {
         _collider = GetComponent<SphereCollider>();
-        _infoContainer = GetComponentInParent<InfoContainer>();
+        _infoContainer = GetComponentInParent<AbilityDataContainer>();
 
         _initialRadius = _collider.radius;
         _collider.enabled = false;
