@@ -985,14 +985,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1750642086027861340}
-  - component: {fileID: 2309931209327357530}
   m_Layer: 6
   m_Name: Armature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1750642086027861340
 Transform:
   m_ObjectHideFlags: 0
@@ -1009,19 +1008,6 @@ Transform:
   - {fileID: 7727704930184445751}
   m_Father: {fileID: 7670178137971895459}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2309931209327357530
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1549149247081171464}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 833a26cc2a6aef041828457ea2923416, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PauseForTesting: 0
 --- !u!1 &1582700822720553231
 GameObject:
   m_ObjectHideFlags: 0
@@ -1713,7 +1699,6 @@ MonoBehaviour:
   - {fileID: 951092374199941371}
   - {fileID: 6316421081484768529}
   - {fileID: 1019016546715915722}
-  - {fileID: 2309931209327357530}
   - {fileID: 7836066011949525608}
   - {fileID: 1311464760736619701}
   - {fileID: 8513622279716316321}

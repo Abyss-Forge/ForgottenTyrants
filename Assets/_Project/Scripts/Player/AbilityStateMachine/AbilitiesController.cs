@@ -1,9 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
+using Systems.EventBus;
 using Systems.GameManagers;
 using Systems.ServiceLocator;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Utils.Extensions;
 
 public class AbilitiesController : MonoBehaviour
@@ -11,7 +10,10 @@ public class AbilitiesController : MonoBehaviour
     [SerializeField] RectTransform _abilitiesIconsHolder;
     [SerializeField] Transform _abilitiesHolder;
 
-    List<AbilityStateMachine> _abilities;
+    private List<AbilityStateMachine> _abilities;
+
+    private EventBinding<PlayerDeathEvent> _playerDeathEventBinding;
+    private EventBinding<PlayerRespawnEvent> _playerRespawnEventBinding;
 
     void Awake()
     {
@@ -32,18 +34,21 @@ public class AbilitiesController : MonoBehaviour
 
     void OnEnable()
     {
-        MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_1, _abilities[0].OnTriggered);
-        MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_2, _abilities[1].OnTriggered);
-        MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_3, _abilities[2].OnTriggered);
-        MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_4, _abilities[3].OnTriggered);
+        _playerDeathEventBinding = new EventBinding<PlayerDeathEvent>(HandleDeath);
+        EventBus<PlayerDeathEvent>.Register(_playerDeathEventBinding);
+
+        _playerRespawnEventBinding = new EventBinding<PlayerRespawnEvent>(HandleRespawn);
+        EventBus<PlayerRespawnEvent>.Register(_playerRespawnEventBinding);
+
+        RegisterInputs(true);
     }
 
     void OnDisable()
     {
-        MyInputManager.Instance.Unsubscribe(EInputAction.CLASS_ABILITY_1, _abilities[0].OnTriggered);
-        MyInputManager.Instance.Unsubscribe(EInputAction.CLASS_ABILITY_2, _abilities[1].OnTriggered);
-        MyInputManager.Instance.Unsubscribe(EInputAction.CLASS_ABILITY_3, _abilities[2].OnTriggered);
-        MyInputManager.Instance.Unsubscribe(EInputAction.CLASS_ABILITY_4, _abilities[3].OnTriggered);
+        EventBus<PlayerDeathEvent>.Deregister(_playerDeathEventBinding);
+        EventBus<PlayerRespawnEvent>.Deregister(_playerRespawnEventBinding);
+
+        RegisterInputs(false);
     }
 
     void Start()
@@ -73,6 +78,24 @@ public class AbilitiesController : MonoBehaviour
                 ability.Unlock();
             }
         }
+    }
+
+    private void HandleDeath()
+    {
+        RegisterInputs(false);
+    }
+
+    private void HandleRespawn()
+    {
+        RegisterInputs(true);
+    }
+
+    private void RegisterInputs(bool register)
+    {
+        MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_1, _abilities[0].OnTriggered, register);
+        MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_2, _abilities[1].OnTriggered, register);
+        MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_3, _abilities[2].OnTriggered, register);
+        MyInputManager.Instance.Subscribe(EInputAction.CLASS_ABILITY_4, _abilities[3].OnTriggered, register);
     }
 
 }

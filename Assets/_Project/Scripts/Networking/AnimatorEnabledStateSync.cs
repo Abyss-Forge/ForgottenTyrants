@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
-public class AnimatorEnabledSync : NetworkBehaviour
+public class AnimatorEnabledStateSync : NetworkBehaviour
 {
     Animator _animator;
 
@@ -48,6 +48,11 @@ public class AnimatorEnabledSync : NetworkBehaviour
     private void SetAnimatorEnabled_ClientRpc(bool enabled)
     {
         _animator.enabled = enabled;
+
+        foreach (var rb in GetComponentsInChildren<Rigidbody>())//pfff no me gusta nada tener que usar esto pero la alternativa es peor
+        {
+            rb.isKinematic = enabled;
+        }
     }
 
 }
