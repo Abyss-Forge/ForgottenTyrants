@@ -12,7 +12,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] CharacterController _characterController;
 
     [SerializeField] private Camera _camera;
-    [SerializeField] private Animator _animator;
 
     [Header("Aesthetic")]
     [SerializeField] private TrailRenderer _trail;

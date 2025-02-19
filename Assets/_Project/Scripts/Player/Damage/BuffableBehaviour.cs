@@ -1,5 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class BuffableBehaviour : MonoBehaviour//, IBuffable
@@ -9,12 +12,18 @@ public class BuffableBehaviour : MonoBehaviour//, IBuffable
     private Stats _modifiedStats = new();
     public Stats CurrentStats => _modifiedStats;
 
-    public event Action<bool> OnBuff;
+    public event Action<float, EStat> OnBuff, OnDebuff;
+
+    private CancellationTokenSource _tokenSource = new();
 
     public void Initialize(Stats defaultStats)
     {
-        _baseStats = new(defaultStats);
-        _modifiedStats = new(defaultStats);
+        _tokenSource.Cancel();
+        _tokenSource.Dispose();
+        _tokenSource = new();
+
+        _baseStats = new Stats(defaultStats);
+        _modifiedStats = new Stats(defaultStats);
     }
 
     public void ApplyBuffFromData(BuffData info) => ApplyBuff(info.Stat, info.Value, info.Duration, info.IsPercentual, info.IsDebuff);
@@ -31,22 +40,27 @@ public class BuffableBehaviour : MonoBehaviour//, IBuffable
         bakedValue += value;
         _modifiedStats.Set(stat, bakedValue);
 
-        if (duration > 0) StartCoroutine(ResetBuff(stat, value, duration));
+        if (duration > 0) Task.Run(() => ResetBuffTask(_tokenSource.Token, stat, value, duration), _tokenSource.Token);
 
-        OnBuff?.Invoke(isDebuff);
+        if (isDebuff) OnDebuff?.Invoke(duration, stat);
+        else OnBuff?.Invoke(duration, stat);
+
         Debug.Log("Buff apply");
     }
 
-    private IEnumerator ResetBuff(EStat stat, float value, float duration)
+    private async Task ResetBuffTask(CancellationToken token, EStat stat, float value, float duration)
     {
-        yield return new WaitForSeconds(duration);
+        try
+        {
+            await Task.Delay(TimeSpan.FromSeconds(duration), token);
 
-        float currentValue = _modifiedStats.Get(stat);
-        currentValue -= value;
-        _modifiedStats.Set(stat, currentValue);
+            float currentValue = _modifiedStats.Get(stat);
+            currentValue -= value;
+            _modifiedStats.Set(stat, currentValue);
 
-        Debug.Log("Buff reset");
-        yield return null;
+            Debug.Log("Buff reset");
+        }
+        catch (TaskCanceledException) { Debug.Log("Buff reset cancelled"); }
     }
 
 }

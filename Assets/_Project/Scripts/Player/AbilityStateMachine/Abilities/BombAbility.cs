@@ -23,6 +23,24 @@ public class BombAbility : AbilityStateMachine, IAbilityWithProjectile
     public float LaunchForce => _launchForce;
 
     #endregion
+
+    protected override void CalculateInfo()
+    {
+        base.CalculateInfo();
+
+        ServiceLocator.Global.Get(out PlayerInfo player);
+
+        _abilityDataList.Add(new BuffData(
+                playerId: player.ClientData.ClientId,
+                teamId: player.ClientData.TeamId,
+                affectedChannel: EDamageApplyChannel.ENEMIES,
+                stat: EStat.PHYSIC_DEFENSE,
+                value: 500,
+                isDebuff: true,
+                isPercentual: true,
+                duration: 10f));
+    }
+
     #region States
 
     protected override void InitializeStates()

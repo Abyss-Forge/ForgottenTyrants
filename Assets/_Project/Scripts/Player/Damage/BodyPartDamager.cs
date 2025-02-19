@@ -23,7 +23,7 @@ public class BodyPartDamager : MonoBehaviour
     }
     [SerializeField] private BodyPartData[] _bodyPartsData;
 
-    private bool _isInvincible;
+    private bool _isAlive = true, _isInvincible;
     private List<int> _alreadyAppliedHashes = new();    //TODO: dynamyc empty
 
     private EventBinding<PlayerRespawnEvent> _playerRespawnEventBinding;
@@ -72,7 +72,7 @@ public class BodyPartDamager : MonoBehaviour
 
     private void HandleCollision(GameObject other, BodyPart bodyPartHit)
     {
-        if (_isInvincible) return;
+        if (!_isAlive || _isInvincible) return;
         if (!other.TryGetComponentInParent<NetworkObject>(out NetworkObject networkObject)) return;
         if (!networkObject.TryGetComponent<AbilityDataContainer>(out AbilityDataContainer container)) return;
         Debug.Log("Damage detected");
@@ -80,6 +80,8 @@ public class BodyPartDamager : MonoBehaviour
         ServiceLocator.Global.Get(out PlayerInfo player);
         foreach (var data in container.DataList.Where(x => x.AbilityData.CanApply(player.ClientData) && !_alreadyAppliedHashes.Contains(x.AbilityData.Hash)))
         {
+            if (!_isAlive || _isInvincible) return;
+
             _alreadyAppliedHashes.Add(data.AbilityData.Hash);
             Debug.Log("Damage applied");
 
@@ -105,6 +107,8 @@ public class BodyPartDamager : MonoBehaviour
 
     private void HandleDeath()
     {
+        _isAlive = false;
+
         EventBus<PlayerDeathEvent>.Raise(new PlayerDeathEvent());
 
         SetRagdollActive(true);
@@ -118,6 +122,8 @@ public class BodyPartDamager : MonoBehaviour
 
         SetRagdollActive(false);
         StartCoroutine(ApplyInvincibility(@event.SpawnInvincibilityTime));
+
+        _isAlive = true;
     }
 
     private void SetRagdollActive(bool enable = true)
