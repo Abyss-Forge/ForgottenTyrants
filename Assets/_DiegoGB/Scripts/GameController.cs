@@ -34,9 +34,6 @@ public class GameController : NetworkBehaviour
     private float _deltaTime = 0.0f;
     private int _team1Points;
     private int _team2Points;
-
-    //private List<Player> _allies = new List<Player>();
-    //private List<Player> _enemies = new List<Player>();
     private NetworkList<SyncedPlayerData> _syncedPlayers;
     private NetworkVariable<float> currentTime = new NetworkVariable<float>(
         0f,
@@ -54,6 +51,7 @@ public class GameController : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
+    EventBinding<PlayerRespawnEvent> _playerRespawnEventBinding;
 
     void Awake()
     {
@@ -64,8 +62,8 @@ public class GameController : NetworkBehaviour
     {
         InvokeRepeating(nameof(ShowFps), 1f, _updateInterval);
         InvokeRepeating(nameof(ShowPing), 1f, _updateInterval);
-        ShowPlayerHealth();
-        ShowBossHealth();
+        //ShowPlayerHealth();
+        //ShowBossHealth();
     }
 
     public override void OnNetworkSpawn()
@@ -81,6 +79,8 @@ public class GameController : NetworkBehaviour
 
             BlockAnyMovementClientRpc();
             PopulateContainerClientRpc();
+            ServiceLocator.Global.Get(out DamageableBehaviour damageable);
+            damageable.OnDamage += (_) => ShowBossHealth();
         }
         if (IsClient)
         {
@@ -88,6 +88,11 @@ public class GameController : NetworkBehaviour
 
             StartCoroutine(UpdateCurrentHp());
             //UpdateClientUIHealth_ClientRpc();
+            ServiceLocator.Global.Get(out DamageableBehaviour damageable);
+            damageable.OnDamage += (_) => StartCoroutine(UpdateCurrentHp());
+            damageable.OnDamage += (_) => ShowPlayerHealth();
+            _playerRespawnEventBinding = new EventBinding<PlayerRespawnEvent>(HandleRespawn);
+            EventBus<PlayerRespawnEvent>.Register(_playerRespawnEventBinding);
         }
     }
 
@@ -96,6 +101,16 @@ public class GameController : NetworkBehaviour
         if (IsClient)
         {
             _syncedPlayers.OnListChanged -= OnSyncedPlayersChanged;
+            ServiceLocator.Global.Get(out DamageableBehaviour damageable);
+            damageable.OnDamage -= (_) => StartCoroutine(UpdateCurrentHp());
+            damageable.OnDamage -= (_) => ShowPlayerHealth();
+            damageable.OnDamage -= (_) => ShowBossHealth();
+            EventBus<PlayerRespawnEvent>.Deregister(_playerRespawnEventBinding);
+        }
+        if (IsServer)
+        {
+            ServiceLocator.Global.Get(out DamageableBehaviour damageable);
+            damageable.OnDamage += (_) => ShowBossHealth();
         }
     }
 
@@ -106,10 +121,15 @@ public class GameController : NetworkBehaviour
         _deltaTime += (Time.unscaledDeltaTime - _deltaTime) * 0.1f;
     }
 
+    private void HandleRespawn()
+    {
+        StartCoroutine(UpdateCurrentHp());
+        ShowPlayerHealth();
+    }
+
     IEnumerator UpdateCurrentHp()
     {
         yield return new WaitForSeconds(.5f);
-        //yield return new WaitForSeconds(1f);
         // Obtiene el DamageableBehaviour del jugador local usando el ServiceLocator (esto es local)
         if (ServiceLocator.Global.TryGet<DamageableBehaviour>(out DamageableBehaviour damage))
         {
@@ -142,7 +162,6 @@ public class GameController : NetworkBehaviour
     {
         ulong senderClientId = rpcParams.Receive.SenderClientId;
 
-        //ServiceLocator.Global.Get(out DamageableBehaviour damage);
         // Aquí el servidor actualizará la salud del jugador en la NetworkList.
         // Usamos el LocalClientId (o el id del jugador que envía) para identificar a quién actualizar.
         for (int i = 0; i < _syncedPlayers.Count; i++)
@@ -156,7 +175,7 @@ public class GameController : NetworkBehaviour
                 break;
             }
         }
-
+        PopulateContainerClientRpc();
     }
 
     void CreateSyncList()
@@ -175,47 +194,6 @@ public class GameController : NetworkBehaviour
             _syncedPlayers.Add(playerData);
         }
     }
-
-    /* [Rpc(SendTo.Server, RequireOwnership = false)]
-    void SendClientHealth_ServerRpc(ulong playerId, int health)
-    {
-        DataSync(playerId, health);
-    }
-
-   
-    void ClientHealthUpdate()
-    {
-        ServiceLocator.Global.Get(out DamageableBehaviour damageable);
-        ServiceLocator.Global.Get(out PlayerInfo player);
-        float health = Mathf.InverseLerp(0, damageable.Health, player.Stats.Health);
-        SendClientHealth_ServerRpc(player.ClientData.ClientId, health);
-    }
-
-    [Rpc(SendTo.ClientsAndHost)]
-    void UpdateClientUIHealth_ClientRpc()
-    {
-        ActivateClientHealthUpdate();
-    }
-
-    IEnumerator ActivateClientHealthUpdate()
-    {
-        yield return new WaitForSeconds(.5f);
-        ClientHealthUpdate();
-    }
-
-    void DataSync(ulong playerId, int health)
-    {
-        for (int i = 0; i < _syncedPlayers.Count; i++)
-        {
-            if (_syncedPlayers[i].ClientId == playerId)
-            {
-                var x = _syncedPlayers[i];
-                x.Health = health;
-                _syncedPlayers[i] = x;
-            }
-        }
-    } */
-
 
     private void OnSyncedPlayersChanged(NetworkListEvent<SyncedPlayerData> changeEvent)
     {
@@ -246,16 +224,6 @@ public class GameController : NetworkBehaviour
         }
     }
 
-    /*    private void AddPlayerToSyncedList(ulong clientId, ClientData clientData)
-       {
-           SyncedPlayerData playerData = new SyncedPlayerData
-           {
-               ClientId = clientId,
-               TeamId = clientData.TeamId,
-           };
-           _syncedPlayers.Add(playerData);
-       } */
-
     [Rpc(SendTo.ClientsAndHost)]
     void BlockAnyMovementClientRpc()
     {
@@ -282,8 +250,6 @@ public class GameController : NetworkBehaviour
             Destroy(child.gameObject);
         foreach (Transform child in _enemiesContainer)
             Destroy(child.gameObject);
-
-        //List<Player> players = FindObjectsByType<Player>(FindObjectsSortMode.None).ToList();
 
         // Itera sobre la lista sincronizada
         foreach (var playerData in _syncedPlayers)
@@ -322,43 +288,25 @@ public class GameController : NetworkBehaviour
     {
         ServiceLocator.Global.Get(out DamageableBehaviour damage);
         _playerHealth.value = damage.Health;
-
-        //ServiceLocator.Global.Get(out PlayerInfo player);
-
-        //player.ClientData.ClientId
     }
+
 
     void ShowBossHealth()
     {
-        float health = FindObjectOfType<BossController>().GetComponent<BossController>().CurrentHp;
-        _bossHealth.value = health;
-
+        if (IsServer)
+        {
+            float health = FindObjectOfType<BossDamager>()._damageable.Health;
+            UpdateBossHealthBar_ClientRPC(health);
+        }
         //ServiceLocator.Global.Get(out PlayerInfo player);
-
         //player.ClientData.ClientId
     }
 
-    /*foreach (var player in players)
+    [Rpc(SendTo.ClientsAndHost)]
+    void UpdateBossHealthBar_ClientRPC(float health)
     {
-        // Determina el contenedor según el equipo del jugador
-        Transform cont = player._playerData.TeamId == 0 ? _alliesContainer : _enemiesContainer;
-
-        // Instanciar el cuadro
-        GameObject frame = Instantiate(_characterFramePrefab, cont);
-
-        //frame.transform.Find("CharacterImage").GetComponent<Image>().sprite = GetCharacterSprite(client.CharacterId);
-        frame.transform.Find("Player health").GetComponent<Slider>().value = player.CurrentHp;
-        //frame.transform.Find("KDA").GetComponent<Text>().text = $"ID: {client.ClientId}";
-    }*/
-
-
-    /*public void UpdateHealth(Player character, float newHealth)
-    {
-        character.BaseStats.Hp = Mathf.Clamp01(newHealth); // Asegura que la vida esté entre 0 y 1
-        // Opcional: Actualiza dinámicamente el UI (puedes optimizar esto según el sistema de eventos del juego)
-        PopulateContainer(alliesContainer, allies);
-        PopulateContainer(enemiesContainer, enemies);
-    }*/
+        _bossHealth.value = health;
+    }
 
     IEnumerator SmoothHealthChange(Slider slider, float targetValue)
     {
@@ -406,16 +354,6 @@ public class GameController : NetworkBehaviour
         countingDown.Value = true;
         //PlayersToSpawn();
     }
-
-    /*void PlayersToSpawn()
-    {
-        // Reposiciona a los players
-        CharacterSpawner spawner = FindObjectOfType<CharacterSpawner>();
-        if (spawner != null)
-        {
-            spawner.ResetPlayersPositions();
-        }
-    }*/
 
     private void FinishGame()
     {
@@ -486,7 +424,6 @@ public class CharacterData
     public int deaths;
     public int assists;
 }
-
 
 [System.Serializable]
 public struct SyncedPlayerData : INetworkSerializable, IEquatable<SyncedPlayerData>

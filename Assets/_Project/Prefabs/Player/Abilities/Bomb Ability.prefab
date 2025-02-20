@@ -100,7 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Stats>k__BackingField:
     _health: 0
-    _physicalDamage: 500
+    _physicalDamage: 5
     _magicalDamage: 0
     _physicalDefense: 0
     _magicalDefense: 0
@@ -113,11 +113,6 @@ MonoBehaviour:
   <CooldownDuration>k__BackingField: 1
   _projectilePrefab: {fileID: 8071749846780607451, guid: 73ecb5544a02d3249a5369c8778b0ec4,
     type: 3}
-  _prefabReference:
-    m_AssetGUID: 73ecb5544a02d3249a5369c8778b0ec4
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
   _projectileAmount: 3
   _projectileThreshold: 0.1
   _launchForce: 10
