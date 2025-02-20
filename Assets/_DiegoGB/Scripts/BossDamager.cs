@@ -12,7 +12,7 @@ using Utils.Extensions;
 [RequireComponent(typeof(DamageableBehaviour), typeof(BuffableBehaviour))]
 public class BossDamager : MonoBehaviour
 {
-    DamageableBehaviour _damageable;
+    public DamageableBehaviour _damageable;
     BuffableBehaviour _buffable;
 
     [SerializeField] private BossController _bossController;
@@ -52,7 +52,6 @@ public class BossDamager : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-
         if (_isInvincible) return;
         if (!other.gameObject.TryGetComponentInParent<NetworkObject>(out NetworkObject networkObject)) return;
         if (!networkObject.TryGetComponent<AbilityDataContainer>(out AbilityDataContainer container)) return;
@@ -60,12 +59,14 @@ public class BossDamager : MonoBehaviour
         Debug.Log("1");
         foreach (var data in container.DataList.Where(x => !_alreadyAppliedDataHashes.Contains(x.AbilityData.Hash)))
         {
+            if (_isInvincible) return;
             _alreadyAppliedDataHashes.Add(data.AbilityData.Hash);
 
             if (data is DamageData damageData)
             {
                 float damage = damageData.DamageAmount * container.Multiplier;
                 _damageable.Damage((int)damage);
+                UpdateScorePoints(damageData.AbilityData.TeamId, (int)damage);
                 Debug.Log("Damaging");
             }
             else if (data is HealData healData)

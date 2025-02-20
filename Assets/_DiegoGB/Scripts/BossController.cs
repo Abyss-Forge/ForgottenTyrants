@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Systems.BehaviourTree;
+using Systems.ServiceLocator;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -70,6 +71,7 @@ public class BossController : Entity
 
         if (IsServer)
         {
+            //ServiceLocator.Global.Register<BossController>(this);
             // Solo el servidor (o el host, si eres host) inicializa la lógica
             // si quieres que sea autoritativa. Si NO, puedes ponerlo en Start() normal.
             //InitializeBehaviorTree();

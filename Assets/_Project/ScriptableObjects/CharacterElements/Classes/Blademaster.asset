@@ -16,7 +16,7 @@ MonoBehaviour:
   <DisplayName>k__BackingField: 
   <Stats>k__BackingField:
     _health: 0
-    _physicalDamage: 500
+    _physicalDamage: 2
     _magicalDamage: 0
     _physicalDefense: 0
     _magicalDefense: 0
