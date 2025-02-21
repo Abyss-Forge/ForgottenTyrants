@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Systems.EventBus;
-using Systems.ServiceLocator;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -40,16 +36,6 @@ public class BossDamager : MonoBehaviour
         _damageable.OnDeath -= HandleDeath;
     }
 
-    private void HandleDeath()
-    {
-
-    }
-
-    void UpdateScorePoints(int teamId, int damage)
-    {
-        _gameController.UpdateTeamPoints_ClientRpc(teamId, damage);
-    }
-
     private void OnCollisionEnter(Collision other)
     {
 
@@ -60,12 +46,14 @@ public class BossDamager : MonoBehaviour
         Debug.Log("1");
         foreach (var data in container.DataList.Where(x => !_alreadyAppliedDataHashes.Contains(x.AbilityData.Hash)))
         {
+            if (_isInvincible) return;
             _alreadyAppliedDataHashes.Add(data.AbilityData.Hash);
 
             if (data is DamageData damageData)
             {
                 float damage = damageData.DamageAmount * container.Multiplier;
                 _damageable.Damage((int)damage);
+                UpdateScorePoints(damageData.AbilityData.TeamId, (int)damage);
                 Debug.Log("Damaging");
             }
             else if (data is HealData healData)
@@ -79,6 +67,16 @@ public class BossDamager : MonoBehaviour
                 _buffable.ApplyBuffFromData(buffData);
             }
         }
+    }
+
+    void UpdateScorePoints(int teamId, int damage)
+    {
+        _gameController.UpdateTeamPoints_ClientRpc(teamId, damage);
+    }
+
+    private void HandleDeath()
+    {
+
     }
 
 }

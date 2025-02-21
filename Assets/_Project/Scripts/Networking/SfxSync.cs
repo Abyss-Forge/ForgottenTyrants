@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Systems.ServiceLocator;
 using Unity.Netcode;
 using UnityEngine;
@@ -10,7 +8,6 @@ public class SfxSync : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        Debug.Log(IsOwner);
         if (!IsOwner) return;
 
         ServiceLocator.Global.Get(out BuffableBehaviour buffable);

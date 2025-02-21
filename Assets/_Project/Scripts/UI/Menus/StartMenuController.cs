@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using ForgottenTyrants;
-using UnityEngine.SceneManagement;
+using Systems.EventBus;
 using UnityEngine;
 using UnityEngine.UI;
-using Systems.EventBus;
 
 public class StartMenuController : MonoBehaviour
 {

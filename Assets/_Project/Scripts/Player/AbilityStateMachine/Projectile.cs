@@ -76,7 +76,7 @@ public abstract class Projectile : NetworkBehaviour
 
     protected virtual bool IsDirectHit(GameObject go)
     {
-        return go.CompareTag(Tag.Player);
+        return go.layer == Layer.Player;
     }
 
     protected virtual async Task OnHit()    //TODO vfx & sfx on impact, ref to ExplosiveProjectile
