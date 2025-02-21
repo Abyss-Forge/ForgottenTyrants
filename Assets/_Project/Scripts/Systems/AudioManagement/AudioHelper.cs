@@ -1,3 +1,4 @@
+using QFSW.QC.Actions;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -14,20 +15,28 @@ namespace Systems.AudioManagement
 
         public void LoadPrefs()
         {
-            string[] keyList = new string[]
+            foreach (string key in VolumeKeyList)
             {
+                float value = PlayerPrefs.GetFloat(key, 0.5f);
+                SetVolume(key, value);
+            }
+        }
+
+        public string[] VolumeKeyList
+        {
+            get
+            {
+                string[] keyList = new string[]
+                {
                 PlayerPrefsKeys.VOLUME_MASTER,
                 PlayerPrefsKeys.VOLUME_UI,
                 PlayerPrefsKeys.VOLUME_MUSIC,
                 PlayerPrefsKeys.VOLUME_SFX,
                 PlayerPrefsKeys.VOLUME_CINEMATICS,
                 PlayerPrefsKeys.VOLUME_VOICE_CHAT
-            };
+                };
 
-            foreach (string key in keyList)
-            {
-                float value = PlayerPrefs.GetFloat(key, 0.5f);
-                SetVolume(key, value);
+                return keyList;
             }
         }
 
@@ -59,7 +68,7 @@ namespace Systems.AudioManagement
             PlayerPrefs.SetFloat(key, volume);
         }
 
-        private float GetVolume(string key)
+        public float GetVolume(string key)
         {
             _audioMixer.GetFloat(key, out float volume);
             volume = FromDecibels(volume);

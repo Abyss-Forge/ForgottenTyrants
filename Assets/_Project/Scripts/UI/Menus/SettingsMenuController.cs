@@ -1,5 +1,6 @@
-using Systems.EventBus;
+using Systems.GameManagers;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class SettingsMenuController : MonoBehaviour
@@ -10,22 +11,24 @@ public class SettingsMenuController : MonoBehaviour
     void OnEnable()
     {
         _closeButton.onClick.AddListener(Close);
+        MyInputManager.Instance.Subscribe(EInputAction.PAUSE, OnPause);
     }
 
     void OnDisable()
     {
         _closeButton.onClick.RemoveAllListeners();
+        MyInputManager.Instance.Unsubscribe(EInputAction.PAUSE, OnPause);
     }
 
-    private void Open()
+    private void OnPause(InputAction.CallbackContext context)
     {
-        _settingsMenu.gameObject.SetActive(true);
+        if (context.performed) _settingsMenu.gameObject.SetActive(!_settingsMenu.gameObject.activeSelf);
     }
 
     private void Close()
     {
+        Debug.Log("sfsdf");
         _settingsMenu.gameObject.SetActive(false);
     }
-
 
 }
