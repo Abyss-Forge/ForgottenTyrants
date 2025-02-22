@@ -44,6 +44,7 @@ public class RandomStatsPowerUp : NetworkBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            // Genera estadísticas aleatorias dentro de los rangos definidos
             int randomHp = Random.Range(_hpRandomMin, _hpRandomMax);
             int randomPhysicalDamage = Random.Range(_physicalDamageMin, _physicalDamageMax);
             int randomMagicalDamage = Random.Range(_magicalDamageMin, _magicalDamageMax);
@@ -53,6 +54,7 @@ public class RandomStatsPowerUp : NetworkBehaviour
             float randomAttackSpeed = Random.Range(_attackSpeedMin, _attackSpeedMax);
             float randomCooldownReduction = Random.Range(_cooldownReductionMin, _cooldownReductionMax);
 
+            // Ejecuta el efecto visual en todos los clientes y host
             PlayVisualEffect_ClientRpc();
 
             Debug.Log($"{other.gameObject} ha sido randomizado con las siguientes stats:\n" +
@@ -65,12 +67,13 @@ public class RandomStatsPowerUp : NetworkBehaviour
             $" Hp: {randomAttackSpeed}\n" +
             $" Hp: {randomCooldownReduction}");
 
+            // Despawnea el objeto de red y lo destruye de la escena
             GetComponent<NetworkObject>().Despawn();
             Destroy(gameObject);
         }
     }
     [Rpc(SendTo.ClientsAndHost)]
-    private void PlayVisualEffect_ClientRpc()//TODO hacer con el eventbus
+    private void PlayVisualEffect_ClientRpc() //TODO hacer con el eventbus
     {
         _test.GetComponent<PlayerController>().StartGlowingEffect(_duration);
     }

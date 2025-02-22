@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Unity.Netcode;
 
+//Clase de testing inicial para probar el multijugador mas básico
 public class NetworkManagerUI : MonoBehaviour
 {
     [SerializeField] Button _serverButton;

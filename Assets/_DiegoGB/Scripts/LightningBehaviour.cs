@@ -32,12 +32,6 @@ public class LightningBehaviour : NetworkBehaviour
             transform.LookAt(_targetPosition);
         }
 
-        // Vector3 direction = (_targetPosition - _lightingModelStart.position).normalized;
-        // _lightingModelStart.rotation = Quaternion.LookRotation(direction);
-
-        // float distanceBetweenStartAndEnd = Vector3.Distance(_lightingModelStart.position, _lightingModelEnd.position);
-        // _lightingModelEnd.position = _lightingModelStart.position + direction * distanceBetweenStartAndEnd;
-
         _line = GetComponent<LineRenderer>();
         if (_line != null)
         {
@@ -78,7 +72,6 @@ public class LightningBehaviour : NetworkBehaviour
         // Instancia la esfera en el servidor
         GameObject marker = Instantiate(_markerPrefab, position, Quaternion.identity);
 
-        // Asegúrate de que el prefab tiene un NetworkObject
         NetworkObject networkObject = marker.GetComponent<NetworkObject>();
         if (networkObject != null)
         {
@@ -86,7 +79,7 @@ public class LightningBehaviour : NetworkBehaviour
         }
         else
         {
-            Debug.LogError("El prefab de la esfera no tiene un componente NetworkObject.");
+            Debug.LogError("NetworkObject component not found");
         }
     }
 
@@ -95,8 +88,8 @@ public class LightningBehaviour : NetworkBehaviour
         // Genera un punto aleatorio en el terreno
         Vector3 randomPoint = GetRandomPointOnTerrain();
 
-        // Llama al _ServerRpc para spawnear la esfera roja en el servidor
-        SpawnMarkerOnTerrain_ServerRpc(randomPoint);
+        // Llama al _ServerRpc para spawnear la esfera roja en el servidor (Este método solo se utiliza para comprobaciones y debugging)
+        //SpawnMarkerOnTerrain_ServerRpc(randomPoint);
 
         // Retorna la posición para cualquier otra lógica que lo necesite
         return randomPoint;
@@ -151,17 +144,24 @@ public class LightningBehaviour : NetworkBehaviour
         yield return new WaitForSeconds(_groundDuration);
 
         float elapsedTime = 0f;
+        // Guarda la curva original para referencia.
         AnimationCurve originalCurve = _line.widthCurve;
+
+        // Bucle que realiza el fade out durante el tiempo definido.
         AnimationCurve fadingCurve = new AnimationCurve();
 
         while (elapsedTime < _fadeDuration)
         {
             elapsedTime += Time.deltaTime;
+
+            // Calcula el progreso del fade (valor entre 0 y 1).
             float fadeProgress = Mathf.Clamp01(elapsedTime / _fadeDuration);
 
+            // Interpola la transparencia y la intensidad de la emisión de 1 a 0.
             SetTransparency(Mathf.Lerp(1.0f, 0.0f, fadeProgress));
             SetEmissionIntensity(Mathf.Lerp(1.0f, 0.0f, fadeProgress));
 
+            // Crea una nueva curva basada en la original, modificando cada clave.
             fadingCurve.keys = originalCurve.keys;
             for (int i = 0; i < fadingCurve.keys.Length; i++)
             {

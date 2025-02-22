@@ -16,10 +16,4 @@ public abstract class Entity : NetworkBehaviour
 
     }
 
-    public float CurrentHp = 0;   // mierdas de diego
-    void Start()
-    {
-        CurrentHp = BaseStats.Health;
-    }
-
 }

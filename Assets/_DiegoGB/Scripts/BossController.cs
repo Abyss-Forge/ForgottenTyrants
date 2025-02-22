@@ -11,13 +11,17 @@ using Vector3 = UnityEngine.Vector3;
 
 public class BossController : Entity
 {
+    [Header("Attacks & Aggro")]
     [SerializeField] private float _targetSelectionInterval = 6f;
     [SerializeField] private float _attackInterval = 3f;
     [SerializeField] float _meleeRange = 10f;
     [SerializeField] float _decayValue = 5f;
     [SerializeField] float _decayInterval = 3f;
-    //[SerializeField] List<GameObject> _players = new List<GameObject>();
+
+    [Header("Gravity settings")]
     [SerializeField] float _gravityEventEffectDuration = 10f;
+
+    [Header("Damage boost settings")]
     [SerializeField] float _damageBoostEffectDuration = 5f;
 
     [Header("Power Up settings")]
@@ -65,18 +69,16 @@ public class BossController : Entity
     Dictionary<Player, float> _playerAggroList = new Dictionary<Player, float>();
     private Player _currentTarget = null;
 
+    //TODELETE BORRAR AL IMPLEMENTAR LA VIDA REAL DEL BOSS
+    private int CurrentHp = 100;
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
 
         if (IsServer)
         {
-            //ServiceLocator.Global.Register<BossController>(this);
-            // Solo el servidor (o el host, si eres host) inicializa la lógica
-            // si quieres que sea autoritativa. Si NO, puedes ponerlo en Start() normal.
-            //InitializeBehaviorTree();
-            //CurrentHp = BaseStats.Health;
-
+            // Inicializa la lista de aggro de cada jugador encontrado en la escena
             GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
             foreach (GameObject obj in playerObjects)
             {
@@ -85,10 +87,6 @@ public class BossController : Entity
                 {
                     _playerAggroList[player] = 0;
                 }
-                // if (!_players.Contains(obj))
-                // {
-                //     _players.Add(obj);
-                // }
             }
             _terrain = Terrain.activeTerrain;
         }
@@ -97,86 +95,35 @@ public class BossController : Entity
     void Start()
     {
         InitializeBehaviorTree();
-        //CurrentHp = BaseStats.Health;
+
+        // Configuración inicial del decal (efecto de advertencia)
         _decalProjector.fadeFactor = 0;
         _decalProjector.gameObject.transform.position = new Vector3(this.gameObject.transform.position.x, _decalProjector.transform.position.y, this.gameObject.transform.position.z);
-
-        // GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
-
-        // foreach (GameObject obj in playerObjects)
-        // {
-        //     Player player = obj.GetComponent<Player>();
-        //     if (player != null && !_playerAggroList.ContainsKey(player))
-        //     {
-        //         _playerAggroList[player] = 0;
-        //     }
-        // }
-
-        // foreach (GameObject obj in playerObjects)
-        // {
-        //     GameObject player = obj;
-        //     if (player != null)
-        //     {
-        //         _players.Add(player);
-        //     }
-        // }
     }
 
     void Update()
     {
+        // Ejecuta el árbol de comportamiento en cada frame
         _rootSequence.Execute();
 
-        //if (Input.GetKeyDown(KeyCode.P)) SwapPositionsRandomly();
-        //if (Input.GetKeyDown(KeyCode.T)) StartCoroutine(EventLowGravity());
-        if (IsClient)
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                TriggerDamageBoost_ServerRpc();
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                TriggerDissapear_ServerRpc();
-            }
+        /*TODO Que el boss llame a uno de estos eventos cada 2 minutos (Se llaman 7 en total) y no se pueden repetir
+        (Si uno ya ha salido no puede volver a salir esa partida)*/
 
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                RequestPowerUps_ServerRpc(); // El cliente pide al servidor que spawnee power-ups
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-                TriggerStorm_ServerRpc();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha5))
-            {
-                TriggerLowGravity_ServerRpc();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha6))
-            {
-                TriggerSwapPositions_ServerRpc();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha7))
-            {
-                TriggerWindEvent_ServerRpc();
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha8))
-            {
-                TriggerBloodEvent_ServerRpc();
-            }
-        }
-
-
+        /*TriggerDamageBoost_ServerRpc();
+        TriggerDissapear_ServerRpc();
+        RequestPowerUps_ServerRpc();
+        TriggerStorm_ServerRpc();
+        TriggerLowGravity_ServerRpc();
+        TriggerSwapPositions_ServerRpc();
+        TriggerWindEvent_ServerRpc();
+        TriggerBloodEvent_ServerRpc();*/
     }
 
     void InitializeBehaviorTree()
     {
         _rootSequence = new BehaviorSequence();
 
-
+        // Cada nodo se ejecuta en intervalos fijos: decaimiento de aggro, selección de objetivo y ataque
         var decayAggroNode = new TimerNode(_decayInterval, new DecayAggroNode(this));
         var selectTargetNode = new TimerNode(_targetSelectionInterval, new SelectBestTargetNode(this));
         var attackTargetNode = new TimerNode(_attackInterval, new AttackTargetNode(this));
@@ -210,19 +157,19 @@ public class BossController : Entity
             Player player = entry.Key;
             float aggro = entry.Value;
             float distance = Vector3.Distance(transform.position, player.transform.position);
-            int health = 100;  // player.CurrentHp //TODO arreglar
+            int health = 100; //TODO
 
+            // Normalización de valores para calcular una puntuación
             float normalizedDamage = aggro / 100;
             float normalizedDistance = 1 - (distance / 100);
             float normalizedHealth = 1 - ((float)health / 100);
 
+            // Pesos para cada factor (ajustables)
             float weightDamage = 1.0f;
             float weightDistance = 1.0f;
             float weightHealth = 1.0f;
 
             float score = (normalizedDamage * weightDamage + normalizedDistance * weightDistance + normalizedHealth * weightHealth) / (weightDamage + weightDistance + weightHealth);
-
-            //Debug.Log($"Player: {player.name}, Aggro: {aggro}, Distance: {distance}, Health: {health}, Score: {score}");
 
             if (score > highestScore)
             {
@@ -247,16 +194,19 @@ public class BossController : Entity
 
     void PerformMeleeAttack()
     {
+        //TODO
         //Debug.Log($"Performing melee attack on {_currentTarget.name}");
     }
 
     void PerformRangedAttack()
     {
+        //TODO
         //Debug.Log($"Performing ranged attack on {_currentTarget.name}");
     }
 
     public void TakeDamage(Player player, int damage)
     {
+        //TODO (Utilizar bossDamagable)
         CurrentHp -= damage;
         Debug.Log($"Boss recibe {damage} de daño. Vida restante: {CurrentHp}");
         AddAggro(player, damage);
@@ -265,6 +215,7 @@ public class BossController : Entity
 
     public void AddAggro(Player player, float amount)
     {
+        //TODO (Comprobar si funciona el agro de cada jugador y el boss targetea al que mas puntuación tiene)
         if (!_playerAggroList.ContainsKey(player))
         {
             _playerAggroList[player] = 0;
@@ -322,7 +273,7 @@ public class BossController : Entity
     [Rpc(SendTo.Server, RequireOwnership = false)]
     public void TriggerDamageBoost_ServerRpc()
     {
-        Debug.Log("Evento de boosteo de damage activado por un cliente.");
+        Debug.Log("Damage boost activated");
         TriggerDamageBoost_ClientRpc();
     }
 
@@ -334,12 +285,14 @@ public class BossController : Entity
 
     IEnumerator EventDamageBoost()
     {
+        // Duplica el daño físico y mágico temporalmente
         _modifiedStats.ChangePhysicalDamage(_baseStats.PhysicalDamage * 2);
         _modifiedStats.ChangePhysicalDamage(_baseStats.MagicalDamage * 2);
 
 
         yield return new WaitForSeconds(_damageBoostEffectDuration);
 
+        // Restaura los valores originales
         _modifiedStats.ChangePhysicalDamage(_baseStats.PhysicalDamage);
         _modifiedStats.ChangePhysicalDamage(_baseStats.MagicalDamage);
     }
@@ -352,7 +305,7 @@ public class BossController : Entity
 
     public void TriggerDissapear_ServerRpc()
     {
-        Debug.Log("Evento de invisibilidad activado por un cliente.");
+        Debug.Log("Invisibility event activated");
         TriggerDisappear_ClientRpc();
     }
 
@@ -365,14 +318,17 @@ public class BossController : Entity
 
     IEnumerator EventDissapear()
     {
+        // Mueve el jefe a una posición oculta
         yield return StartCoroutine(MoveTo(_hidePosition.position, _moveDuration));
 
         yield return new WaitForSeconds(_disappearEffectDuration);
 
+        // Muestra advertencia (efecto de fade con decal)
         StartCoroutine(DangerWarning());
 
         yield return new WaitForSeconds(_warningDuration);
 
+        // Retorna el jefe a su posición original
         yield return StartCoroutine(MoveTo(_bossPosition.position, _moveDuration));
 
     }
@@ -387,28 +343,23 @@ public class BossController : Entity
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / duration);
 
-            // Si usas una curva de movimiento, aplica su valor
             if (_movementCurve != null)
             {
                 t = _movementCurve.Evaluate(t);
             }
 
-            // Interpolar entre la posición inicial y la final
             transform.position = Vector3.Lerp(startPosition, destination, t);
 
             yield return null;
         }
 
-        // Asegúrate de llegar exactamente al destino
         transform.position = destination;
     }
 
     private IEnumerator DangerWarning()
     {
-        // Guarda el valor original si lo necesitas restaurar luego
         float originalFade = _decalProjector.fadeFactor;
 
-        // Inicia con opacidad 0
         _decalProjector.fadeFactor = 0f;
 
         for (int i = 0; i < _repeatCount; i++)
@@ -433,9 +384,7 @@ public class BossController : Entity
                 yield return null;
             }
         }
-
-        // Al finalizar, dejamos el fade en 0 o lo restauramos a su valor original
-        _decalProjector.fadeFactor = 0f; // o originalFade, según tu necesidad
+        _decalProjector.fadeFactor = 0f;
     }
 
     #endregion
@@ -445,7 +394,7 @@ public class BossController : Entity
     [Rpc(SendTo.Server, RequireOwnership = false)]
     public void RequestPowerUps_ServerRpc()
     {
-        Debug.Log("Solicitud de power-ups recibida desde un cliente.");
+        Debug.Log("Power ups request activated");
         EventPowerUps();
     }
 
@@ -457,18 +406,16 @@ public class BossController : Entity
         {
             Vector3 randomPosition = GetRandomPositionAroundBoss(_heightOffsetPowerUp, out _);
 
-            // Instanciar el potenciador en la posición calculada
             GameObject powerUp = Instantiate(_powerUpPrefab, randomPosition, Quaternion.identity);
 
             NetworkObject networkObject = powerUp.GetComponent<NetworkObject>();
             if (networkObject != null)
             {
-                // Spawnear el objeto en la red
                 networkObject.Spawn();
             }
             else
             {
-                Debug.LogError("El prefab del power-up no tiene un componente NetworkObject.");
+                Debug.LogError("Prefab doesnt have a NetworkObject");
             }
         }
     }
@@ -480,7 +427,7 @@ public class BossController : Entity
     [Rpc(SendTo.Server, RequireOwnership = false)]
     public void TriggerStorm_ServerRpc()
     {
-        Debug.Log("Evento de tormenta activado por un cliente.");
+        Debug.Log("Storm event activated");
         StartCoroutine(EventStorm());
     }
 
@@ -507,10 +454,8 @@ public class BossController : Entity
                 _thunderSpawner.position.z + randomCircle.y
             );
 
-            // Llamar a un método para generar el rayo (puedes ajustar la lógica)
             SpawnLightningAtPosition(spawnPosition);
 
-            // Esperar el tiempo entre rayos
             yield return new WaitForSeconds(_lightningInterval);
 
             elapsedTime += _lightningInterval;
@@ -521,7 +466,7 @@ public class BossController : Entity
     {
         var lightning = Instantiate(_lightningPrefab, position, Quaternion.identity);
         var netObj = lightning.GetComponent<NetworkObject>();
-        netObj.Spawn(); // El servidor lo spawnea y lo controla
+        netObj.Spawn();
     }
 
     #endregion
@@ -543,20 +488,16 @@ public class BossController : Entity
         for (int i = 0; i < _windCount; i++)
         {
             Vector3 randomPosition = GetRandomPositionAroundBoss(_heightOffsetWind, out Quaternion rotation);
-
-
             GameObject wind = Instantiate(_windPrefab, randomPosition, rotation);
-
             NetworkObject networkObject = wind.GetComponent<NetworkObject>();
             if (networkObject != null)
             {
-                // Spawnear el objeto en la red
                 networkObject.Spawn();
                 winds.Add(wind);
             }
             else
             {
-                Debug.LogError("El prefab del wind no tiene un componente NetworkObject.");
+                Debug.LogError("Prefab doesnt have a NetworkObject component");
             }
         }
         yield return new WaitForSeconds(_windDuration);
@@ -619,14 +560,14 @@ public class BossController : Entity
     [Rpc(SendTo.Server, RequireOwnership = false)]
     public void TriggerLowGravity_ServerRpc()
     {
-        Debug.Log("Evento de baja gravedad activado por un cliente.");
+        Debug.Log("Low gravity event activated");
         Vector3 lowGravity = new Vector3(0, -2f, 0);
 
         SetGravity_ClientRpc(lowGravity);
 
         foreach (GameObject player in GetAllPlayers())
         {
-            SetPlayerJumpForce(player, 5f); // Multiplica JumpForce por 5
+            SetPlayerJumpForce(player, 5f);
         }
 
         StartCoroutine(RestoreGravityAfterDuration());
@@ -654,11 +595,11 @@ public class BossController : Entity
         yield return new WaitForSeconds(_gravityEventEffectDuration);
 
         Vector3 defaultGravity = new Vector3(0, -9.81f, 0);
-        SetGravity_ClientRpc(defaultGravity); // Restaura la gravedad para todos los clientes
+        SetGravity_ClientRpc(defaultGravity);
 
         foreach (GameObject player in GetAllPlayers())
         {
-            RestorePlayerJumpForce(player); // Restaura el JumpForce original
+            RestorePlayerJumpForce(player);
         }
     }
 
@@ -673,7 +614,6 @@ public class BossController : Entity
             }
 
             float newJumpForce = _originalJumpForces[player] * multiplier;
-            //pc.SetJumpForce(newJumpForce); // Cambia localmente en el servidor
 
             // Notifica al cliente
             var networkObject = player.GetComponent<NetworkObject>();
@@ -757,7 +697,6 @@ public class BossController : Entity
         foreach (GameObject player in GetAllPlayers())
         {
             positionRotationPairs.Add((player.transform.position, player.transform.rotation));
-            //Debug.Log($"{player.name} Player position after shuffle: {player.transform.position}");
         }
         Shuffle(positionRotationPairs);
 
@@ -773,10 +712,8 @@ public class BossController : Entity
                 animator.enabled = false;
             }
 
-            //Debug.Log($"{player.name} - Old Rotation: {player.transform.rotation.eulerAngles} New Rotation: {positionRotationPairs[i].rotation.eulerAngles}");
             player.transform.position = positionRotationPairs[i].position;
             player.transform.localRotation = positionRotationPairs[i].rotation;
-            //Debug.Log($"{player.name} - Updated Rotation: {player.transform.rotation.eulerAngles}");
 
             if (characterController != null)
             {

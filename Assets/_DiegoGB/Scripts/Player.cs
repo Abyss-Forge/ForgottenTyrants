@@ -49,8 +49,6 @@ public class Player : Entity
                  $"Magical Defense: {_baseStats.MagicalDefense}, Cooldown Reduction: {_baseStats.CooldownReduction}");
     }
 
-
-    //  Diego me cago en tu raza
 #if UNITY_EDITOR
 
     [SerializeField] BossController bossController;

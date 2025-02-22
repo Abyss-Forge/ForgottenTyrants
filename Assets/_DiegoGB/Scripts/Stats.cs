@@ -130,9 +130,7 @@ public class Stats
         }
     }
 
-
-
-    //mierdas del diego que deberian estar hechas con el buffable behaviour
+    //TODO Transicionarlo a buffableBehaviour
     public void ChangePhysicalDamage(float newPhysicalDamage)
     {
         _physicalDamage = newPhysicalDamage;

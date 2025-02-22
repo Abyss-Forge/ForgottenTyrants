@@ -12,25 +12,35 @@ using UnityEngine.UI;
 
 public class GameController : NetworkBehaviour
 {
+    [Header("UI - Timers & messages")]
     [SerializeField] private TMP_Text _timer;
     [SerializeField] private TMP_Text _starting;
-    [SerializeField] private TMP_Text _team1PointsText;
-    [SerializeField] private TMP_Text _team2PointsText;
-    [SerializeField] private float _minAlpha = 0.3f;
-    [SerializeField] private float _maxAlpha = 1f;
-    [SerializeField] private float _velocity = 1f;
     [SerializeField] private string _prepareTime = "00:30";
     [SerializeField] private string _gameTime = "15:00";
+
+    [Header("UI - Team scores")]
+    [SerializeField] private TMP_Text _team1PointsText;
+    [SerializeField] private TMP_Text _team2PointsText;
+
+    [Header("UI - Health bars")]
     [SerializeField] private Slider _playerHealth;
     [SerializeField] private Slider _bossHealth;
 
-    [SerializeField] private Transform _alliesContainer; // Contenedor para aliados
-    [SerializeField] private Transform _enemiesContainer; // Contenedor para enemigos
-    [SerializeField] private GameObject _characterFramePrefab; // Prefab del cuadro
-
+    [Header("UI - Net stats")]
     [SerializeField] private TextMeshProUGUI _fpsStats;
     [SerializeField] private TextMeshProUGUI _pingStats;
-    private float _updateInterval = 1f; // Actualiza cada 0.5 segundos
+    private float _updateInterval = 1f;
+
+    [Header("Text animation values")]
+    [SerializeField] private float _minAlpha = 0.3f;
+    [SerializeField] private float _maxAlpha = 1f;
+    [SerializeField] private float _velocity = 1f;
+
+    [Header("Character frame containers")]
+    [SerializeField] private Transform _alliesContainer;
+    [SerializeField] private Transform _enemiesContainer;
+    [SerializeField] private GameObject _characterFramePrefab;
+
     private float _deltaTime = 0.0f;
     private int _team1Points;
     private int _team2Points;
@@ -60,37 +70,42 @@ public class GameController : NetworkBehaviour
 
     void Start()
     {
+        // Actualiza las estadísticas de FPS y Ping cada "updateInterval" segundos
         InvokeRepeating(nameof(ShowFps), 1f, _updateInterval);
         InvokeRepeating(nameof(ShowPing), 1f, _updateInterval);
-        //ShowPlayerHealth();
-        //ShowBossHealth();
     }
 
     public override void OnNetworkSpawn()
     {
         if (IsServer)
         {
+            // Configura el temporizador de preparación y activa la cuenta regresiva
             currentTime.Value = TimeStringToSeconds(_prepareTime);
             countingDown.Value = true;
             gameStarted.Value = false;
 
             CreateSyncList();
-            // Poblar la lista de jugadores al inicio
 
+            // Bloquea el movimiento y actualiza los contenedores de personajes
             BlockAnyMovementClientRpc();
             PopulateContainerClientRpc();
+
+            // Suscribe el evento de daño del jefe para actualizar su salud
             ServiceLocator.Global.Get(out DamageableBehaviour damageable);
             damageable.OnDamage += (_) => ShowBossHealth();
         }
         if (IsClient)
         {
+            // Suscribe cambios en la lista sincronizada para actualizar la UI
             _syncedPlayers.OnListChanged += OnSyncedPlayersChanged;
 
+            // Actualiza la salud del jugador local y suscribe eventos de daño para refrescar la UI
             StartCoroutine(UpdateCurrentHp());
-            //UpdateClientUIHealth_ClientRpc();
             ServiceLocator.Global.Get(out DamageableBehaviour damageable);
             damageable.OnDamage += (_) => StartCoroutine(UpdateCurrentHp());
             damageable.OnDamage += (_) => ShowPlayerHealth();
+
+            // Registra el evento de reaparición
             _playerRespawnEventBinding = new EventBinding<PlayerRespawnEvent>(HandleRespawn);
             EventBus<PlayerRespawnEvent>.Register(_playerRespawnEventBinding);
         }
@@ -100,6 +115,7 @@ public class GameController : NetworkBehaviour
     {
         if (IsClient)
         {
+            // Desuscribe los eventos y elimina el binding del EventBus
             _syncedPlayers.OnListChanged -= OnSyncedPlayersChanged;
             ServiceLocator.Global.Get(out DamageableBehaviour damageable);
             damageable.OnDamage -= (_) => StartCoroutine(UpdateCurrentHp());
@@ -118,9 +134,12 @@ public class GameController : NetworkBehaviour
     {
         TimerClock();
         GameStartingAnimation();
+
+        // Suaviza el deltaTime para el cálculo de FPS
         _deltaTime += (Time.unscaledDeltaTime - _deltaTime) * 0.1f;
     }
 
+    // Maneja la reaparición del jugador actualizando la salud local y la UI
     private void HandleRespawn()
     {
         StartCoroutine(UpdateCurrentHp());
@@ -133,12 +152,12 @@ public class GameController : NetworkBehaviour
         // Obtiene el DamageableBehaviour del jugador local usando el ServiceLocator (esto es local)
         if (ServiceLocator.Global.TryGet<DamageableBehaviour>(out DamageableBehaviour damage))
         {
-            Debug.Log($"[Cliente {NetworkManager.Singleton.LocalClientId}] Valor de Health local: {damage.Health}");
+            Debug.Log($"[Client {NetworkManager.Singleton.LocalClientId}] Health local value: {damage.Health}");
             UpdateMyHealthServerRpc(damage.Health);
         }
         else
         {
-            Debug.LogWarning("No se encontró DamageableBehaviour en el ServiceLocator.");
+            Debug.LogWarning("DamageableBehaviour not found in ServiceLocator");
         }
     }
 
@@ -171,7 +190,7 @@ public class GameController : NetworkBehaviour
                 SyncedPlayerData data = _syncedPlayers[i];
                 data.Health = newHealth;
                 _syncedPlayers[i] = data;
-                Debug.Log($"Actualizada la salud del cliente {senderClientId} a {newHealth}");
+                Debug.Log($"health updated {senderClientId} to {newHealth}");
                 break;
             }
         }
@@ -195,9 +214,10 @@ public class GameController : NetworkBehaviour
         }
     }
 
+    // Se llama cuando hay cambios en la lista sincronizada y actualiza la UI
     private void OnSyncedPlayersChanged(NetworkListEvent<SyncedPlayerData> changeEvent)
     {
-        Debug.Log($"[Cliente] OnSyncedPlayersChanged: Tipo = {changeEvent.Type} para ClientId {changeEvent.Value.ClientId} con Health = {changeEvent.Value.Health}");
+        Debug.Log($"[Client] OnSyncedPlayersChanged: Type = {changeEvent.Type} for ClientId {changeEvent.Value.ClientId} with Health = {changeEvent.Value.Health}");
         StartCoroutine(PopulateContainer());
     }
 
@@ -214,7 +234,7 @@ public class GameController : NetworkBehaviour
             var transport = NetworkManager.Singleton.NetworkConfig.NetworkTransport as UnityTransport;
             if (transport != null)
             {
-                float ping = transport.GetCurrentRtt(0); // Obtener RTT en ms (NetworkManager.Singleton.NetworkConfig.NetworkTransport.ServerClientId)
+                float ping = transport.GetCurrentRtt(0);
                 _pingStats.text = $"Ping: {Mathf.Round(ping)} ms";
             }
             else
@@ -246,6 +266,7 @@ public class GameController : NetworkBehaviour
     {
         yield return new WaitForSeconds(.5f);
 
+        // Limpia los contenedores de aliados y enemigos
         foreach (Transform child in _alliesContainer)
             Destroy(child.gameObject);
         foreach (Transform child in _enemiesContainer)
@@ -261,11 +282,6 @@ public class GameController : NetworkBehaviour
 
             Slider healthSlider = frame.transform.Find("Player health")?.GetComponent<Slider>();
             healthSlider.value = playerData.Health;
-
-            // Asignar los datos al cuadro
-            //frame.transform.Find("CharacterImage").GetComponent<Image>().sprite = GetCharacterSprite(clientData.CharacterId);
-            //frame.transform.Find("HealthSlider").GetComponent<Slider>().value = clientData.Health;
-            //frame.transform.Find("KDA").GetComponent<Text>().text = $"ID: {clientId}";
         }
     }
 
@@ -277,7 +293,6 @@ public class GameController : NetworkBehaviour
             if (_syncedPlayers[i].ClientId == clientId)
             {
                 var playerData = _syncedPlayers[i];
-                //playerData.Health = Mathf.Clamp01(newHealth);
                 _syncedPlayers[i] = playerData;
                 break;
             }
@@ -298,8 +313,6 @@ public class GameController : NetworkBehaviour
             float health = FindObjectOfType<BossDamager>()._damageable.Health;
             UpdateBossHealthBar_ClientRPC(health);
         }
-        //ServiceLocator.Global.Get(out PlayerInfo player);
-        //player.ClientData.ClientId
     }
 
     [Rpc(SendTo.ClientsAndHost)]
@@ -324,9 +337,9 @@ public class GameController : NetworkBehaviour
         slider.value = targetValue;
     }
 
+    // Actualiza el temporizador y gestiona el inicio/fin de partida (solo en el servidor)
     private void TimerClock()
     {
-        // Solo el Servidor actualiza la cuenta regresiva
         if (IsServer && countingDown.Value)
         {
             currentTime.Value -= Time.deltaTime;
@@ -352,7 +365,6 @@ public class GameController : NetworkBehaviour
         ActivateMovementPlayersClientRpc();
         currentTime.Value = TimeStringToSeconds(_gameTime);
         countingDown.Value = true;
-        //PlayersToSpawn();
     }
 
     private void FinishGame()
@@ -395,6 +407,7 @@ public class GameController : NetworkBehaviour
 
     }
 
+    // Convierte un string "MM:SS" a segundos
     private float TimeStringToSeconds(string timeString)
     {
         string[] split = timeString.Split(':');
@@ -425,6 +438,7 @@ public class CharacterData
     public int assists;
 }
 
+// Estructura para sincronizar datos básicos del jugador en red
 [System.Serializable]
 public struct SyncedPlayerData : INetworkSerializable, IEquatable<SyncedPlayerData>
 {
@@ -441,7 +455,6 @@ public struct SyncedPlayerData : INetworkSerializable, IEquatable<SyncedPlayerDa
         ///serializer.SerializeValue(ref CharacterId);
     }
 
-    // Implementing IEquatable<T>
     public bool Equals(SyncedPlayerData other)
     {
         return ClientId == other.ClientId &&
@@ -450,7 +463,6 @@ public struct SyncedPlayerData : INetworkSerializable, IEquatable<SyncedPlayerDa
         //CharacterId == other.CharacterId;
     }
 
-    // Override GetHashCode and Equals to ensure proper equality checks
     public override bool Equals(object obj)
     {
         return obj is SyncedPlayerData other && Equals(other);

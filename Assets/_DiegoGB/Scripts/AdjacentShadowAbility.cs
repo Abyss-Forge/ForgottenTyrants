@@ -8,11 +8,9 @@ using UnityEngine.InputSystem;
 public class AdjacentShadowAbility : MonoBehaviour
 {
     [Header("Ability Settings")]
-    //[SerializeField] private float _range = 10;
     [SerializeField] private float _cooldownDuration = 5, _animationDuration = 2;
 
     [Header("Effect Modifiers")]
-    //[SerializeField] private float percentageMovementReduction = 25f;
     [SerializeField] private float _damageDealt = 30f;
     [SerializeField] private float _distanceBehind = 10f;
     [SerializeField] private float _range = 20f;
@@ -34,11 +32,13 @@ public class AdjacentShadowAbility : MonoBehaviour
         }
     }
 
+    // Callback para la acción de input asignada a la habilidad
     private void OnCast(InputAction.CallbackContext context)
     {
         if (context.performed) Cast();
     }
 
+    // Inicia la ejecución de la habilidad si no está en cooldown ni activa
     public void Cast()
     {
         if (_cooldownTimer <= 0f && !_isAbilityActive)
@@ -50,7 +50,10 @@ public class AdjacentShadowAbility : MonoBehaviour
 
     private IEnumerator CastAdjacentShadow()
     {
+        // Obtiene el objeto impactado por el rayo del crosshair
         enemy = CrosshairRaycaster.GetImpactObject();
+
+        // Verifica que se haya impactado un objeto, que tenga la etiqueta "Enemy" y esté dentro del rango
         if (enemy.CompareTag(Tag.Enemy) && CalculateIsInRange())
         {
             _isAbilityActive = true;
@@ -64,6 +67,7 @@ public class AdjacentShadowAbility : MonoBehaviour
 
     }
 
+    // Calcula si el enemigo está dentro del rango permitido
     private bool CalculateIsInRange()
     {
         float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
@@ -72,11 +76,16 @@ public class AdjacentShadowAbility : MonoBehaviour
 
     private void TeleportToEnemy()
     {
+        // Calcula la posición detrás del enemigo
         Vector3 positionBehind = enemy.transform.position - enemy.transform.forward * _distanceBehind;
+
+        // Desactiva temporalmente el CharacterController para evitar conflictos al cambiar la posición
         GetComponent<CharacterController>().enabled = false;
         transform.position = positionBehind;
         GetComponent<CharacterController>().enabled = true;
-        GetComponent<PlayerController>().SetVelocity(Vector3.zero); //Optional right now
+
+        // Reinicia la velocidad del jugador y alinea la rotación con la del enemigo
+        GetComponent<PlayerController>().SetVelocity(Vector3.zero);
         transform.rotation = enemy.transform.rotation;
     }
 
@@ -85,6 +94,7 @@ public class AdjacentShadowAbility : MonoBehaviour
         Debug.Log("Damage dealt: " + _damageDealt);
     }
 
+    // Actualiza el temporizador de enfriamiento reduciéndolo con el tiempo transcurrido
     private void UpdateCooldownTimer()
     {
         if (_cooldownTimer > 0 && !_isAbilityActive) _cooldownTimer -= Time.deltaTime;
@@ -95,6 +105,4 @@ public class AdjacentShadowAbility : MonoBehaviour
         Gizmos.color = new(2, 1, 1, 0.3f);
         Gizmos.DrawSphere(transform.position, _range);
     }
-
-    //Github org access test
 }

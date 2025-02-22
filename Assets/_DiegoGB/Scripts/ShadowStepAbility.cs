@@ -7,11 +7,9 @@ using UnityEngine.InputSystem;
 public class ShadowStepAbility : MonoBehaviour
 {
     [Header("Ability Settings")]
-    //[SerializeField] private float _range = 10;
     [SerializeField] private float _effectDuration = .5f, _cooldownDuration = 5, _animationDuration = 0.5f;
 
     [Header("Effect Modifiers")]
-    //[SerializeField] private float percentageMovementReduction = 25f;
     [SerializeField] private float _charges = 3f;
     [SerializeField] private float _chargeReloadTime = 5f;
 
@@ -26,7 +24,6 @@ public class ShadowStepAbility : MonoBehaviour
         _playerController = GetComponent<PlayerController>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         ReloadCharge();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
+//Clase de testing para multijugador
 public class NetworkPlayerMovement : NetworkBehaviour
 {
     private void Update()
