@@ -311,7 +311,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 2344243242
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 709241e49b235d54881efb408c84704e, type: 2}
   m_sharedMaterial: {fileID: -3184889892854629324, guid: 709241e49b235d54881efb408c84704e,
@@ -596,7 +596,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 43242342
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 709241e49b235d54881efb408c84704e, type: 2}
   m_sharedMaterial: {fileID: -3184889892854629324, guid: 709241e49b235d54881efb408c84704e,
@@ -791,7 +791,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1593766276
+  GlobalObjectIdHash: 4171152395
   InScenePlacedSourceGlobalObjectIdHash: 3354779224
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 0
@@ -814,21 +814,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _timer: {fileID: 4182430240887703030}
   _starting: {fileID: 2043202882475931332}
+  _prepareTime: 00:05
+  _gameTime: 15:00
   _team1PointsText: {fileID: 8058124822043273528}
   _team2PointsText: {fileID: 4900023945964769589}
+  _playerHealth: {fileID: 2379968140220625280}
+  _bossHealth: {fileID: 4926727079883786401}
+  _fpsStats: {fileID: 5503292997466860063}
+  _pingStats: {fileID: 9032948817976984277}
   _minAlpha: 0
   _maxAlpha: 1
   _velocity: 0.5
-  _prepareTime: 00:05
-  _gameTime: 15:00
-  _playerHealth: {fileID: 2379968140220625280}
-  _bossHealth: {fileID: 4926727079883786401}
   _alliesContainer: {fileID: 4171669573114710722}
   _enemiesContainer: {fileID: 3804580071010982817}
   _characterFramePrefab: {fileID: 7757861636178832068, guid: 14b048c08d6474a4992c0db32cf2dc5d,
     type: 3}
-  _fpsStats: {fileID: 5503292997466860063}
-  _pingStats: {fileID: 9032948817976984277}
 --- !u!1 &4785141288926092175
 GameObject:
   m_ObjectHideFlags: 0
