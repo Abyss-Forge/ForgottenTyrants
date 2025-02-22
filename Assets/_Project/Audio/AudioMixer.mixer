@@ -114,13 +114,29 @@ AudioMixerController:
   m_SuspendThreshold: -80
   m_EnableSuspend: 1
   m_UpdateMode: 0
-  m_ExposedParameters: []
+  m_ExposedParameters:
+  - guid: 093727b7d7ef2eb4e81fbeecddc1e2db
+    name: CinematicsVolume
+  - guid: 66f25b8b892e372438d717c4ed1a581a
+    name: DialogVolume
+  - guid: bfa281ce9ae030c479f4473aab295782
+    name: MasterVolume
+  - guid: da1c6c4cf6947554188d853dad7c166c
+    name: MusicVolume
+  - guid: 168c4d80ef41c8444a45e6699ece0f10
+    name: SFXVolume
+  - guid: 5e202e2834779c041a1b953ee991fec6
+    name: UIVolume
+  - guid: 6175665c44941fe4c956c0f3f6db64ae
+    name: VoiceChatVolume
   m_AudioMixerGroupViews:
   - guids:
     - 49eeb32df82cab149a8a9fb3392d8ac3
     - cc0c05297446f50468cf1228985e2a7a
     - c2308fea2b508e24695f60c57fb2b754
     - eb936f63d3874504abc107d4ac0f7254
+    - 64ad1fa0a10b5cd43bd5bb8693b47bd4
+    - 6fbcf0420b17f894dbf12a3b731a8d36
     - d897bee7520b10a499812c33b65e9989
     name: View
   m_CurrentViewIndex: 0
