@@ -25,7 +25,7 @@ public class NetworkStats : MonoBehaviour
     {
         if (NetworkManager.Singleton.IsConnectedClient)
         {
-            var transport = NetworkManager.Singleton.NetworkConfig.NetworkTransport;    //  NetworkTransport / UnityTransport
+            var transport = NetworkManager.Singleton.NetworkConfig.NetworkTransport;    //  NetworkTransport or UnityTransport
             if (transport != null)
             {
                 _ping = transport.GetCurrentRtt(NetworkManager.Singleton.LocalClientId);
