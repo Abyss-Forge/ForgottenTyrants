@@ -5,6 +5,7 @@ using Systems.EventBus;
 using Systems.GameManagers;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Utils;
 
 //[RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
@@ -56,9 +57,12 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
+        CursorHelper.Capture();
         // _characterController = GetComponent<CharacterController>();
+
+        //Diego troleando
         StartGlowingEffect(5);
-        _currentSpeed = _walkSpeed;     //Diego troleando
+        _currentSpeed = _walkSpeed;
     }
 
     void OnEnable()

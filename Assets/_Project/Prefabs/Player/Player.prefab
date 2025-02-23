@@ -10518,7 +10518,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1484020662159581804}
   - component: {fileID: 4620212469160742554}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: SFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10815,7 +10815,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8424982287532024280}
   - component: {fileID: 8706874442313488237}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Debuff
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36002,7 +36002,7 @@ GameObject:
   - component: {fileID: 3399614839531873826}
   - component: {fileID: 6978986995751033359}
   - component: {fileID: 951092374199941371}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Data
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46647,7 +46647,7 @@ GameObject:
   - component: {fileID: 5828088301475379569}
   - component: {fileID: 5816823916395895089}
   - component: {fileID: 1019016546715915722}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57271,7 +57271,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8392913832447398947}
   - component: {fileID: 8183462591024305845}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Heal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62300,6 +62300,7 @@ GameObject:
   - component: {fileID: 2126848411653528712}
   - component: {fileID: 2227587661013959609}
   - component: {fileID: 6184573723502661926}
+  - component: {fileID: 438185446926520130}
   m_Layer: 7
   m_Name: Minimap Icons Canvas
   m_TagString: Untagged
@@ -62390,6 +62391,22 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &438185446926520130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6959427453403649698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36bc64738a5cc344ea319e03b0436e73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _arrowMarker: {fileID: 5976222900408472240}
+  _myColor: {r: 1, g: 1, b: 1, a: 1}
+  _team1Color: {r: 1, g: 1, b: 0, a: 1}
+  _team2Color: {r: 0.5882353, g: 0, b: 1, a: 1}
 --- !u!1 &7023587951338344644
 GameObject:
   m_ObjectHideFlags: 0
@@ -67680,7 +67697,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1056897063962762795}
   - component: {fileID: 8175095734469306891}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Death
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68258,7 +68275,7 @@ GameObject:
   m_Component:
   - component: {fileID: 384054976734185691}
   - component: {fileID: 397529284590704462}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Buff
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68532,7 +68549,7 @@ GameObject:
   - component: {fileID: 6719390018648279104}
   - component: {fileID: 6508495394690394469}
   - component: {fileID: 8513622279716316321}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Abilities
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68695,6 +68712,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Crosshair
       objectReference: {fileID: 0}
+    - target: {fileID: 1009367266432395491, guid: 9f104986121dc5c4f917a328fa6714b7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -68814,11 +68836,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1095166364285222758, guid: 7927e011fe602b44bad6aa56953fa8fe,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2354323998712104720, guid: 7927e011fe602b44bad6aa56953fa8fe,
         type: 3}
       propertyPath: _objectToFollow
       value: 
       objectReference: {fileID: 9963347311403842}
+    - target: {fileID: 3351020093272321419, guid: 7927e011fe602b44bad6aa56953fa8fe,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7506160260129498768, guid: 7927e011fe602b44bad6aa56953fa8fe,
         type: 3}
       propertyPath: m_Name

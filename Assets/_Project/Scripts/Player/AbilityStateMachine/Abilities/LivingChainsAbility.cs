@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using UnityEngine;
 using ForgottenTyrants;
+using UnityEngine;
 using Utils.Extensions;
 
 public class LivingChainsAbility : AbilityStateMachine, IAbilityWithRange
@@ -9,22 +9,13 @@ public class LivingChainsAbility : AbilityStateMachine, IAbilityWithRange
 
     [SerializeField] private LineRenderer _lineRendererTemplate;
 
-    Dictionary<GameObject, GameObject> _playerChains = new();
+    private Dictionary<Transform, LineRenderer> _playerChains = new();
 
     #endregion
     #region Interface implementation
 
     [SerializeField] float _range;
     public float Range => _range;
-
-    void OnDrawGizmos()
-    {
-        if (_fsm != null && _fsm.CurrentState.ID == EAbilityState.ACTIVE)
-        {
-            Gizmos.color = new(0, 1, 0, 0.3f);
-            Gizmos.DrawSphere(transform.position, _range);
-        }
-    }
 
     #endregion
     #region States
@@ -48,85 +39,71 @@ public class LivingChainsAbility : AbilityStateMachine, IAbilityWithRange
         {
             base.Enter();
 
-            TryDetectPlayersInRange();
+            _ability.TryDetectPlayersInRange();
         }
 
         public override void Update()
         {
             base.Update();
 
-            UpdateChainsPositions();
+            _ability.UpdateChainsPositions();
         }
 
         public override void Exit()
         {
             base.Exit();
 
-            ResetChains();
+            _ability.ResetChains();
+        }
+    }
+    #endregion
+
+    private void TryDetectPlayersInRange()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, _range, Layer.Player);
+        bool hasHit = false;
+
+        foreach (Collider collider in hitColliders)
+        {
+            ApplyEnemyEffect(collider.transform);
+            hasHit = true;
         }
 
-        private void TryDetectPlayersInRange()
+        if (!hasHit) _fsm.TransitionTo(EAbilityState.COOLDOWN);
+    }
+
+    private void ApplyEnemyEffect(Transform target)
+    {
+        if (!_playerChains.ContainsKey(target))
         {
-            Collider[] hitColliders = Physics.OverlapSphere(_ability.transform.position, _ability._range, Layer.Player);
-            bool hasHit = false;
+            GameObject chain = new("Chain");
+            chain.transform.SetParent(transform);
+            LineRenderer lr = chain.CopyComponent(_lineRendererTemplate);
 
-            foreach (Collider hitCollider in hitColliders)
-            {
-                if (hitCollider.gameObject.CompareTag(Tag.Ally))
-                {
-                    ApplyAllyEffect(hitCollider.gameObject);
-                    hasHit = true;
-                }
-                else if (hitCollider.gameObject.CompareTag(Tag.Enemy))
-                {
-                    ApplyEnemyEffect(hitCollider.gameObject);
-                    hasHit = true;
-                }
-            }
+            lr.SetPosition(0, transform.position);
+            lr.SetPosition(1, target.position);
+            //StartCoroutine(AnimateChain(lr, target.position));
 
-            if (!hasHit) _ability._fsm.TransitionTo(EAbilityState.COOLDOWN);
-        }
-
-        private void ApplyAllyEffect(GameObject ally)
-        {
-            Debug.Log("Ally hit!: " + ally.name);
-        }
-
-        private void ApplyEnemyEffect(GameObject enemy)
-        {
-            if (!_ability._playerChains.ContainsKey(enemy))
-            {
-                GameObject chain = new("Chain");
-                chain.transform.SetParent(_ability.transform);
-                LineRenderer lr = chain.CopyComponent(_ability._lineRendererTemplate);
-
-                lr.SetPosition(0, _ability.transform.position);
-                lr.SetPosition(1, enemy.transform.position);
-                //_ability.StartCoroutine(AnimateChain(lr, enemy.transform.position));
-
-                _ability._playerChains.Add(enemy, chain);
-            }
-        }
-
-        private void UpdateChainsPositions()
-        {
-            foreach (var item in _ability._playerChains)
-            {
-                LineRenderer lineRenderer = item.Value.GetComponent<LineRenderer>();
-                lineRenderer.SetPosition(0, _ability.transform.position);
-                lineRenderer.SetPosition(1, item.Key.transform.position);
-            }
-        }
-
-        private void ResetChains()
-        {
-            foreach (var item in _ability._playerChains)
-            {
-                Destroy(item.Value);
-            }
-            _ability._playerChains.Clear();
+            _playerChains.Add(target, lr);
         }
     }
 
-    #endregion
+    private void UpdateChainsPositions()
+    {
+        foreach (var item in _playerChains)
+        {
+            LineRenderer lr = item.Value;
+            lr.SetPosition(0, transform.position);
+            lr.SetPosition(1, item.Key.position);
+        }
+    }
+
+    private void ResetChains()
+    {
+        foreach (var item in _playerChains)
+        {
+            Destroy(item.Value.gameObject);
+        }
+        _playerChains.Clear();
+    }
 }

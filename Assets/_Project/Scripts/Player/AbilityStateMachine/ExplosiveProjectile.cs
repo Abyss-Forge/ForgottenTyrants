@@ -51,7 +51,7 @@ public abstract class ExplosiveProjectile : Projectile, IDamageable
 
     protected override bool IsDirectHit(GameObject go)
     {
-        return base.IsDirectHit(go) && _explodeOnContact;
+        return _explodeOnContact || base.IsDirectHit(go);
     }
 
     protected override async Task OnHit()

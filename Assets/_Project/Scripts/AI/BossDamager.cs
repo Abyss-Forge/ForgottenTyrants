@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Systems.EventBus;
-using Systems.ServiceLocator;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -40,16 +36,6 @@ public class BossDamager : MonoBehaviour
         _damageable.OnDeath -= HandleDeath;
     }
 
-    private void HandleDeath()
-    {
-
-    }
-
-    void UpdateScorePoints(int teamId, int damage)
-    {
-        _gameController.UpdateTeamPoints_ClientRpc(teamId, damage);
-    }
-
     private void OnCollisionEnter(Collision other)
     {
         if (_isInvincible) return;
@@ -80,6 +66,16 @@ public class BossDamager : MonoBehaviour
                 _buffable.ApplyBuffFromData(buffData);
             }
         }
+    }
+
+    void UpdateScorePoints(int teamId, int damage)
+    {
+        _gameController.UpdateTeamPoints_ClientRpc(teamId, damage);
+    }
+
+    private void HandleDeath()
+    {
+
     }
 
 }

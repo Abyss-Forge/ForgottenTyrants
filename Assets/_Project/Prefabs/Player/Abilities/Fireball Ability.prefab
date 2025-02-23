@@ -80,7 +80,7 @@ MonoBehaviour:
   <CanBeCanceled>k__BackingField: 0
   <ActiveDuration>k__BackingField: 0
   <CooldownDuration>k__BackingField: 2
-  _projectilePrefab: {fileID: 2460827438442045762, guid: c63e456c61541b0408feae9a9710cb55,
+  _projectilePrefab: {fileID: 9068214188564177919, guid: c63e456c61541b0408feae9a9710cb55,
     type: 3}
   _projectileAmount: 1
   _projectileThreshold: 0

@@ -1,15 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using ForgottenTyrants;
-using UnityEngine.SceneManagement;
+using Systems.EventBus;
 using UnityEngine;
 using UnityEngine.UI;
-using Systems.EventBus;
 
 public class StartMenuController : MonoBehaviour
 {
     [SerializeField] private Button _playButton, _settingsButton, _quitButton;
-    [SerializeField] private GameObject _settingsMenu;
+    [SerializeField] private RectTransform _settingsMenu;
 
     void OnEnable()
     {
@@ -38,7 +34,7 @@ public class StartMenuController : MonoBehaviour
 
     private void OpenSettings()
     {
-        _settingsMenu.SetActive(true);
+        _settingsMenu.gameObject.SetActive(true);
     }
 
 }

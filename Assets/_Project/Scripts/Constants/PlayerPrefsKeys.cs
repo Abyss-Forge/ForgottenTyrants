@@ -5,13 +5,13 @@ public sealed class PlayerPrefsKeys
 
     #region Audio
     //Must have the same names as the AudioMixer entries
-    public const string VOLUME_UI = "UI";
-    public const string VOLUME_MASTER = "Master";
-    public const string VOLUME_MUSIC = "Music";
-    public const string VOLUME_SFX = "SFX";
-    public const string VOLUME_CINEMATICS = "Cinematics";
-    public const string VOLUME_DIALOG = "Dialog";
-    public const string VOLUME_VOICE_CHAT = "VoiceChat";
+    public const string VOLUME_UI = "UIVolume";
+    public const string VOLUME_MASTER = "MasterVolume";
+    public const string VOLUME_MUSIC = "MusicVolume";
+    public const string VOLUME_SFX = "SFXVolume";
+    public const string VOLUME_CINEMATICS = "CinematicsVolume";
+    public const string VOLUME_DIALOG = "DialogVolume";
+    public const string VOLUME_VOICE_CHAT = "VoiceChatVolume";
     #endregion
 
     #region Display

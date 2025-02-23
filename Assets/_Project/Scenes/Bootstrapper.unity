@@ -1587,7 +1587,7 @@ MonoBehaviour:
   _messageText: {fileID: 1415235994}
   _messagesTxt: {fileID: 4900000, guid: d0ff1e12fe61bd044a5e8da8a2dd561c, type: 3}
   _backgroundsFolder:
-    folderPath: Assets/_Project/2D/Sprites/Menus/Backgrounds
+    folderPath: Assets/_Project/2D/Sprites/Menus/Loading Screens
 --- !u!1001 &1792987115
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1696,12 +1696,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2101147195}
     m_Modifications:
-    - target: {fileID: 5037981661973284768, guid: 3a73141c8c8592e45b7f08ff4da23cb4,
-        type: 3}
-      propertyPath: OutputAudioMixerGroup
-      value: 
-      objectReference: {fileID: 2008170038661350482, guid: 89a8d23093536ee42a7e5d88be039448,
-        type: 2}
     - target: {fileID: 5908166852836578909, guid: 3a73141c8c8592e45b7f08ff4da23cb4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1750,11 +1744,6 @@ PrefabInstance:
     - target: {fileID: 5908166852836578909, guid: 3a73141c8c8592e45b7f08ff4da23cb4,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5908166852836578909, guid: 3a73141c8c8592e45b7f08ff4da23cb4,
-        type: 3}
-      propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7192788494139448022, guid: 3a73141c8c8592e45b7f08ff4da23cb4,

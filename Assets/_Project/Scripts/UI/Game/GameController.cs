@@ -91,8 +91,8 @@ public class GameController : NetworkBehaviour
             PopulateContainerClientRpc();
 
             // Suscribe el evento de daño del jefe para actualizar su salud
-            ServiceLocator.Global.Get(out DamageableBehaviour damageable);
-            damageable.OnDamage += (_) => ShowBossHealth();
+            /* ServiceLocator.Global.Get(out DamageableBehaviour damageable);    //TODO si registras un el damageable del boss en server, el host no puede registrar el suyo
+             damageable.OnDamage += (_) => ShowBossHealth();*/
         }
         if (IsClient)
         {

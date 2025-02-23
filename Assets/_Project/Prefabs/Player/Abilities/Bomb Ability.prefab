@@ -100,7 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Stats>k__BackingField:
     _health: 0
-    _physicalDamage: 5
+    _physicalDamage: 50
     _magicalDamage: 0
     _physicalDefense: 0
     _magicalDefense: 0

@@ -1,12 +1,12 @@
 using System.Collections;
-using UnityEngine.EventSystems;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
 public class MyButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerExitHandler
 {
-    private Image _image;
+    Image _image;
 
     [Header("Config")]
     [SerializeField] private Sprite _idleSprite, _hoverSprite, _activeSprite;
@@ -15,9 +15,9 @@ public class MyButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandle
     private bool _isSelected;
     public bool IsSelected => _isSelected;
 
-    private enum _PointerAction
+    private enum EPointerAction
     {
-        Enter, Click, Exit
+        ENTER, CLICK, EXIT
     }
 
     void Start()
@@ -34,7 +34,7 @@ public class MyButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandle
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (CanBeModified(_PointerAction.Enter))
+        if (CanBeModified(EPointerAction.ENTER))
         {
             _image.sprite = _hoverSprite;
         }
@@ -42,7 +42,7 @@ public class MyButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandle
 
     public virtual void OnPointerClick(PointerEventData eventData)
     {
-        if (CanBeModified(_PointerAction.Click))
+        if (CanBeModified(EPointerAction.CLICK))
         {
             SetSelected(!_isSelected); //toggle
         }
@@ -50,7 +50,7 @@ public class MyButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandle
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (CanBeModified(_PointerAction.Exit))
+        if (CanBeModified(EPointerAction.EXIT))
         {
             _image.sprite = _idleSprite;
         }
@@ -62,7 +62,7 @@ public class MyButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandle
         _image.sprite = selected ? _activeSprite : _idleSprite;
     }
 
-    private bool CanBeModified(_PointerAction action)
+    private bool CanBeModified(EPointerAction action)
     {
         if (!_isSelected)
         {
@@ -76,7 +76,7 @@ public class MyButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandle
 
         if (_isToggleable)
         {
-            return action == _PointerAction.Click;
+            return action == EPointerAction.CLICK;
         }
 
         return true;

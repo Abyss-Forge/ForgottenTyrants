@@ -10,14 +10,14 @@ namespace Systems.AudioManagement
     {
         [SerializeField] private AudioMixer _audioMixer;
 
-        private AudioHelper _audioHelper;
+        public AudioVolumeHelper Helper;
 
-        private List<AudioSource> AllSceneAudioSources;
+        private List<AudioSource> _allSceneAudioSources;
 
         protected override void OnAwake()
         {
-            _audioHelper = new(_audioMixer);
-            _audioHelper.LoadPrefs();
+            Helper = new(_audioMixer);
+            Helper.LoadPrefs();
 
             RefreshAudioSources();
         }
@@ -40,13 +40,13 @@ namespace Systems.AudioManagement
 
         private void RefreshAudioSources()
         {
-            AllSceneAudioSources = new();
-            AllSceneAudioSources.AddRange(FindObjectsOfType<AudioSource>());
+            _allSceneAudioSources = new();
+            _allSceneAudioSources.AddRange(FindObjectsOfType<AudioSource>());
         }
 
         public void PauseAllAudio()
         {
-            foreach (AudioSource audio in AllSceneAudioSources)
+            foreach (AudioSource audio in _allSceneAudioSources)
             {
                 audio.Pause();
             }
@@ -54,7 +54,7 @@ namespace Systems.AudioManagement
 
         public void ResumeAllAudio()
         {
-            foreach (AudioSource audio in AllSceneAudioSources)
+            foreach (AudioSource audio in _allSceneAudioSources)
             {
                 audio.UnPause();
             }

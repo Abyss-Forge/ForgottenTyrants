@@ -186,7 +186,7 @@ MonoBehaviour:
   _ricochets: 5
   _maxRicochetAngle: 90
   _explosion: {fileID: 7120469233543256903}
-  _explodeOnContact: 1
+  _explodeOnContact: 0
   _explodeOnLifetimeEnd: 1
   _isProximityEnabled: 0
   _proximityDetector: {fileID: 2954807700785221026}
