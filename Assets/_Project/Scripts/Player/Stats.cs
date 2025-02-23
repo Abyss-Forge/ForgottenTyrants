@@ -130,13 +130,4 @@ public class Stats
         }
     }
 
-    //TODO Transicionarlo a buffableBehaviour
-    public void ChangePhysicalDamage(float newPhysicalDamage)
-    {
-        _physicalDamage = newPhysicalDamage;
-    }
-    public void ChangeMagicalDamage(float newMagicalDamage)
-    {
-        _magicalDamage = newMagicalDamage;
-    }
 }

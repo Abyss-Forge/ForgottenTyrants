@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Unity.Netcode;
+using UnityEngine;
 
 public abstract class Entity : NetworkBehaviour
 {
@@ -9,7 +9,7 @@ public abstract class Entity : NetworkBehaviour
     [SerializeField] protected Stats _baseStats = new();
     protected Stats _modifiedStats = new();
     public Stats BaseStats => _baseStats;
-    public Stats ModifiedStats => _modifiedStats;
+    public Stats CurrentStats => _modifiedStats;
 
     public void AppyStatsModifier(Stats stats, bool isAppliedToBase)
     {

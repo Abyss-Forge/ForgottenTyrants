@@ -3,19 +3,33 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class BuffableBehaviour : MonoBehaviour//, IBuffable
+public interface IInitializable
+{
+    bool IsInitialized { get; }
+
+    void Initialize();
+}
+
+public class BuffableBehaviour : MonoBehaviour, IBuffable, IInitializable
 {
     [Tooltip("Leave at 0 to initialize from code")]
     [SerializeField] private Stats _baseStats = new();
     private Stats _modifiedStats = new();
     public Stats CurrentStats => _modifiedStats;
-
     public event Action<float, EStat> OnBuff, OnDebuff;
+
+    [SerializeField] private bool _canBeReinitialized;
+    private bool _isInitialized;
+    public bool IsInitialized => _isInitialized;
 
     private CancellationTokenSource _tokenSource = new();
 
+    public void Initialize() => Initialize(_baseStats);
     public void Initialize(Stats defaultStats)
     {
+        if (_isInitialized && !_canBeReinitialized) return;
+        _isInitialized = true;
+
         _tokenSource.Cancel();
         _tokenSource.Dispose();
         _tokenSource = new();
@@ -38,7 +52,7 @@ public class BuffableBehaviour : MonoBehaviour//, IBuffable
         bakedValue += value;
         _modifiedStats.Set(stat, bakedValue);
 
-        if (duration > 0) Task.Run(() => ResetBuffTask(_tokenSource.Token, stat, value, duration), _tokenSource.Token);
+        if (duration > 0) Task.Run(() => ResetBuff(_tokenSource.Token, stat, value, duration), _tokenSource.Token);
 
         if (isDebuff) OnDebuff?.Invoke(duration, stat);
         else OnBuff?.Invoke(duration, stat);
@@ -46,7 +60,7 @@ public class BuffableBehaviour : MonoBehaviour//, IBuffable
         Debug.Log("Buff apply");
     }
 
-    private async Task ResetBuffTask(CancellationToken token, EStat stat, float value, float duration)
+    private async Task ResetBuff(CancellationToken token, EStat stat, float value, float duration)
     {
         try
         {

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Systems.BehaviourTree;
-using Systems.ServiceLocator;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,8 +8,10 @@ using DecalProjector = UnityEngine.Rendering.Universal.DecalProjector;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 
-public class BossController : Entity
+public class BossController : NetworkBehaviour
 {
+    [SerializeField] BossDamager _bossDamager;
+
     [Header("Attacks & Aggro")]
     [SerializeField] private float _targetSelectionInterval = 6f;
     [SerializeField] private float _attackInterval = 3f;
@@ -68,9 +69,6 @@ public class BossController : Entity
 
     Dictionary<Player, float> _playerAggroList = new Dictionary<Player, float>();
     private Player _currentTarget = null;
-
-    //TODELETE BORRAR AL IMPLEMENTAR LA VIDA REAL DEL BOSS
-    private int CurrentHp = 100;
 
     public override void OnNetworkSpawn()
     {
@@ -206,11 +204,10 @@ public class BossController : Entity
 
     public void TakeDamage(Player player, int damage)
     {
-        //TODO (Utilizar bossDamagable)
-        CurrentHp -= damage;
-        Debug.Log($"Boss recibe {damage} de daño. Vida restante: {CurrentHp}");
+        _bossDamager.Damage(damage);
+        Debug.Log($"Boss recibe {damage} de daño. Vida restante: {_bossDamager.Health}");
         AddAggro(player, damage);
-        if (CurrentHp <= 0) Die();
+        if (_bossDamager.Health <= 0) Die();
     }
 
     public void AddAggro(Player player, float amount)
@@ -280,21 +277,7 @@ public class BossController : Entity
     [Rpc(SendTo.ClientsAndHost)]
     private void TriggerDamageBoost_ClientRpc()
     {
-        StartCoroutine(EventDamageBoost());
-    }
-
-    IEnumerator EventDamageBoost()
-    {
-        // Duplica el daño físico y mágico temporalmente
-        _modifiedStats.ChangePhysicalDamage(_baseStats.PhysicalDamage * 2);
-        _modifiedStats.ChangePhysicalDamage(_baseStats.MagicalDamage * 2);
-
-
-        yield return new WaitForSeconds(_damageBoostEffectDuration);
-
-        // Restaura los valores originales
-        _modifiedStats.ChangePhysicalDamage(_baseStats.PhysicalDamage);
-        _modifiedStats.ChangePhysicalDamage(_baseStats.MagicalDamage);
+        _bossDamager.ApplyBuff(stat: EStat.PHYSIC_DAMAGE, value: 100, isPercentual: true, duration: _damageBoostEffectDuration);
     }
 
     #endregion
@@ -547,11 +530,10 @@ public class BossController : Entity
         // El servidor va aplicando la curación poco a poco.
         for (int i = 0; i < _ticks; i++)
         {
-            CurrentHp += _healingPerTick;
+            _bossDamager.Heal(_healingPerTick);
             yield return new WaitForSeconds(_timeBetweenTicks);
         }
     }
-
 
     #endregion
 

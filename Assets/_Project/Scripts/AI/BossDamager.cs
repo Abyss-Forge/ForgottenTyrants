@@ -1,16 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using Utils.Extensions;
 
-[RequireComponent(typeof(DamageableBehaviour), typeof(BuffableBehaviour))]
-public class BossDamager : MonoBehaviour
+public class BossDamager : MonoBehaviour, IDamageable, IBuffable
 {
-    public DamageableBehaviour _damageable;
-    BuffableBehaviour _buffable;
-
     [SerializeField] private BossController _bossController;
     [SerializeField] private GameController _gameController;
     [SerializeField] private TMP_Text _team1PointsText, _team2PointsText;
@@ -18,22 +17,102 @@ public class BossDamager : MonoBehaviour
     private bool _isInvincible;
     private List<int> _alreadyAppliedDataHashes = new();    //TODO: dynamyc empty
 
+    [Tooltip("Leave at 0 to initialize from code")]
+    [SerializeField] private int _health;
+    public int Health => _health;
+
+    public event Action OnDeath;
+    public event Action<int> OnDamage, OnHeal;
+
+    public void InitializeDamageable(int health)
+    {
+        _health = health;
+    }
+
+    public void Damage(int damageAmount)
+    {
+        _health -= damageAmount;
+        OnDamage?.Invoke(damageAmount);
+
+        if (_health <= 0) OnDeath?.Invoke();
+    }
+
+    public void Heal(int healAmount)
+    {
+        _health += healAmount;
+        OnHeal?.Invoke(healAmount);
+    }
+
+    [Tooltip("Leave at 0 to initialize from code")]
+    [SerializeField] private Stats _baseStats = new();
+    private Stats _modifiedStats = new();
+    public Stats CurrentStats => _modifiedStats;
+
+    public event Action<float, EStat> OnBuff, OnDebuff;
+
+    private CancellationTokenSource _tokenSource = new();
+
+    public void InitializeBuffable(Stats defaultStats)
+    {
+        _tokenSource.Cancel();
+        _tokenSource.Dispose();
+        _tokenSource = new();
+
+        _baseStats = new Stats(defaultStats);
+        _modifiedStats = new Stats(defaultStats);
+    }
+
+    public void ApplyBuffFromData(BuffData info) => ApplyBuff(info.Stat, info.Value, info.Duration, info.IsPercentual, info.IsDebuff);
+
+    public void ApplyBuff(EStat stat, float value, float duration = -1, bool isPercentual = true, bool isDebuff = false)
+    {
+        float baseValue = _baseStats.Get(stat);
+        float bakedValue = _modifiedStats.Get(stat);
+
+        if (isPercentual) value *= baseValue / 100;
+
+        if (isDebuff) value *= -1;
+
+        bakedValue += value;
+        _modifiedStats.Set(stat, bakedValue);
+
+        if (duration > 0) Task.Run(() => ResetBuffTask(_tokenSource.Token, stat, value, duration), _tokenSource.Token);
+
+        if (isDebuff) OnDebuff?.Invoke(duration, stat);
+        else OnBuff?.Invoke(duration, stat);
+
+        Debug.Log("Buff apply");
+    }
+
+    private async Task ResetBuffTask(CancellationToken token, EStat stat, float value, float duration)
+    {
+        try
+        {
+            await Task.Delay(TimeSpan.FromSeconds(duration), token);
+
+            float currentValue = _modifiedStats.Get(stat);
+            currentValue -= value;
+            _modifiedStats.Set(stat, currentValue);
+
+            Debug.Log("Buff reset");
+        }
+        catch (TaskCanceledException) { Debug.Log("Buff reset cancelled"); }
+    }
+
     void Awake()
     {
-        _damageable = GetComponent<DamageableBehaviour>();
-        _buffable = GetComponent<BuffableBehaviour>();
-        _damageable.Initialize((int)_bossController.BaseStats.Health);
-        _buffable.Initialize(_bossController.BaseStats);
+        InitializeBuffable(_baseStats);
+        InitializeDamageable((int)_baseStats.Health);
     }
 
     void OnEnable()
     {
-        _damageable.OnDeath += HandleDeath;
+        OnDeath += HandleDeath;
     }
 
     void OnDisable()
     {
-        _damageable.OnDeath -= HandleDeath;
+        OnDeath -= HandleDeath;
     }
 
     private void OnCollisionEnter(Collision other)
@@ -51,19 +130,19 @@ public class BossDamager : MonoBehaviour
             if (data is DamageData damageData)
             {
                 float damage = damageData.DamageAmount * container.Multiplier;
-                _damageable.Damage((int)damage);
+                Damage((int)damage);
                 UpdateScorePoints(damageData.AbilityData.TeamId, (int)damage);
                 Debug.Log("Damaging");
             }
             else if (data is HealData healData)
             {
                 Debug.Log("Healing");
-                _damageable.Heal((int)healData.HealAmount);
+                Heal((int)healData.HealAmount);
             }
             else if (data is BuffData buffData)
             {
                 Debug.Log("Buffing");
-                _buffable.ApplyBuffFromData(buffData);
+                ApplyBuffFromData(buffData);
             }
         }
     }

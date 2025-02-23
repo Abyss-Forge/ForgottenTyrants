@@ -24,9 +24,6 @@ EditorBuildSettings:
     path: Assets/_Project/Scenes/Tests/GameplayMapTestDiego.unity
     guid: 7e9f3954d9ce356419006cb77316abd4
   - enabled: 0
-    path: Assets/_Project/Scenes/Tests/PruebasDiego.unity
-    guid: 407a9079a8d27064c99112cacadaaaa6
-  - enabled: 0
     path: Assets/_Project/Scenes/Tests/PruebasIvan.unity
     guid: 66f1da52f6b05f04bbbdce73b7b8c9a0
   - enabled: 0
