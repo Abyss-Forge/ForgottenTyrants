@@ -28,6 +28,7 @@ namespace Utils.Extensions
         public static void Disable(this GameObject go) => go.SetActive(false);
         public static void Destroy(this GameObject go) => MonoBehaviour.Destroy(go);
         public static void Unparent(this Transform tr) => tr.SetParent(null);
+        public static bool CompareLayer(this GameObject go, int layer) => go.layer == layer;
 
         public static void AlignToGround(this Transform tr)
         {

@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using ForgottenTyrants;
 using Unity.Netcode;
 using UnityEngine;
+using Utils.Extensions;
 
 
 public class SpeedAreaScript : NetworkBehaviour
@@ -64,7 +66,7 @@ public class SpeedAreaScript : NetworkBehaviour
         if (!IsServer) return;
 
         // Verificamos si es un player
-        if (!other.CompareTag("Player")) return;
+        if (!other.gameObject.CompareLayer(Layer.Player)) return;
 
         // Obtenemos el PlayerController
         PlayerController playerController = other.GetComponentInChildren<PlayerController>();

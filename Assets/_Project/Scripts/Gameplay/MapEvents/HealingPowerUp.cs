@@ -1,34 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 
-public class HealingPowerUp : NetworkBehaviour
+public class HealingPowerUp : PowerUp
 {
-    [SerializeField] private int _healAmount;
-    [SerializeField] GameObject _healingPrefab;
+    [SerializeField] private int _healingAmount;
 
-    private void OnTriggerEnter(Collider other)
+    protected override void CalculateData()
     {
-        if (!IsServer) return;
-
-        if (other.gameObject.CompareTag("Player"))
-        {
-            // Ejecuta el efecto visual en todos los clientes y en el host
-            PlayVisualEffect_ClientRpc();
-
-            //TODO implementar healing.
-            Debug.Log($"{other.gameObject} ha sido curado {_healAmount}");
-
-            // Despawnea el objeto de red y lo destruye en la escena
-            GetComponent<NetworkObject>().Despawn();
-            Destroy(gameObject);
-        }
+        _container.AddInfo(new HealData(
+            playerId: default,
+            teamId: default,
+            affectedChannel: EDamageApplyChannel.EVERYONE,
+            healAmount: _healingAmount)
+        );
     }
 
-    [Rpc(SendTo.ClientsAndHost)]
-    private void PlayVisualEffect_ClientRpc()
-    {
-        _healingPrefab.GetComponentInChildren<ParticleSystem>().Play();
-    }
 }

@@ -3,6 +3,7 @@ using UnityEngine;
 public class MultiDamagePowerUp : PowerUp
 {
     [SerializeField] private int _damageTakenAmount, _damageBuffPercent;
+    [SerializeField] private float _duration;
 
     protected override void CalculateData()
     {
@@ -21,8 +22,7 @@ public class MultiDamagePowerUp : PowerUp
            stat: EStat.PHYSIC_DAMAGE,
            value: _damageBuffPercent,
            isPercentual: true,
-           duration: 20
-           )
+           duration: _duration)
        );
     }
 

@@ -1,11 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using ForgottenTyrants;
 using Systems.BehaviourTree;
-using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
-using Utils.Extensions;
 using DecalProjector = UnityEngine.Rendering.Universal.DecalProjector;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
@@ -28,7 +29,7 @@ public class BossController : NetworkBehaviour
     [SerializeField] float _damageBoostEffectDuration = 5f;
 
     [Header("Power Up settings")]
-    [SerializeField] NetworkObject _powerUpPrefab;
+    [SerializeField] NetworkObject[] _powerUpPrefabs; //Son NetworkObjects de tipo PowerUp pero por lo de la animacion tiene que referenciarse asi
     [SerializeField] float _spawnRadius = 100f;
     [SerializeField] int _spawnCount = 3;
     [SerializeField] float _heightOffsetPowerUp = 2f;
@@ -67,19 +68,19 @@ public class BossController : NetworkBehaviour
 
     private BehaviorSequence _rootSequence;
     private Terrain _terrain;
-    private Dictionary<GameObject, float> _originalJumpForces = new Dictionary<GameObject, float>();
+    private Dictionary<GameObject, float> _originalJumpForces = new();
 
-    Dictionary<Player, float> _playerAggroList = new Dictionary<Player, float>();
+    Dictionary<Player, float> _playerAggroList = new();
     private Player _currentTarget = null;
+
+    private List<string> _eventNames = new();
 
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn();
-
         if (IsServer)
         {
             // Inicializa la lista de aggro de cada jugador encontrado en la escena
-            GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
+            GameObject[] playerObjects = GameObject.FindGameObjectsWithTag(Tag.Player);
             foreach (GameObject obj in playerObjects)
             {
                 Player player = obj.GetComponent<Player>();
@@ -98,25 +99,38 @@ public class BossController : NetworkBehaviour
 
         // Configuración inicial del decal (efecto de advertencia)
         _decalProjector.fadeFactor = 0;
-        _decalProjector.gameObject.transform.position = new Vector3(this.gameObject.transform.position.x, _decalProjector.transform.position.y, this.gameObject.transform.position.z);
+        _decalProjector.gameObject.transform.position = new Vector3(gameObject.transform.position.x, _decalProjector.transform.position.y, this.gameObject.transform.position.z);
+
+        if (IsServer)
+        {
+            _eventNames.AddRange(new List<string> {
+            nameof(TriggerDamageBoost_ServerRpc),
+            nameof(TriggerDissapear_ServerRpc),
+            nameof(RequestPowerUps_ServerRpc),
+            nameof(TriggerStorm_ServerRpc),
+            nameof(TriggerLowGravity_ServerRpc),
+            nameof(TriggerSwapPositions_ServerRpc),
+            nameof(TriggerWindEvent_ServerRpc),
+            nameof(TriggerBloodEvent_ServerRpc),
+        });
+
+            float eventThreshold = (float)TimeSpan.FromMinutes(2).TotalSeconds;
+            InvokeRepeating(nameof(TriggerRandomEvent), eventThreshold, eventThreshold);
+        }
     }
 
     void Update()
     {
         // Ejecuta el árbol de comportamiento en cada frame
         _rootSequence.Execute();
+    }
 
-        /*TODO Que el boss llame a uno de estos eventos cada 2 minutos (Se llaman 7 en total) y no se pueden repetir
-        (Si uno ya ha salido no puede volver a salir esa partida)*/
-
-        /*TriggerDamageBoost_ServerRpc();
-        TriggerDissapear_ServerRpc();
-        RequestPowerUps_ServerRpc();
-        TriggerStorm_ServerRpc();
-        TriggerLowGravity_ServerRpc();
-        TriggerSwapPositions_ServerRpc();
-        TriggerWindEvent_ServerRpc();
-        TriggerBloodEvent_ServerRpc();*/
+    private void TriggerRandomEvent()
+    {
+        Debug.Log("Random event triggered");
+        string methodToInvoke = _eventNames.ElementAt(Random.Range(0, _eventNames.Count - 1));
+        Invoke(nameof(methodToInvoke), 0);
+        _eventNames.Remove(methodToInvoke);
     }
 
     void InitializeBehaviorTree()
@@ -196,6 +210,7 @@ public class BossController : NetworkBehaviour
     {
         //TODO
         //Debug.Log($"Performing melee attack on {_currentTarget.name}");
+        //XD
     }
 
     void PerformRangedAttack()
@@ -287,7 +302,6 @@ public class BossController : NetworkBehaviour
     #region 2- DISAPPEAR EVENT
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
-
     public void TriggerDissapear_ServerRpc()
     {
         Debug.Log("Invisibility event activated");
@@ -390,8 +404,9 @@ public class BossController : NetworkBehaviour
         for (int i = 0; i < _spawnCount; i++)
         {
             Vector3 randomPosition = GetRandomPositionAroundBoss(_heightOffsetPowerUp, out _);
+            int randomPowerUpIndex = Random.Range(0, _powerUpPrefabs.Length - 1);
 
-            NetworkObject instance = Instantiate(_powerUpPrefab, randomPosition, Quaternion.identity);
+            NetworkObject instance = Instantiate(_powerUpPrefabs[randomPowerUpIndex], randomPosition, Quaternion.identity);
             instance.Spawn();
         }
     }
