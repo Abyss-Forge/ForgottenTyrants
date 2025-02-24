@@ -1,19 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 
-public class MultiDamagePowerUp : NetworkBehaviour
+public class MultiDamagePowerUp : PowerUp
 {
-    [SerializeField] private int _damageAmount;
+    [SerializeField] private int _damageTakenAmount, _damageBuffPercent;
 
-    private void OnTriggerEnter(Collider other)
+    protected override void CalculateData()
     {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            Debug.Log($"En proceso");
-            GetComponent<NetworkObject>().Despawn();
-            Destroy(gameObject);
-        }
+        _container.AddInfo(new DamageData(
+            playerId: default,
+            teamId: default,
+            affectedChannel: EDamageApplyChannel.EVERYONE,
+            damageAmount: _damageTakenAmount,
+            damageType: EElementalType.PHYSIC)
+        );
+
+        _container.AddInfo(new BuffData(
+           playerId: default,
+           teamId: default,
+           affectedChannel: EDamageApplyChannel.EVERYONE,
+           stat: EStat.PHYSIC_DAMAGE,
+           value: _damageBuffPercent,
+           isPercentual: true,
+           duration: 20
+           )
+       );
     }
+
 }

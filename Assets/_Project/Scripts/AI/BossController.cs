@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using Systems.BehaviourTree;
+using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils.Extensions;
 using DecalProjector = UnityEngine.Rendering.Universal.DecalProjector;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
@@ -26,7 +28,7 @@ public class BossController : NetworkBehaviour
     [SerializeField] float _damageBoostEffectDuration = 5f;
 
     [Header("Power Up settings")]
-    [SerializeField] GameObject _powerUpPrefab;
+    [SerializeField] NetworkObject _powerUpPrefab;
     [SerializeField] float _spawnRadius = 100f;
     [SerializeField] int _spawnCount = 3;
     [SerializeField] float _heightOffsetPowerUp = 2f;
@@ -389,17 +391,8 @@ public class BossController : NetworkBehaviour
         {
             Vector3 randomPosition = GetRandomPositionAroundBoss(_heightOffsetPowerUp, out _);
 
-            GameObject powerUp = Instantiate(_powerUpPrefab, randomPosition, Quaternion.identity);
-
-            NetworkObject networkObject = powerUp.GetComponent<NetworkObject>();
-            if (networkObject != null)
-            {
-                networkObject.Spawn();
-            }
-            else
-            {
-                Debug.LogError("Prefab doesnt have a NetworkObject");
-            }
+            NetworkObject instance = Instantiate(_powerUpPrefab, randomPosition, Quaternion.identity);
+            instance.Spawn();
         }
     }
 

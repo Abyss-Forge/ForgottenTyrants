@@ -6,9 +6,8 @@ using UnityEngine;
 
 public class SpeedAreaScript : NetworkBehaviour
 {
-    [SerializeField] private float _speed;
-    [SerializeField] private float _durationSpeedBoost;
-    private static Dictionary<ulong, Coroutine> _activeBoostsGlobal = new Dictionary<ulong, Coroutine>();
+    [SerializeField] private float _speed, _durationSpeedBoost;
+    private static Dictionary<ulong, Coroutine> _activeBoostsGlobal = new();
 
     private IEnumerator BoostSpeedServerCoroutine(PlayerController playerController)
     {

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ForgottenTyrants;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -42,7 +43,7 @@ public class RandomStatsPowerUp : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag(Tag.Player))
         {
             // Genera estadísticas aleatorias dentro de los rangos definidos
             int randomHp = Random.Range(_hpRandomMin, _hpRandomMax);
@@ -72,9 +73,11 @@ public class RandomStatsPowerUp : NetworkBehaviour
             Destroy(gameObject);
         }
     }
+
     [Rpc(SendTo.ClientsAndHost)]
     private void PlayVisualEffect_ClientRpc() //TODO hacer con el eventbus
     {
         _test.GetComponent<PlayerController>().StartGlowingEffect(_duration);
     }
+
 }

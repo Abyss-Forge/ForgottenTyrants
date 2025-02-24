@@ -3,9 +3,10 @@ using Unity.Netcode;
 
 public enum EDamageApplyChannel
 {
-    MYSELF = 0,
-    ALLIES = 1,
-    ENEMIES = 2,
+    EVERYONE,
+    MYSELF,
+    ALLIES,
+    ENEMIES,
 }
 
 public interface IAbilityData : INetworkSerializable
@@ -41,6 +42,7 @@ public struct AbilityData : INetworkSerializable, IEquatable<AbilityData>
 
     public bool CanApply(ClientData data)
     {
+        if (_affectedChannel == EDamageApplyChannel.EVERYONE) return true;
         if (_affectedChannel == EDamageApplyChannel.MYSELF) return data.ClientId == _playerId;
         if (_affectedChannel == EDamageApplyChannel.ALLIES) return data.TeamId == _teamId;
         if (_affectedChannel == EDamageApplyChannel.ENEMIES) return data.TeamId != _teamId;
