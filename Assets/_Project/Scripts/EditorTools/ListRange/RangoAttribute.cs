@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[System.AttributeUsage(System.AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
 public class RangoAttribute : PropertyAttribute
 {
     public int Min { get; }

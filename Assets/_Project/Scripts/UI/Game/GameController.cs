@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using Systems.EventBus;
 using Systems.ServiceLocator;
 using TMPro;
@@ -12,6 +11,8 @@ using UnityEngine.UI;
 
 public class GameController : NetworkBehaviour
 {
+    [SerializeField] private BossDamager _bossDamager;
+
     [Header("UI - Timers & messages")]
     [SerializeField] private TMP_Text _timer;
     [SerializeField] private TMP_Text _starting;
@@ -75,7 +76,7 @@ public class GameController : NetworkBehaviour
         InvokeRepeating(nameof(ShowPing), 1f, _updateInterval);
     }
 
-    public override void OnNetworkSpawn()
+    public override async void OnNetworkSpawn()
     {
         if (IsServer)
         {
@@ -90,24 +91,23 @@ public class GameController : NetworkBehaviour
             BlockAnyMovementClientRpc();
             PopulateContainerClientRpc();
 
-            // Suscribe el evento de daño del jefe para actualizar su salud
-            ServiceLocator.Global.Get(out BossDamager damager);
-            damager.OnDamage += (_) => ShowBossHealth();
+            _bossDamager.OnDamage += (_) => ShowBossHealth();
         }
         if (IsClient)
         {
             // Suscribe cambios en la lista sincronizada para actualizar la UI
             _syncedPlayers.OnListChanged += OnSyncedPlayersChanged;
 
-            // Actualiza la salud del jugador local y suscribe eventos de daño para refrescar la UI
-            StartCoroutine(UpdateCurrentHp());
-            ServiceLocator.Global.Get(out DamageableBehaviour damageable);
-            damageable.OnDamage += (_) => StartCoroutine(UpdateCurrentHp());
-            damageable.OnDamage += (_) => ShowPlayerHealth();
-
             // Registra el evento de reaparición
             _playerRespawnEventBinding = new EventBinding<PlayerRespawnEvent>(HandleRespawn);
             EventBus<PlayerRespawnEvent>.Register(_playerRespawnEventBinding);
+
+            // Actualiza la salud del jugador local y suscribe eventos de daño para refrescar la UI
+            StartCoroutine(UpdateCurrentHp());
+            await Task.Delay(100); //saluditos
+            ServiceLocator.Global.Get(out DamageableBehaviour damageable);
+            damageable.OnDamage += (_) => StartCoroutine(UpdateCurrentHp());
+            damageable.OnDamage += (_) => ShowPlayerHealth();
         }
     }
 
@@ -120,13 +120,11 @@ public class GameController : NetworkBehaviour
             ServiceLocator.Global.Get(out DamageableBehaviour damageable);
             damageable.OnDamage -= (_) => StartCoroutine(UpdateCurrentHp());
             damageable.OnDamage -= (_) => ShowPlayerHealth();
-            damageable.OnDamage -= (_) => ShowBossHealth();
             EventBus<PlayerRespawnEvent>.Deregister(_playerRespawnEventBinding);
         }
         if (IsServer)
         {
-            ServiceLocator.Global.Get(out BossDamager damager);
-            damager.OnDamage += (_) => ShowBossHealth();
+            _bossDamager.OnDamage += (_) => ShowBossHealth();
         }
     }
 
@@ -305,14 +303,9 @@ public class GameController : NetworkBehaviour
         _playerHealth.value = damage.Health;
     }
 
-
     void ShowBossHealth()
     {
-        if (IsServer)
-        {
-            float health = FindObjectOfType<BossDamager>().Health;
-            UpdateBossHealthBar_ClientRPC(health);
-        }
+        UpdateBossHealthBar_ClientRPC(_bossDamager.Health);
     }
 
     [Rpc(SendTo.ClientsAndHost)]

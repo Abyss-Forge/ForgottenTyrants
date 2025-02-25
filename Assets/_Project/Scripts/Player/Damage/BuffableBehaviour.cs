@@ -18,7 +18,7 @@ public class BuffableBehaviour : MonoBehaviour, IBuffable, IInitializable
     public Stats CurrentStats => _modifiedStats;
     public event Action<float, EStat> OnBuff, OnDebuff;
 
-    [SerializeField] private bool _canBeReinitialized;
+    [SerializeField] private bool _canBeReinitialized = true;
     private bool _isInitialized;
     public bool IsInitialized => _isInitialized;
 

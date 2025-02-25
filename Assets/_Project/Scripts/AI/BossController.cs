@@ -7,6 +7,7 @@ using Systems.BehaviourTree;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils.Extensions;
 using DecalProjector = UnityEngine.Rendering.Universal.DecalProjector;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
@@ -14,6 +15,7 @@ using Vector3 = UnityEngine.Vector3;
 public class BossController : NetworkBehaviour
 {
     [SerializeField] BossDamager _bossDamager;
+    [SerializeField] BossAttacker _bossAttacker;
 
     [Header("Attacks & Aggro")]
     [SerializeField] private float _targetSelectionInterval = 6f;
@@ -21,6 +23,8 @@ public class BossController : NetworkBehaviour
     [SerializeField] float _meleeRange = 10f;
     [SerializeField] float _decayValue = 5f;
     [SerializeField] float _decayInterval = 3f;
+    [SerializeField] float _rotationSpeed = 3f;
+    [SerializeField] float _maxAttackAngle = 30f;
 
     [Header("Gravity settings")]
     [SerializeField] float _gravityEventEffectDuration = 10f;
@@ -70,52 +74,56 @@ public class BossController : NetworkBehaviour
     private Terrain _terrain;
     private Dictionary<GameObject, float> _originalJumpForces = new();
 
-    Dictionary<Player, float> _playerAggroList = new();
-    private Player _currentTarget = null;
+    private Dictionary<Transform, float> _playerAggroDict = new();
+    private Transform _currentTarget = null;
+    public Transform CurrentTarget => _currentTarget;
 
     private List<string> _eventNames = new();
 
-    public override void OnNetworkSpawn()
-    {
-        if (IsServer)
-        {
-            // Inicializa la lista de aggro de cada jugador encontrado en la escena
-            GameObject[] playerObjects = GameObject.FindGameObjectsWithTag(Tag.Player);
-            foreach (GameObject obj in playerObjects)
-            {
-                Player player = obj.GetComponent<Player>();
-                if (player != null && !_playerAggroList.ContainsKey(player))
-                {
-                    _playerAggroList[player] = 0;
-                }
-            }
-            _terrain = Terrain.activeTerrain;
-        }
-    }
-
-    void Start()
+    void Awake()
     {
         InitializeBehaviorTree();
 
         // Configuración inicial del decal (efecto de advertencia)
         _decalProjector.fadeFactor = 0;
-        _decalProjector.gameObject.transform.position = new Vector3(gameObject.transform.position.x, _decalProjector.transform.position.y, this.gameObject.transform.position.z);
+        Vector3 position = transform.position;
+        position.y = _decalProjector.transform.position.y;
+        _decalProjector.transform.position = position;
+    }
 
+    public override void OnNetworkSpawn()
+    {
         if (IsServer)
         {
+            _terrain = Terrain.activeTerrain;
+
+            RefreshPlayers();
+
             _eventNames.AddRange(new List<string> {
-            nameof(TriggerDamageBoost_ServerRpc),
-            nameof(TriggerDissapear_ServerRpc),
-            nameof(RequestPowerUps_ServerRpc),
-            nameof(TriggerStorm_ServerRpc),
-            nameof(TriggerLowGravity_ServerRpc),
-            nameof(TriggerSwapPositions_ServerRpc),
-            nameof(TriggerWindEvent_ServerRpc),
-            nameof(TriggerBloodEvent_ServerRpc),
-        });
+                nameof(TriggerDamageBoost_ServerRpc),
+                nameof(TriggerDissapear_ServerRpc),
+                nameof(RequestPowerUps_ServerRpc),
+                nameof(TriggerStorm_ServerRpc),
+                nameof(TriggerLowGravity_ServerRpc),
+                nameof(TriggerSwapPositions_ServerRpc),
+                nameof(TriggerWindEvent_ServerRpc),
+                nameof(TriggerBloodEvent_ServerRpc),
+            });
 
             float eventThreshold = (float)TimeSpan.FromMinutes(2).TotalSeconds;
-            InvokeRepeating(nameof(TriggerRandomEvent), eventThreshold, eventThreshold);
+            InvokeRepeating(nameof(TriggerRandomEvent), 10, eventThreshold);
+
+            _bossDamager.OnDamage += HandleDamage;
+            _bossDamager.OnDeath += Die;
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        if (IsServer)
+        {
+            _bossDamager.OnDamage -= HandleDamage;
+            _bossDamager.OnDeath -= Die;
         }
     }
 
@@ -123,24 +131,45 @@ public class BossController : NetworkBehaviour
     {
         // Ejecuta el árbol de comportamiento en cada frame
         _rootSequence.Execute();
+
+        if (_currentTarget != null)
+        {
+            Vector3 direction = (_currentTarget.position - transform.position).normalized;
+            direction.y = 0f;
+
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            lookRotation *= Quaternion.Euler(0, 180f, 0); // usamos la rotacion inversa porque diego importó el modelo al reves, buen trabajo diego
+
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, _rotationSpeed * Time.deltaTime);
+        }
+    }
+
+    private void RefreshPlayers()
+    {
+        GameObject[] playerObjects = GameObject.FindGameObjectsWithTag(Tag.Player);
+
+        foreach (var obj in playerObjects)
+        {
+            AddAggro(obj.transform, 0);
+        }
     }
 
     private void TriggerRandomEvent()
     {
         Debug.Log("Random event triggered");
         string methodToInvoke = _eventNames.ElementAt(Random.Range(0, _eventNames.Count - 1));
-        Invoke(nameof(methodToInvoke), 0);
+        Invoke(methodToInvoke, 0);
         _eventNames.Remove(methodToInvoke);
     }
 
-    void InitializeBehaviorTree()
+    private void InitializeBehaviorTree()
     {
-        _rootSequence = new BehaviorSequence();
+        _rootSequence = new();
 
         // Cada nodo se ejecuta en intervalos fijos: decaimiento de aggro, selección de objetivo y ataque
-        var decayAggroNode = new TimerNode(_decayInterval, new DecayAggroNode(this));
-        var selectTargetNode = new TimerNode(_targetSelectionInterval, new SelectBestTargetNode(this));
-        var attackTargetNode = new TimerNode(_attackInterval, new AttackTargetNode(this));
+        TimerNode decayAggroNode = new(_decayInterval, new DecayAggroNode(this));
+        TimerNode selectTargetNode = new(_targetSelectionInterval, new SelectBestTargetNode(this));
+        TimerNode attackTargetNode = new(_attackInterval, new AttackTargetNode(this));
 
         _rootSequence.AddNode(decayAggroNode);
         _rootSequence.AddNode(selectTargetNode);
@@ -162,15 +191,15 @@ public class BossController : NetworkBehaviour
 
     public void SelectBestTarget()
     {
-        if (_playerAggroList.Count == 0) return;
+        if (_playerAggroDict.Count == 0) RefreshPlayers();
 
         float highestScore = float.MinValue;
 
-        foreach (var entry in _playerAggroList)
+        foreach (var entry in _playerAggroDict)
         {
-            Player player = entry.Key;
+            Transform player = entry.Key;
             float aggro = entry.Value;
-            float distance = Vector3.Distance(transform.position, player.transform.position);
+            float distance = Vector3.Distance(transform.position, player.position);
             int health = 100; //TODO
 
             // Normalización de valores para calcular una puntuación
@@ -197,89 +226,77 @@ public class BossController : NetworkBehaviour
     {
         if (_currentTarget == null) return;
 
-        float distance = Vector3.Distance(transform.position, _currentTarget.transform.position);
+        Vector2 bossPos = new Vector2(transform.position.x, transform.position.z);
+        Vector2 targetPos = new Vector2(_currentTarget.position.x, _currentTarget.position.z);
 
-        if (distance <= _meleeRange)
-        {
-            PerformMeleeAttack();
-        }
+        Vector2 bossForward = new Vector2(-transform.forward.x, -transform.forward.z).normalized; // usamos forward.z inverso porque diego importó el modelo al reves, buen trabajo diego
+        Vector2 toTarget = (targetPos - bossPos).normalized;
+
+        float angle = Vector2.Angle(bossForward, toTarget);
+        if (angle > _maxAttackAngle) return;
+
+        float distance = Vector3.Distance(transform.position, _currentTarget.position);
+
+        if (distance <= _meleeRange) PerformMeleeAttack();
         else PerformRangedAttack();
     }
 
-    void PerformMeleeAttack()
+    private void PerformMeleeAttack()
     {
         //TODO
-        //Debug.Log($"Performing melee attack on {_currentTarget.name}");
-        //XD
+        Debug.Log($"Performing melee attack on {_currentTarget.name}");
     }
 
-    void PerformRangedAttack()
+    private void PerformRangedAttack()
     {
-        //TODO
-        //Debug.Log($"Performing ranged attack on {_currentTarget.name}");
+        Debug.Log($"Performing ranged attack on {_currentTarget.name}");
+        _bossAttacker.PerformRangedAttack(_bossDamager.CurrentStats, CurrentTarget);
     }
 
-    public void TakeDamage(Player player, int damage)
+    private void HandleDamage(int damage)
     {
-        _bossDamager.Damage(damage);
         Debug.Log($"Boss recibe {damage} de daño. Vida restante: {_bossDamager.Health}");
-        AddAggro(player, damage);
-        if (_bossDamager.Health <= 0) Die();
+        //TODO AddAggro(player, damage);
     }
 
-    public void AddAggro(Player player, float amount)
+    private void AddAggro(Transform player, float amount)
     {
         //TODO (Comprobar si funciona el agro de cada jugador y el boss targetea al que mas puntuación tiene)
-        if (!_playerAggroList.ContainsKey(player))
+        if (!_playerAggroDict.ContainsKey(player))
         {
-            _playerAggroList[player] = 0;
+            _playerAggroDict.Add(player, 0);
         }
-        _playerAggroList[player] += amount;
+        _playerAggroDict[player] += amount;
     }
 
-    public void ResetAggro(Player player)
+    private void ResetAggro(Transform player)
     {
-        if (_playerAggroList.ContainsKey(player))
+        if (_playerAggroDict.ContainsKey(player))
         {
-            _playerAggroList[player] = 0;
+            _playerAggroDict[player] = 0;
             Debug.Log($"Aggro reseteado para {player.name}.");
         }
     }
 
-    public float GetAggro(Player player)
+    public float GetAggro(Transform player)
     {
-        return _playerAggroList.ContainsKey(player) ? _playerAggroList[player] : 0;
-    }
-
-    public Player GetCurrentTarget()
-    {
-        return _currentTarget;
+        return _playerAggroDict.ContainsKey(player) ? _playerAggroDict[player] : -1;
     }
 
     public void CalculateDecay()
     {
-        List<Player> players = new List<Player>(_playerAggroList.Keys);
+        List<Transform> players = new(_playerAggroDict.Keys);
 
-        foreach (Player player in players)
+        foreach (Transform player in players)
         {
-            _playerAggroList[player] -= _decayValue;
-            if (_playerAggroList[player] < 0) _playerAggroList[player] = 0;
-        }
-    }
-    private void Shuffle<T>(List<T> list)
-    {
-        for (int i = 0; i < list.Count; i++)
-        {
-            int randomIndex = Random.Range(0, list.Count);
-            T temp = list[i];
-            list[i] = list[randomIndex];
-            list[randomIndex] = temp;
+            _playerAggroDict[player] -= _decayValue;
+            if (_playerAggroDict[player] < 0) _playerAggroDict[player] = 0;
         }
     }
 
     void Die()
     {
-        Destroy(this.gameObject);
+        Destroy(gameObject);
     }
 
     #region 1- DAMAGE BOOST EVENT
@@ -314,7 +331,6 @@ public class BossController : NetworkBehaviour
         StartCoroutine(EventDissapear());
     }
 
-
     IEnumerator EventDissapear()
     {
         // Mueve el jefe a una posición oculta
@@ -329,7 +345,6 @@ public class BossController : NetworkBehaviour
 
         // Retorna el jefe a su posición original
         yield return StartCoroutine(MoveTo(_bossPosition.position, _moveDuration));
-
     }
 
     private IEnumerator MoveTo(Vector3 destination, float duration)
@@ -688,7 +703,8 @@ public class BossController : NetworkBehaviour
         {
             positionRotationPairs.Add((player.transform.position, player.transform.rotation));
         }
-        Shuffle(positionRotationPairs);
+
+        positionRotationPairs.Shuffle();
 
         for (int i = 0; i < GetAllPlayers().Count; i++)
         {
@@ -736,129 +752,11 @@ public class BossController : NetworkBehaviour
         return new Vector3(x, y + heightOffset, z);
     }
 
-
     #endregion
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, _spawnRadius);
-    }
-}
-
-namespace Systems.BehaviourTree
-{
-    public abstract class BehaviorNode
-    {
-        public enum NodeState { Running, Success, Failure }
-        protected NodeState state = NodeState.Running;
-        public NodeState State => state;
-        public abstract NodeState Execute();
-    }
-    public class TimerNode : BehaviorNode
-    {
-        private float interval;
-        private BehaviorNode childNode;
-        private float elapsedTime = 0f;
-
-        public TimerNode(float interval, BehaviorNode childNode)
-        {
-            this.interval = interval;
-            this.childNode = childNode;
-        }
-
-        public override NodeState Execute()
-        {
-            elapsedTime += Time.deltaTime;
-
-            if (elapsedTime >= interval)
-            {
-                elapsedTime = 0f;
-                return childNode.Execute();
-            }
-
-            return NodeState.Running;
-        }
-    }
-    public class DecayAggroNode : BehaviorNode
-    {
-        private BossController boss;
-
-        public DecayAggroNode(BossController boss)
-        {
-            this.boss = boss;
-        }
-        public override NodeState Execute()
-        {
-            boss.CalculateDecay();
-            return NodeState.Success;
-        }
-    }
-
-    public class SelectBestTargetNode : BehaviorNode
-    {
-        private BossController boss;
-
-        public SelectBestTargetNode(BossController boss)
-        {
-            this.boss = boss;
-        }
-
-        public override NodeState Execute()
-        {
-            boss.SelectBestTarget();
-            return boss.GetCurrentTarget() != null ? NodeState.Success : NodeState.Failure;
-        }
-    }
-
-    public class AttackTargetNode : BehaviorNode
-    {
-        private BossController boss;
-
-        public AttackTargetNode(BossController boss)
-        {
-            this.boss = boss;
-        }
-
-        public override NodeState Execute()
-        {
-            boss.AttackTarget();
-            return NodeState.Success;
-        }
-    }
-    public class BehaviorSequence : BehaviorNode
-    {
-        private List<BehaviorNode> nodes = new List<BehaviorNode>();
-        private int currentNodeIndex = 0;
-
-        public void AddNode(BehaviorNode node)
-        {
-            nodes.Add(node);
-        }
-
-        public override NodeState Execute()
-        {
-            if (currentNodeIndex >= nodes.Count)
-            {
-                currentNodeIndex = 0;
-                return NodeState.Success;
-            }
-
-            var currentNode = nodes[currentNodeIndex];
-            var result = currentNode.Execute();
-
-            if (result == NodeState.Running)
-            {
-                return NodeState.Running;
-            }
-
-            if (result == NodeState.Success)
-            {
-                currentNodeIndex++;
-                return Execute();
-            }
-
-            return NodeState.Failure;
-        }
     }
 }

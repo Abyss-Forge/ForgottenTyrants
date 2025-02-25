@@ -30,9 +30,10 @@ public class BodyPartDamager : MonoBehaviour
 
     void Awake()
     {
-        ServiceLocator.Global.Get(out PlayerInfo player);
         _damageable = GetComponent<DamageableBehaviour>();
         _buffable = GetComponent<BuffableBehaviour>();
+
+        ServiceLocator.Global.Get(out PlayerInfo player);
         _damageable.Initialize((int)player.Stats.Health);
         _buffable.Initialize(player.Stats);
     }
@@ -111,6 +112,7 @@ public class BodyPartDamager : MonoBehaviour
 
         EventBus<PlayerDeathEvent>.Raise(new PlayerDeathEvent());
 
+        _alreadyAppliedHashes = new();
         SetRagdollActive(true);
     }
 

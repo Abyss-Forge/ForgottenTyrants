@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using ForgottenTyrants;
+using UnityEngine;
 
 public class EnergyDrainAbility : AbilityStateMachine, IAbilityWithTarget, IAbilityWithDotTick
 {
@@ -35,7 +35,6 @@ public class EnergyDrainAbility : AbilityStateMachine, IAbilityWithTarget, IAbil
         {
         }
 
-        private GhostStatusEffect _ghostStatusEffect;
         private float _timer;
 
         public override void Enter()
@@ -44,8 +43,6 @@ public class EnergyDrainAbility : AbilityStateMachine, IAbilityWithTarget, IAbil
 
             base.Enter();
 
-            _ghostStatusEffect = new();
-            _ghostStatusEffect.ApplyEffect(_ability.GetComponentInParent<Player>()); //TODO with service locator
             _timer = 0;
         }
 
@@ -54,13 +51,6 @@ public class EnergyDrainAbility : AbilityStateMachine, IAbilityWithTarget, IAbil
             base.Update();
 
             ApplyDamageAbsorptionEffect();
-        }
-
-        public override void Exit()
-        {
-            base.Exit();
-
-            _ghostStatusEffect.RemoveEffect(_ability.GetComponentInParent<Player>());
         }
 
         private void TryGetTarget()

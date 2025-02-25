@@ -812,6 +812,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07a894788dbf54f41806d94aa5b50558, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _bossDamager: {fileID: 0}
   _timer: {fileID: 4182430240887703030}
   _starting: {fileID: 2043202882475931332}
   _prepareTime: 00:05

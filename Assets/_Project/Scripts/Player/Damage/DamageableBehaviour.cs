@@ -9,7 +9,7 @@ public class DamageableBehaviour : MonoBehaviour, IDamageable, IInitializable
     public event Action OnDeath;
     public event Action<int> OnDamage, OnHeal;
 
-    [SerializeField] private bool _canBeReinitialized;
+    [SerializeField] private bool _canBeReinitialized = true;
     private bool _isInitialized;
     public bool IsInitialized => _isInitialized;
 

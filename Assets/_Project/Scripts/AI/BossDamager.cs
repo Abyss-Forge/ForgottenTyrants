@@ -10,7 +10,6 @@ using Utils.Extensions;
 
 public class BossDamager : MonoBehaviour, IDamageable, IBuffable
 {
-    [SerializeField] private BossController _bossController;
     [SerializeField] private GameController _gameController;
     [SerializeField] private TMP_Text _team1PointsText, _team2PointsText;
 
