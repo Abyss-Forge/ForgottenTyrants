@@ -1,18 +1,9 @@
 <CharacterTemplates>
   <Preset>
-    <Name>Name</Name>
-    <Race>Shytrax</Race>
-    <Class>Elementalist</Class>
-    <Weapon>Sword &amp; Shield</Weapon>
-    <Armor>Titanium Plates</Armor>
-    <Trinket>Sage's Clock</Trinket>
-  </Preset>
-  <Preset>
-    <Name>Name</Name>
+    <Name>DEfault</Name>
     <Race>Human</Race>
-    <Class>Catalyst</Class>
-    <Weapon>Sword &amp; Shield</Weapon>
-    <Armor>Hunters Jacket</Armor>
-    <Trinket>Vital Rejuvenation</Trinket>
+    <Class>Blademaster</Class>
+    <Armor>Aether Veil</Armor>
+    <Trinket>Sage's Clock</Trinket>
   </Preset>
 </CharacterTemplates>

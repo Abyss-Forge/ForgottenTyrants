@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/_Project/Scenes/Menus/MultiplayerMenu.unity
     guid: e4255ac76c1e84a458fc2a2aafa2f6f6
   - enabled: 1
-    path: Assets/_Project/Scenes/CharacterSelect.unity
+    path: Assets/_Project/Scenes/Menus/CharacterSelect.unity
     guid: b7544d5a30d9eed449267cef7699537b
   - enabled: 1
     path: Assets/_Project/Scenes/GameplayMap.unity
@@ -26,9 +26,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/_Project/Scenes/Tests/PruebasIvan.unity
     guid: 66f1da52f6b05f04bbbdce73b7b8c9a0
-  - enabled: 0
-    path: Assets/_Project/Scenes/Menus/UI Character Selection.unity
-    guid: 8bd0840c7a69c8846baaaacd0c269e74
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 7fad290d30951984aacf194c44092805,
       type: 2}
