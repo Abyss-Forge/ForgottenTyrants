@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PresetSelectorController : MonoBehaviour
+public class PresetListController : MonoBehaviour
 {
     [SerializeField] private Button _closeButton;
     [SerializeField] private RectTransform _menu, _list;
@@ -29,7 +29,7 @@ public class PresetSelectorController : MonoBehaviour
         }
     }
 
-    public void Open(List<CharacterPresetXML> presets, Action<CharacterPreset> OnSelect, Action<CharacterPreset> OnDelete)
+    public void Open(List<CharacterBuildPresetXML> presets, Action<CharacterPreset> OnSelect, Action<CharacterPreset> OnDelete)
     {
         _menu.gameObject.SetActive(true);
 

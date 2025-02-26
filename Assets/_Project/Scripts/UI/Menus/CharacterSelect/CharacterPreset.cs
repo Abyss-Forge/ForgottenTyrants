@@ -9,10 +9,10 @@ public class CharacterPreset : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Button _deleteButton;
     [SerializeField] private TextMeshProUGUI _nameText, _raceText, _classText, _armorText, _trinketText;
 
-    public CharacterPresetXML PresetModel { get; private set; }
+    public CharacterBuildPresetXML PresetModel { get; private set; }
     public event Action<CharacterPreset> OnDelete, OnSelect;
 
-    public void Initialize(CharacterPresetXML presetModel)
+    public void Initialize(CharacterBuildPresetXML presetModel)
     {
         PresetModel = presetModel;
 

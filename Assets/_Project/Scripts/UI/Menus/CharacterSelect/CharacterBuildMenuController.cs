@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CharacterPresetXML
+public class CharacterBuildPresetXML
 {
     public string Name { get; set; }
 
@@ -11,9 +11,9 @@ public class CharacterPresetXML
     public string Armor { get; set; }
     public string Trinket { get; set; }
 
-    public CharacterPresetXML() { }
+    public CharacterBuildPresetXML() { }
 
-    public CharacterPresetXML(string name, string race, string characterClass, string armour, string trinket) : this()
+    public CharacterBuildPresetXML(string name, string race, string characterClass, string armour, string trinket) : this()
     {
         Name = name;
 
@@ -24,16 +24,17 @@ public class CharacterPresetXML
     }
 }
 
-public class CharacterSelectionMenuController : Presettable<CharacterPresetXML>
+public class CharacterBuildMenuController : Presettable<CharacterBuildPresetXML>
 {
     [Header("Presets")]
-    [SerializeField] private PresetSelectorController _presetSelectorController;
+    [SerializeField] private PresetListController _presetSelectorController;
     [SerializeField] private Button _savePresetButton, _loadPresetButton;
     [SerializeField] private TMP_InputField _presetNameInputField;
     [SerializeField] private TMP_Text _presetNameErrorText;
 
     [Header("Selection")]
-    [SerializeField] private SelectableCharacterElement _raceSelectableElement, _classSelectableElement, _armorSelectableElement, _trinketSelectableElement;
+    [SerializeField] private SelectableCharacterElement _raceSelectableElement;
+    [SerializeField] private SelectableCharacterElement _classSelectableElement, _armorSelectableElement, _trinketSelectableElement;
 
     [SerializeField] private CharacterElementDatabase<RaceTemplate> _raceDatabase;
     [SerializeField] private CharacterElementDatabase<ClassTemplate> _classDatabase;
@@ -50,7 +51,7 @@ public class CharacterSelectionMenuController : Presettable<CharacterPresetXML>
     public ArmorTemplate SelectedArmor => _armorDatabase.Elements[_armorSelectableElement.CurrentIndex];
     public TrinketTemplate SelectedTrinket => _trinketDatabase.Elements[_trinketSelectableElement.CurrentIndex];
 
-    public CharacterSelectionMenuController() : base("CharacterTemplates", "Preset") { }
+    public CharacterBuildMenuController() : base("CharacterTemplates", "Preset") { }
 
     void Awake()
     {
@@ -82,7 +83,7 @@ public class CharacterSelectionMenuController : Presettable<CharacterPresetXML>
         string name = _presetNameInputField.text ?? $"Preset {Random.Range(0, 1000)}";
         _presetNameInputField.text = null;
 
-        CharacterPresetXML preset = new(name, SelectedRace.name, SelectedClass.name, SelectedArmor.name, SelectedTrinket.name);
+        CharacterBuildPresetXML preset = new(name, SelectedRace.name, SelectedClass.name, SelectedArmor.name, SelectedTrinket.name);
         CreatePreset(preset);
     }
 

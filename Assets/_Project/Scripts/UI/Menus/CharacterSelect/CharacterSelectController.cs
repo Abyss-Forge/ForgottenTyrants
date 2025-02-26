@@ -22,7 +22,7 @@ public class Team
 
 public class CharacterSelectController : NetworkBehaviour
 {
-    [SerializeField] private CharacterSelectionMenuController _buildController;
+    [SerializeField] private CharacterBuildMenuController _buildController;
 
     [SerializeField] private CharacterDatabase _characterDatabase;
     [SerializeField] private Transform _charactersHolder, _cardsHolder, _characterInfoPanel, _introSpawnPoint;
@@ -34,10 +34,10 @@ public class CharacterSelectController : NetworkBehaviour
 
     private int _maxTeamSize;
     private GameObject _introInstance;
+    private List<Team> _teams = new();
     private List<CharacterSelectButton> _characterButtons = new();
     private List<PlayerCard> _playerCards;
     private NetworkList<CharacterSelectState> _players;
-    private List<Team> _teams = new();
 
     void Awake()
     {
@@ -176,17 +176,17 @@ public class CharacterSelectController : NetworkBehaviour
 
     public void SelectBuild(RaceTemplate race, ClassTemplate @class, ArmorTemplate armor, TrinketTemplate trinket)
     {
-        for (int i = 0; i < _players.Count; i++)
+        foreach (var player in _players)
         {
-            if (_players[i].ClientId != NetworkManager.Singleton.LocalClientId) continue;
+            if (player.ClientId != NetworkManager.Singleton.LocalClientId) continue;
 
-            if (_players[i].IsLockedIn) return;
+            if (player.IsLockedIn) return;
 
-            if (_players[i].RaceId == race.UID && _players[i].ClassId == @class.UID &&
-            _players[i].ArmorId == armor.UID && _players[i].TrinketId == trinket.UID)
+            /*if (player.RaceId == race.UID && player.ClassId == @class.UID &&
+                player.ArmorId == armor.UID && player.TrinketId == trinket.UID)
             {
                 return;
-            }
+            }*/
         }
 
         SelectBuild_ServerRpc(race.UID, @class.UID, armor.UID, trinket.UID);
@@ -209,7 +209,7 @@ public class CharacterSelectController : NetworkBehaviour
             temp.ClassId = classId;
             temp.ArmorId = armorId;
             temp.TrinketId = trinketId;
-            _players[i] = temp;
+            _players[i] = temp;     //  por esto no usamos foreach
         }
     }
 
