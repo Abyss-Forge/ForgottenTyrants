@@ -60,7 +60,7 @@ public class AbilitiesController : MonoBehaviour
                 _abilities[i].FSM.SubscribeOnStateChange(HandleAbilityStates);
                 i++;    //TODO: remake using event bus
                         //esto es inseguro de narices pero esta hecho asi pq a veces las habilidades tardan en instanciarse y
-                        //necesitamos que se suscriban a los eventos cuando hayan ternimando de inicializarse,
+                        //necesitamos que se suscriban a los eventos cuando hayan terminado de inicializarse,
             }
         }
     }

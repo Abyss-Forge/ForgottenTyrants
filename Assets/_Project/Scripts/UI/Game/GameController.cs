@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using Systems.EventBus;
 using Systems.ServiceLocator;
 using TMPro;
@@ -12,6 +11,8 @@ using UnityEngine.UI;
 
 public class GameController : NetworkBehaviour
 {
+    [SerializeField] private BossDamager _bossDamager;
+
     [Header("UI - Timers & messages")]
     [SerializeField] private TMP_Text _timer;
     [SerializeField] private TMP_Text _starting;
@@ -23,8 +24,8 @@ public class GameController : NetworkBehaviour
     [SerializeField] private TMP_Text _team2PointsText;
 
     [Header("UI - Health bars")]
-    [SerializeField] private Slider _playerHealth;
-    [SerializeField] private Slider _bossHealth;
+    [SerializeField] private Slider _playerHealthSlider;
+    [SerializeField] private Slider _bossHealthSlider;
 
     [Header("UI - Net stats")]
     [SerializeField] private TextMeshProUGUI _fpsStats;
@@ -65,7 +66,7 @@ public class GameController : NetworkBehaviour
 
     void Awake()
     {
-        _syncedPlayers = new NetworkList<SyncedPlayerData>();
+        _syncedPlayers = new();
     }
 
     void Start()
@@ -75,7 +76,7 @@ public class GameController : NetworkBehaviour
         InvokeRepeating(nameof(ShowPing), 1f, _updateInterval);
     }
 
-    public override void OnNetworkSpawn()
+    public override async void OnNetworkSpawn()
     {
         if (IsServer)
         {
@@ -90,24 +91,32 @@ public class GameController : NetworkBehaviour
             BlockAnyMovementClientRpc();
             PopulateContainerClientRpc();
 
-            // Suscribe el evento de daño del jefe para actualizar su salud
-            /* ServiceLocator.Global.Get(out DamageableBehaviour damageable);    //TODO si registras un el damageable del boss en server, el host no puede registrar el suyo
-             damageable.OnDamage += (_) => ShowBossHealth();*/
+            _bossDamager.OnDamage += (_) => ShowBossHealth();
+
+            await Task.Delay(100); //saluditos
+            _bossHealthSlider.maxValue = _bossDamager.Health;
+            _bossHealthSlider.value = _bossDamager.Health;
         }
         if (IsClient)
         {
             // Suscribe cambios en la lista sincronizada para actualizar la UI
             _syncedPlayers.OnListChanged += OnSyncedPlayersChanged;
 
+            // Registra el evento de reaparición
+            _playerRespawnEventBinding = new EventBinding<PlayerRespawnEvent>(HandleRespawn);
+            EventBus<PlayerRespawnEvent>.Register(_playerRespawnEventBinding);
+
             // Actualiza la salud del jugador local y suscribe eventos de daño para refrescar la UI
             StartCoroutine(UpdateCurrentHp());
+
+            await Task.Delay(100); //saluditos
             ServiceLocator.Global.Get(out DamageableBehaviour damageable);
             damageable.OnDamage += (_) => StartCoroutine(UpdateCurrentHp());
             damageable.OnDamage += (_) => ShowPlayerHealth();
 
-            // Registra el evento de reaparición
-            _playerRespawnEventBinding = new EventBinding<PlayerRespawnEvent>(HandleRespawn);
-            EventBus<PlayerRespawnEvent>.Register(_playerRespawnEventBinding);
+            ServiceLocator.Global.Get(out DamageableBehaviour damage);
+            _playerHealthSlider.maxValue = damage.Health;
+            _playerHealthSlider.value = damage.Health;
         }
     }
 
@@ -120,13 +129,11 @@ public class GameController : NetworkBehaviour
             ServiceLocator.Global.Get(out DamageableBehaviour damageable);
             damageable.OnDamage -= (_) => StartCoroutine(UpdateCurrentHp());
             damageable.OnDamage -= (_) => ShowPlayerHealth();
-            damageable.OnDamage -= (_) => ShowBossHealth();
             EventBus<PlayerRespawnEvent>.Deregister(_playerRespawnEventBinding);
         }
         if (IsServer)
         {
-            ServiceLocator.Global.Get(out DamageableBehaviour damageable);
-            damageable.OnDamage += (_) => ShowBossHealth();
+            _bossDamager.OnDamage += (_) => ShowBossHealth();
         }
     }
 
@@ -302,23 +309,18 @@ public class GameController : NetworkBehaviour
     void ShowPlayerHealth()
     {
         ServiceLocator.Global.Get(out DamageableBehaviour damage);
-        _playerHealth.value = damage.Health;
+        _playerHealthSlider.value = damage.Health;
     }
-
 
     void ShowBossHealth()
     {
-        if (IsServer)
-        {
-            float health = FindObjectOfType<BossDamager>()._damageable.Health;
-            UpdateBossHealthBar_ClientRPC(health);
-        }
+        UpdateBossHealthBar_ClientRPC(_bossDamager.Health);
     }
 
     [Rpc(SendTo.ClientsAndHost)]
     void UpdateBossHealthBar_ClientRPC(float health)
     {
-        _bossHealth.value = health;
+        _bossHealthSlider.value = health;
     }
 
     IEnumerator SmoothHealthChange(Slider slider, float targetValue)

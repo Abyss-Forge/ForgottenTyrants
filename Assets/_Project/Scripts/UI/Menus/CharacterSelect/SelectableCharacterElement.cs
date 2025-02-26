@@ -35,6 +35,13 @@ public class SelectableCharacterElement : MonoBehaviour
         _previousButton.onClick.RemoveAllListeners();
     }
 
+    public void Select(string name)
+    {
+        _currentIndex = _elements.FindIndex(item => item.name == name);
+
+        InvokeOnChange();
+    }
+
     private void Next()
     {
         _currentIndex = (_currentIndex + 1) % _elements.Count;

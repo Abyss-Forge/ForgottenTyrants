@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,18 +6,24 @@ using UnityEngine.UI;
 public class PresetSelectorController : MonoBehaviour
 {
     [SerializeField] private Button _closeButton;
-    [SerializeField] private GameObject _menu, _list, _presetPrefab;
+    [SerializeField] private RectTransform _menu, _list;
+    [SerializeField] private CharacterPreset _presetPrefab;
 
-    void Awake()
+    void OnEnable()
     {
         _closeButton.onClick.AddListener(Close);
     }
 
+    void OnDisable()
+    {
+        _closeButton.onClick.RemoveAllListeners();
+    }
+
     public void Close()
     {
-        _menu.SetActive(false);
+        _menu.gameObject.SetActive(false);
 
-        foreach (Transform child in _list.transform)
+        foreach (Transform child in _list)
         {
             Destroy(child.gameObject);
         }
@@ -26,21 +31,14 @@ public class PresetSelectorController : MonoBehaviour
 
     public void Open(List<CharacterPresetXML> presets, Action<CharacterPreset> OnSelect, Action<CharacterPreset> OnDelete)
     {
-        _menu.SetActive(true);
+        _menu.gameObject.SetActive(true);
 
         foreach (var item in presets)
         {
-            GameObject instance = Instantiate(_presetPrefab, Vector2.zero, Quaternion.identity, _list.GetComponent<RectTransform>());
-            CharacterPreset preset = instance.GetComponent<CharacterPreset>();
-
-            preset._raceText.text = $"Race: {item.Race}";
-            preset._classText.text = $"Class: {item.Class}";
-            preset._armorText.text = $"Armor: {item.Armor}";
-            preset._trinketText.text = $"Trinket: {item.Trinket}";
-
-            preset._presetModel = item;
-            preset.OnSelect += OnSelect;
-            preset.OnDelete += OnDelete;
+            CharacterPreset instance = Instantiate(_presetPrefab, Vector2.zero, Quaternion.identity, _list);
+            instance.Initialize(item);
+            instance.OnSelect += OnSelect;
+            instance.OnDelete += OnDelete;
         }
     }
 
