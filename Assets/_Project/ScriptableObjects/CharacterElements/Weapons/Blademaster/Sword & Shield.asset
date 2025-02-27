@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Sword & Shield
   m_EditorClassIdentifier: Assembly-CSharp::WeaponTemplate
   <UID>k__BackingField: 2021338877968515072
-  <DisplayName>k__BackingField: 
+  <DisplayName>k__BackingField: Sword & Shield
   <Stats>k__BackingField:
     _health: 0
-    _physicalDamage: 0
+    _physicalDamage: 15
     _magicalDamage: 0
-    _physicalDefense: 0
+    _physicalDefense: 20
     _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
+    _movementSpeed: 5
+    _attackSpeed: 0.2
     _cooldownReduction: 0

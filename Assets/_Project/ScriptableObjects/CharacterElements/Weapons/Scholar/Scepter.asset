@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Scepter
   m_EditorClassIdentifier: 
   <UID>k__BackingField: 402346488975327232
-  <DisplayName>k__BackingField: 
+  <DisplayName>k__BackingField: Scepter
   <Stats>k__BackingField:
     _health: 0
     _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
+    _magicalDamage: 20
+    _physicalDefense: 10
     _magicalDefense: 0
     _movementSpeed: 0
     _attackSpeed: 0
-    _cooldownReduction: 0
+    _cooldownReduction: 10

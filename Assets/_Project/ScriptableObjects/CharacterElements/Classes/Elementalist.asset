@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: Elementalist
   m_EditorClassIdentifier: Assembly-CSharp::CharacterClassTemplate
   <UID>k__BackingField: 2901752472945033216
-  <DisplayName>k__BackingField: 
+  <DisplayName>k__BackingField: Elementalist
   <Stats>k__BackingField:
-    _health: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
+    _health: 20
+    _physicalDamage: 10
+    _magicalDamage: 30
+    _physicalDefense: 5
+    _magicalDefense: 15
+    _movementSpeed: 5
+    _attackSpeed: 0.2
+    _cooldownReduction: 10
   <Abilities>k__BackingField:
   - {fileID: 0}
   - {fileID: 0}

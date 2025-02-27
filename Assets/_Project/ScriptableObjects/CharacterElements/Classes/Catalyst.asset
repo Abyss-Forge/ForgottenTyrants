@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: Catalyst
   m_EditorClassIdentifier: Assembly-CSharp::CharacterClassTemplate
   <UID>k__BackingField: 7712138384453402624
-  <DisplayName>k__BackingField: 
+  <DisplayName>k__BackingField: Catalyst
   <Stats>k__BackingField:
-    _health: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
+    _health: 30
+    _physicalDamage: 10
+    _magicalDamage: 20
+    _physicalDefense: 5
+    _magicalDefense: 10
+    _movementSpeed: 5
+    _attackSpeed: 0.1
+    _cooldownReduction: 5
   <Abilities>k__BackingField:
   - {fileID: 0}
   - {fileID: 0}

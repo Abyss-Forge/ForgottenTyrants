@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Throwable Knives
   m_EditorClassIdentifier: 
   <UID>k__BackingField: 5800282277309054976
-  <DisplayName>k__BackingField: 
+  <DisplayName>k__BackingField: Throwable Knives
   <Stats>k__BackingField:
     _health: 0
-    _physicalDamage: 0
+    _physicalDamage: 30
     _magicalDamage: 0
     _physicalDefense: 0
     _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
+    _movementSpeed: 5
+    _attackSpeed: 0.1
     _cooldownReduction: 0

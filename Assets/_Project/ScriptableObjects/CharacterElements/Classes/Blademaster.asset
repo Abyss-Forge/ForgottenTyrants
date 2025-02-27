@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: Blademaster
   m_EditorClassIdentifier: Assembly-CSharp::CharacterClassTemplate
   <UID>k__BackingField: 307814877265657856
-  <DisplayName>k__BackingField: 
+  <DisplayName>k__BackingField: Blademaster
   <Stats>k__BackingField:
-    _health: 0
-    _physicalDamage: 2
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
+    _health: 50
+    _physicalDamage: 20
+    _magicalDamage: 10
+    _physicalDefense: 5
+    _magicalDefense: 5
+    _movementSpeed: 10
+    _attackSpeed: 0.1
     _cooldownReduction: 0
   <Abilities>k__BackingField:
   - {fileID: 11400000, guid: 6f2d5a0b802feec49ae071b1a8478343, type: 2}

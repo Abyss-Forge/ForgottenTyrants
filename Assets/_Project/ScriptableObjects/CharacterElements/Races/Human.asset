@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Human
   m_EditorClassIdentifier: Assembly-CSharp::CharacterRaceTemplate
   <UID>k__BackingField: 7165112657937170432
-  <DisplayName>k__BackingField: 
+  <DisplayName>k__BackingField: Human
   <Stats>k__BackingField:
-    _health: 45
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
+    _health: 650
+    _physicalDamage: 60
+    _magicalDamage: 60
+    _physicalDefense: 15
+    _magicalDefense: 15
+    _movementSpeed: 310
+    _attackSpeed: 1
+    _cooldownReduction: 5
