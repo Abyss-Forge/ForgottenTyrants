@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: Scholar
   m_EditorClassIdentifier: Assembly-CSharp::CharacterClassTemplate
   <UID>k__BackingField: 1088482426637778944
-  <DisplayName>k__BackingField: 
+  <DisplayName>k__BackingField: Scholar
   <Stats>k__BackingField:
-    _health: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
+    _health: 10
+    _physicalDamage: 10
+    _magicalDamage: 30
+    _physicalDefense: 5
+    _magicalDefense: 10
     _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
+    _attackSpeed: 0.1
+    _cooldownReduction: 15
   <Abilities>k__BackingField:
   - {fileID: 0}
   - {fileID: 0}

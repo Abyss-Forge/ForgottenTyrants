@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Volkaris
   m_EditorClassIdentifier: Assembly-CSharp::CharacterRaceTemplate
   <UID>k__BackingField: 84335840385302528
-  <DisplayName>k__BackingField: 
+  <DisplayName>k__BackingField: Volkaris
   <Stats>k__BackingField:
-    _health: 23
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
+    _health: 600
+    _physicalDamage: 65
+    _magicalDamage: 65
+    _physicalDefense: 20
+    _magicalDefense: 20
+    _movementSpeed: 320
+    _attackSpeed: 1
+    _cooldownReduction: 5

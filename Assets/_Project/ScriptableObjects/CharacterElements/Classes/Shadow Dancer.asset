@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: Shadow Dancer
   m_EditorClassIdentifier: Assembly-CSharp::CharacterClassTemplate
   <UID>k__BackingField: 7584157430003531776
-  <DisplayName>k__BackingField: 
+  <DisplayName>k__BackingField: Shadow Dancer
   <Stats>k__BackingField:
-    _health: 0
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
+    _health: 20
+    _physicalDamage: 25
+    _magicalDamage: 15
+    _physicalDefense: 5
+    _magicalDefense: 5
+    _movementSpeed: 20
+    _attackSpeed: 0.3
     _cooldownReduction: 0
   <Abilities>k__BackingField:
   - {fileID: 0}

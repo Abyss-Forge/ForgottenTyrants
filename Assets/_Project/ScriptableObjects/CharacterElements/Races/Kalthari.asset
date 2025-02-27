@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Kalthari
   m_EditorClassIdentifier: Assembly-CSharp::CharacterRaceTemplate
   <UID>k__BackingField: 3740391772891643904
-  <DisplayName>k__BackingField: 
+  <DisplayName>k__BackingField: Kalthari
   <Stats>k__BackingField:
-    _health: 50
-    _physicalDamage: 0
-    _magicalDamage: 0
-    _physicalDefense: 0
-    _magicalDefense: 0
-    _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
+    _health: 700
+    _physicalDamage: 70
+    _magicalDamage: 55
+    _physicalDefense: 20
+    _magicalDefense: 10
+    _movementSpeed: 300
+    _attackSpeed: 0.9
+    _cooldownReduction: 5

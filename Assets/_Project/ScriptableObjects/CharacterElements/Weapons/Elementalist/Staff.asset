@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Staff
   m_EditorClassIdentifier: 
   <UID>k__BackingField: 1347361339886010368
-  <DisplayName>k__BackingField: 
+  <DisplayName>k__BackingField: Staff
   <Stats>k__BackingField:
     _health: 0
     _physicalDamage: 0
-    _magicalDamage: 0
+    _magicalDamage: 15
     _physicalDefense: 0
     _magicalDefense: 0
     _movementSpeed: 0
-    _attackSpeed: 0
-    _cooldownReduction: 0
+    _attackSpeed: 0.1
+    _cooldownReduction: 15
