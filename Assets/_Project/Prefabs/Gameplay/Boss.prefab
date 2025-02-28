@@ -114,8 +114,8 @@ MonoBehaviour:
   _health: 0
   _baseStats:
     _health: 10000
-    _physicalDamage: 10
-    _magicalDamage: 10
+    _physicalDamage: 100
+    _magicalDamage: 100
     _physicalDefense: 0
     _magicalDefense: 0
     _movementSpeed: 0
