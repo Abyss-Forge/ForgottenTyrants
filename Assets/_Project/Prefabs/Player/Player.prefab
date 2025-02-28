@@ -46741,7 +46741,7 @@ MonoBehaviour:
   _lookSensitivityX: 0.1
   _walkSpeed: 5
   _gravityMultiplier: 1
-  _jumpForce: 2
+  _jumpForce: 3
   _dashForce: 5
   _dashDuration: 0.5
   _dashCooldown: 1
