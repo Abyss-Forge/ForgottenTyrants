@@ -134,6 +134,28 @@ namespace Systems.ServiceLocator
         }
 
         /// <summary>
+        /// Deregisters a service to the ServiceLocator using the service's type.
+        /// </summary>
+        /// <typeparam name="T">Class type of the service to be deregistered.</typeparam>
+        /// <returns>The ServiceLocator instance after deregistering the service.</returns>
+        public ServiceLocator Deregister<T>() where T : class
+        {
+            _services.Deregister<T>();
+            return this;
+        }
+
+        /// <summary>
+        /// Deregisters a service to the ServiceLocator using a specific type.
+        /// </summary>
+        /// <param name="type">The type to use for deregistration.</param>
+        /// <returns>The ServiceLocator instance after deregistering the service.</returns>
+        public ServiceLocator Deregister(Type type)
+        {
+            _services.Deregister(type);
+            return this;
+        }
+
+        /// <summary>
         /// Gets a service of a specific type. If no service of the required type is found, an error is thrown.
         /// </summary>
         /// <param name="service">Service of type T to get.</param>  

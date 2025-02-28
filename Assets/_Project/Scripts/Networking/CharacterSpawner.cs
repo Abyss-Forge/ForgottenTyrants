@@ -72,8 +72,7 @@ public class CharacterSpawner : NetworkBehaviour
             RespawnTime = _respawnTime
         });
 
-        ServiceLocator.Global.Get(out PlayerInfo player);
-        ServiceLocator.Global.Get(out CharacterController characterController);
+        ServiceLocator.Global.Get(out PlayerInfo player).Get(out CharacterController characterController);
 
         player.InitializeBaseBuildData(player.ClientData);
 

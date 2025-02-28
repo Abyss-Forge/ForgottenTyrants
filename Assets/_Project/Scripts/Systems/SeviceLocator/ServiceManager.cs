@@ -49,6 +49,18 @@ namespace Systems.ServiceLocator
             //Debug.Log($"ServiceManager.Register: Registered service of type {type.FullName}");
             return this;
         }
+
+        public ServiceManager Deregister<T>() where T : class => Deregister(typeof(T));
+        public ServiceManager Deregister(Type type)
+        {
+            if (!_services.Remove(type))
+            {
+                Debug.LogError($"ServiceManager.Deregister: Service of type {type.FullName} not registered");
+            }
+
+            //Debug.Log($"ServiceManager.Deregister: Deregistered service of type {type.FullName}");
+            return this;
+        }
     }
 
 }

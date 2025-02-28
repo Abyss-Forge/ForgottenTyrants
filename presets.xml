@@ -1,7 +1,7 @@
 <CharacterTemplates>
   <Preset>
-    <Name>DEfault</Name>
-    <Race>Human</Race>
+    <Name>default</Name>
+    <Race>Kalthari</Race>
     <Class>Blademaster</Class>
     <Armor>Aether Veil</Armor>
     <Trinket>Sage's Clock</Trinket>

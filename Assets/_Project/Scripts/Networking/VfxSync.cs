@@ -11,11 +11,9 @@ public class VfxSync : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        ServiceLocator.Global.Get(out BuffableBehaviour buffable);
+        ServiceLocator.Global.Get(out BuffableBehaviour buffable).Get(out DamageableBehaviour damageable);
         buffable.OnBuff += (duration, _) => PlayBuff_ClientRpc(duration);
         buffable.OnDebuff += (duration, _) => PlayDebuff_ClientRpc(duration);
-
-        ServiceLocator.Global.Get(out DamageableBehaviour damageable);
         damageable.OnHeal += PlayHeal_ClientRpc;
         damageable.OnDeath += PlayDeath_ClientRpc;
     }
@@ -24,11 +22,9 @@ public class VfxSync : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        ServiceLocator.Global.Get(out BuffableBehaviour buffable);
+        ServiceLocator.Global.Get(out BuffableBehaviour buffable).Get(out DamageableBehaviour damageable);
         buffable.OnBuff -= (duration, _) => PlayBuff_ClientRpc(duration);
         buffable.OnDebuff -= (duration, _) => PlayDebuff_ClientRpc(duration);
-
-        ServiceLocator.Global.Get(out DamageableBehaviour damageable);
         damageable.OnHeal -= PlayHeal_ClientRpc;
         damageable.OnDeath -= PlayDeath_ClientRpc;
     }

@@ -23,3 +23,6 @@ MonoBehaviour:
     _movementSpeed: 0
     _attackSpeed: 0
     _cooldownReduction: 0
+  <Icon>k__BackingField: {fileID: 0}
+  <ModelRoot>k__BackingField: {fileID: 5236736802167204080, guid: c1e3afc995271b14487ea9caad1b8dbf,
+    type: 3}

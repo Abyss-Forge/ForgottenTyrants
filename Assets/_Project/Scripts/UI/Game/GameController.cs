@@ -62,6 +62,7 @@ public class GameController : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
+
     EventBinding<PlayerRespawnEvent> _playerRespawnEventBinding;
 
     void Awake()

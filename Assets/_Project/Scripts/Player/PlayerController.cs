@@ -1,8 +1,7 @@
-using System;
 using System.Collections;
-using System.Threading.Tasks;
 using Systems.EventBus;
 using Systems.GameManagers;
+using Systems.ServiceLocator;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Utils;
@@ -36,6 +35,15 @@ public class PlayerController : MonoBehaviour
     private EventBinding<PlayerRespawnEvent> _playerRespawnEventBinding;
     private EventBinding<PlayerMovementEvent> _playerMovementEventBinding;
 
+    [Header("Animation")]
+    [SerializeField] private Animator _hitboxAnimator;
+    private Animator _animator;
+    const string FLOAT_INPUT_MAGNITUDE = "InputMagnitude";
+    const string BOOL_GROUNDED = "IsGrounded";
+    const string BOOL_DASH = "IsDashing";
+    const string TRIGGER_JUMP = "Jump";
+    private int Key(string key) => Animator.StringToHash(key);
+
     private void OnMove(InputAction.CallbackContext context)
     {
         _move = context.ReadValue<Vector2>();
@@ -63,6 +71,13 @@ public class PlayerController : MonoBehaviour
         //Diego troleando
         StartGlowingEffect(5);
         _currentSpeed = _walkSpeed;
+    }
+
+    void Start()
+    {
+        ServiceLocator.Global.Get(out Animator animator);
+        _animator = animator;
+        Debug.Log("anim: " + animator.gameObject.name);
     }
 
     void OnEnable()
@@ -105,6 +120,15 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         //animation
+        float inputMagnitude = Mathf.Clamp01(_move.magnitude);
+
+        _animator.SetFloat(Key(FLOAT_INPUT_MAGNITUDE), inputMagnitude, 0.05f, Time.deltaTime);
+        _animator.SetBool(Key(BOOL_GROUNDED), _isGrounded);
+        _animator.SetBool(Key(BOOL_DASH), _isDashing);
+
+        _hitboxAnimator.SetFloat(Key(FLOAT_INPUT_MAGNITUDE), inputMagnitude, 0.05f, Time.deltaTime);
+        _hitboxAnimator.SetBool(Key(BOOL_GROUNDED), _isGrounded);
+        _hitboxAnimator.SetBool(Key(BOOL_DASH), _isDashing);
     }
 
     void LateUpdate()   //we move the camera in late update so all the movement has finished before positioning it
@@ -137,6 +161,7 @@ public class PlayerController : MonoBehaviour
     private void ApplyGravity()
     {
         _isGrounded = _characterController.isGrounded;
+
         if (_isGrounded && _velocity.y < 0)
         {
             _velocity.y = Physics.gravity.y; //keep the character grounded
@@ -150,6 +175,9 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         _velocity.y = Mathf.Sqrt(-Physics.gravity.y * _gravityMultiplier * _jumpForce);
+
+        _animator.SetTrigger(Key(TRIGGER_JUMP));
+        _hitboxAnimator.SetTrigger(Key(TRIGGER_JUMP));
     }
 
     public IEnumerator Dash()
@@ -248,7 +276,7 @@ public class PlayerController : MonoBehaviour
         return _currentSpeed;
     }
 
-    void Start()
+    void Startttt()
     {
         if (_renderer != null) _objectMaterial = _renderer.material;// Usamos el material instanciado para no afectar materiales compartidos
     }

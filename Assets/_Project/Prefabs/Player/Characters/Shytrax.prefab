@@ -1,0 +1,121 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8500746770899136838
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 8ba7ff9663086714fb9c8de121970a0a,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8ba7ff9663086714fb9c8de121970a0a,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8ba7ff9663086714fb9c8de121970a0a,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8ba7ff9663086714fb9c8de121970a0a,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8ba7ff9663086714fb9c8de121970a0a,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8ba7ff9663086714fb9c8de121970a0a,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8ba7ff9663086714fb9c8de121970a0a,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8ba7ff9663086714fb9c8de121970a0a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8ba7ff9663086714fb9c8de121970a0a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8ba7ff9663086714fb9c8de121970a0a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8ba7ff9663086714fb9c8de121970a0a,
+        type: 3}
+      propertyPath: m_Name
+      value: Shytrax
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 8ba7ff9663086714fb9c8de121970a0a,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8ba7ff9663086714fb9c8de121970a0a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2205695091673854428}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8ba7ff9663086714fb9c8de121970a0a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2545295685889580901}
+  m_SourcePrefab: {fileID: 100100000, guid: 8ba7ff9663086714fb9c8de121970a0a, type: 3}
+--- !u!95 &2635218827645635799 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 8ba7ff9663086714fb9c8de121970a0a,
+    type: 3}
+  m_PrefabInstance: {fileID: 8500746770899136838}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8735243814554356759 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8ba7ff9663086714fb9c8de121970a0a,
+    type: 3}
+  m_PrefabInstance: {fileID: 8500746770899136838}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2205695091673854428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8735243814554356759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad8deae8091111f4eb30a56c1f4e0d3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList: []
+  m_Animator: {fileID: 2635218827645635799}
+--- !u!114 &2545295685889580901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8735243814554356759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c1125506bb30074abb639e9fe065a28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

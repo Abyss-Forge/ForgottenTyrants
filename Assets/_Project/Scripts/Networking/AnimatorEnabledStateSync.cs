@@ -10,6 +10,20 @@ public class AnimatorEnabledStateSync : NetworkBehaviour
     private EventBinding<PlayerDeathEvent> _playerDeathEventBinding;
     private EventBinding<PlayerRespawnEvent> _playerRespawnEventBinding;
 
+    bool isLocal = false;
+
+    public void Initialize()
+    {
+        isLocal = true;
+
+        _playerDeathEventBinding = new EventBinding<PlayerDeathEvent>(HandleDeath);
+        EventBus<PlayerDeathEvent>.Register(_playerDeathEventBinding);
+
+        _playerRespawnEventBinding = new EventBinding<PlayerRespawnEvent>(HandleRespawn);
+        EventBus<PlayerRespawnEvent>.Register(_playerRespawnEventBinding);
+        Debug.Log("spawn model offline" + gameObject.name + IsOwner);
+    }
+
     void Awake()
     {
         _animator = GetComponent<Animator>();
@@ -17,6 +31,7 @@ public class AnimatorEnabledStateSync : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        Debug.Log("spawn model" + gameObject.name + IsOwner);
         if (!IsOwner) return;
 
         _playerDeathEventBinding = new EventBinding<PlayerDeathEvent>(HandleDeath);
@@ -36,20 +51,39 @@ public class AnimatorEnabledStateSync : NetworkBehaviour
 
     private void HandleDeath()
     {
-        SetAnimatorEnabled_ClientRpc(false);
+        if (isLocal)
+        {
+            SetAnimatorEnabled(false);
+        }
+        else
+        {
+            SetAnimatorEnabled_ClientRpc(false);
+        }
     }
 
     private void HandleRespawn()
     {
-        SetAnimatorEnabled_ClientRpc(true);
+        if (isLocal)
+        {
+            SetAnimatorEnabled(true);
+        }
+        else
+        {
+            SetAnimatorEnabled_ClientRpc(true);
+        }
     }
 
     [Rpc(SendTo.ClientsAndHost)]
     private void SetAnimatorEnabled_ClientRpc(bool enabled)
     {
+        SetAnimatorEnabled(enabled);
+    }
+
+    private void SetAnimatorEnabled(bool enabled)
+    {
         _animator.enabled = enabled;
 
-        foreach (var rb in GetComponentsInChildren<Rigidbody>())//pfff no me gusta nada tener que usar esto pero la alternativa es peor
+        foreach (var rb in GetComponentsInChildren<Rigidbody>())
         {
             rb.isKinematic = enabled;
         }

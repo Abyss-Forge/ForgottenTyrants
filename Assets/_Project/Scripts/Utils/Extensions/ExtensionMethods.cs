@@ -93,24 +93,41 @@ namespace Utils.Extensions
             if (component != null) UnityEngine.Object.Destroy(component);
         }
 
+
         /// <summary>
         /// Moves a component of type <typeparamref name="T"/> from the target GameObject to the origin GameObject.
         /// </summary>
         /// <typeparam name="T">The type of the component to move.</typeparam>
-        /// <param name="target">The GameObject to which the component will be moved.</param>
-        /// <param name="origin">The GameObject from which the component will be moved.</param>
+        /// <param name="destination">The GameObject to which the component will be moved.</param>
+        /// <param name="source">The GameObject from which the component will be moved.</param>
+
+        /// <returns>The moved component of type <typeparamref name="T"/> if the operation is successful; otherwise, null.</returns>
+        public static T MoveComponent<T>(this GameObject destination, GameObject source) where T : Component => destination.MoveComponent<T>(source.GetComponent<T>());
+        /// <summary>
+        /// Moves a component of type <typeparamref name="T"/> from the target GameObject to the origin GameObject.
+        /// </summary>
+        /// <typeparam name="T">The type of the component to move.</typeparam>
+        /// <param name="destination">The GameObject to which the component will be moved.</param>
         /// <param name="component">Optional. The specific component instance to move. If not provided, the method will attempt to get the component from the target GameObject.</param>
         /// <returns>The moved component of type <typeparamref name="T"/> if the operation is successful; otherwise, null.</returns>
-        public static T MoveComponent<T>(this GameObject target, GameObject origin, T component = null) where T : Component
+        public static T MoveComponent<T>(this GameObject destination, T component) where T : Component
         {
-            component ??= origin.GetComponent<T>();
             if (component == null) return null;
 
-            T copy = target.CopyComponent<T>(component);
-            target.RemoveComponent<T>(component);
+            T copy = destination.CopyComponent<T>(component);
+            component.gameObject.RemoveComponent<T>(component);
             return copy;
         }
 
+
+        /// <summary>
+        /// Copies a component from one GameObject to another.
+        /// </summary>
+        /// <typeparam name="T">The type of the component to copy.</typeparam>
+        /// <param name="destination">The GameObject to which the component will be copied.</param>
+        /// <param name="source">The original game object with the component to copy.</param>
+        /// <returns>The copied component attached to the destination GameObject.</returns>
+        public static T CopyComponent<T>(this GameObject destination, GameObject source) where T : Component => destination.CopyComponent<T>(source.GetComponent<T>().OrNull());
         /// <summary>
         /// Copies a component from one GameObject to another.
         /// </summary>
@@ -118,11 +135,13 @@ namespace Utils.Extensions
         /// <param name="destination">The GameObject to which the component will be copied.</param>
         /// <param name="component">The original component to copy.</param>
         /// <returns>The copied component attached to the destination GameObject.</returns>
-        public static T CopyComponent<T>(this GameObject destination, T component = null) where T : Component
+        public static T CopyComponent<T>(this GameObject destination, T component) where T : Component
         {
-            //TODO: if component is null, get the first component matching T type
+            if (component == null) { return null; }
+
             Type componentType = component.GetType();
             Component copy = destination.AddComponent(componentType);
+            //copy.Copy(component);
 
             FieldInfo[] fields = componentType.GetFields();
             foreach (FieldInfo field in fields)
@@ -145,6 +164,34 @@ namespace Utils.Extensions
 
             return copy as T;
         }
+
+        public static T Copy<T>(this Component destination, T component) where T : Component
+        {
+            Type componentType = component.GetType();
+
+            FieldInfo[] fields = componentType.GetFields();
+            foreach (FieldInfo field in fields)
+            {
+                field.SetValue(destination, field.GetValue(component));
+            }
+
+            PropertyInfo[] properties = componentType.GetProperties();
+            foreach (PropertyInfo property in properties)
+            {
+                if (property.CanWrite && property.GetSetMethod(true) != null)
+                {
+                    try
+                    {
+                        property.SetValue(destination, property.GetValue(component));
+                    }
+                    catch { }
+                }
+            }
+
+            return destination as T;
+        }
+
+
 
         public static bool TryGetComponentInParent<T>(this GameObject go, out T component) where T : Component
         {

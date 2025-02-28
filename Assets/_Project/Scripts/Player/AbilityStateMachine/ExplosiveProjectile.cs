@@ -10,7 +10,7 @@ public abstract class ExplosiveProjectile : Projectile, IDamageable
 
     [Header("Proximity")]
     [SerializeField] protected bool _isProximityEnabled;
-    [SerializeField] protected BodyPart _proximityDetector;
+    [SerializeField] protected ObservableHitbox _proximityDetector;
     [SerializeField] protected float _detonationDelaySeconds = 1;
 
     [Header("Damageable")]
