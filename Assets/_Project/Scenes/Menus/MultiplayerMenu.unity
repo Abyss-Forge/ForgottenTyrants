@@ -2863,35 +2863,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 551782501}
     m_Modifications:
-    - target: {fileID: 879499277, guid: fb4c12f82b356ac4784c451366cdd2b0, type: 3}
-      propertyPath: Race
-      value: 
-      objectReference: {fileID: 11400000, guid: a58ada72c9119f242be44ca98d0bdfda,
-        type: 2}
-    - target: {fileID: 879499277, guid: fb4c12f82b356ac4784c451366cdd2b0, type: 3}
-      propertyPath: Armor
-      value: 
-      objectReference: {fileID: 11400000, guid: 5bf1db49d7e5ea742807a7f8fb2c6899,
-        type: 2}
-    - target: {fileID: 879499277, guid: fb4c12f82b356ac4784c451366cdd2b0, type: 3}
-      propertyPath: Class
-      value: 
-      objectReference: {fileID: 11400000, guid: f62d11bc512e9854596ddc22006330c2,
-        type: 2}
-    - target: {fileID: 879499277, guid: fb4c12f82b356ac4784c451366cdd2b0, type: 3}
-      propertyPath: Trinket
-      value: 
-      objectReference: {fileID: 11400000, guid: 95c6871b42416a244b1dd3c06b5a4787,
-        type: 2}
-    - target: {fileID: 879499277, guid: fb4c12f82b356ac4784c451366cdd2b0, type: 3}
-      propertyPath: _gameplayScene.guid
-      value: 7e9f3954d9ce356419006cb77316abd4
-      objectReference: {fileID: 0}
-    - target: {fileID: 879499277, guid: fb4c12f82b356ac4784c451366cdd2b0, type: 3}
-      propertyPath: _gameplayScene.asset
-      value: 
-      objectReference: {fileID: 102900000, guid: 7e9f3954d9ce356419006cb77316abd4,
-        type: 3}
     - target: {fileID: 8950656886617044264, guid: fb4c12f82b356ac4784c451366cdd2b0,
         type: 3}
       propertyPath: m_Name

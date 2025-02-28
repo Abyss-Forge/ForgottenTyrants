@@ -113,7 +113,7 @@ public class BodyPartDamager : MonoBehaviour
         EventBus<PlayerDeathEvent>.Raise(new PlayerDeathEvent());
 
         _alreadyAppliedHashes = new();
-        SetRagdollActive(true);
+        //SetRagdollActive(true);
     }
 
     private void HandleRespawn(PlayerRespawnEvent @event)
@@ -122,7 +122,7 @@ public class BodyPartDamager : MonoBehaviour
         _damageable.Initialize((int)player.Stats.Health);
         _buffable.Initialize(player.Stats);
 
-        SetRagdollActive(false);
+        //SetRagdollActive(false);
         StartCoroutine(ApplyInvincibility(@event.SpawnInvincibilityTime));
 
         _isAlive = true;

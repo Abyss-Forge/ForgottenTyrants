@@ -71,8 +71,7 @@ public abstract class AbilityStateMachine : MonoBehaviour, IAbilityBase
     {
         _abilityDataList.Clear();
 
-        ServiceLocator.Global.Get(out PlayerInfo player);
-        ServiceLocator.Global.Get(out BuffableBehaviour buffable);
+        ServiceLocator.Global.Get(out PlayerInfo player).Get(out BuffableBehaviour buffable);
 
         if (Stats.PhysicalDamage > 0)
         {

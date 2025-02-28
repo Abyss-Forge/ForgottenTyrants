@@ -114,7 +114,7 @@ public class BossController : NetworkBehaviour
             InvokeRepeating(nameof(TriggerRandomEvent), 10, eventThreshold);
 
             _bossDamager.OnDamage += HandleDamage;
-            _bossDamager.OnDeath += Die;
+            _bossDamager.OnDeath += Die_ClientRpc;
         }
     }
 
@@ -123,7 +123,7 @@ public class BossController : NetworkBehaviour
         if (IsServer)
         {
             _bossDamager.OnDamage -= HandleDamage;
-            _bossDamager.OnDeath -= Die;
+            _bossDamager.OnDeath -= Die_ClientRpc;
         }
     }
 
@@ -294,7 +294,8 @@ public class BossController : NetworkBehaviour
         }
     }
 
-    void Die()
+    [Rpc(SendTo.ClientsAndHost)]
+    void Die_ClientRpc()
     {
         Destroy(gameObject);
     }

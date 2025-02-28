@@ -20,7 +20,7 @@ public class HostManager : Singleton<HostManager>
     [SerializeField] private int _maxConnections = 6;
     public int MaxConnections => _maxConnections;
 
-    [SerializeField] private SceneReference _gameplayScene; //TODO remove test
+    [SerializeField] private SceneReference _characterSelectScene, _gameplayScene;
 
     public Dictionary<ulong, ClientData> ClientDataDict { get; private set; } = new();
     public string JoinCode { get; private set; }
@@ -117,12 +117,12 @@ public class HostManager : Singleton<HostManager>
             throw;
         }
 
-        var relayServerData = new RelayServerData(allocation, "dtls");
+        RelayServerData relayServerData = new(allocation, "dtls");
         NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
         try
         {
-            var createLobbyOptions = new CreateLobbyOptions();
+            CreateLobbyOptions createLobbyOptions = new();
             createLobbyOptions.IsPrivate = isPrivate;
             createLobbyOptions.Data = new Dictionary<string, DataObject>()
             {
@@ -148,7 +148,6 @@ public class HostManager : Singleton<HostManager>
         NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
         NetworkManager.Singleton.OnServerStarted += OnNetworkReady;
 
-        // ClientDataDict = new();
         NetworkManager.Singleton.StartHost();
     }
 
@@ -183,7 +182,7 @@ public class HostManager : Singleton<HostManager>
     {
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
 
-        SceneLoaderWrapper.Instance.LoadScene(ForgottenTyrants.Scene.CharacterSelect, useNetworkSceneManager: true, LoadSceneMode.Single);
+        SceneLoaderWrapper.Instance.LoadScene(_characterSelectScene.Name, useNetworkSceneManager: true, LoadSceneMode.Single);
     }
 
     private void OnClientDisconnect(ulong clientId)

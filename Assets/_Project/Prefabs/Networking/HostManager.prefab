@@ -51,3 +51,7 @@ MonoBehaviour:
   _gameplayScene:
     asset: {fileID: 102900000, guid: 7e9f3954d9ce356419006cb77316abd4, type: 3}
     guid: 7e9f3954d9ce356419006cb77316abd4
+  Race: {fileID: 11400000, guid: a58ada72c9119f242be44ca98d0bdfda, type: 2}
+  Class: {fileID: 11400000, guid: f62d11bc512e9854596ddc22006330c2, type: 2}
+  Armor: {fileID: 11400000, guid: 5bf1db49d7e5ea742807a7f8fb2c6899, type: 2}
+  Trinket: {fileID: 11400000, guid: 95c6871b42416a244b1dd3c06b5a4787, type: 2}

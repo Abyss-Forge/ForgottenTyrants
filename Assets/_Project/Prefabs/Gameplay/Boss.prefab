@@ -113,7 +113,7 @@ MonoBehaviour:
   _team2PointsText: {fileID: 0}
   _health: 0
   _baseStats:
-    _health: 1000
+    _health: 10000
     _physicalDamage: 10
     _magicalDamage: 10
     _physicalDefense: 0
@@ -338,7 +338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1922076949
+  GlobalObjectIdHash: 734147166
   InScenePlacedSourceGlobalObjectIdHash: 3132438032
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
