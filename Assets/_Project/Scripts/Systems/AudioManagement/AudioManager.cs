@@ -10,7 +10,7 @@ namespace Systems.AudioManagement
     {
         [SerializeField] private AudioMixer _audioMixer;
 
-        public AudioVolumeHelper Helper;
+        public AudioVolumeHelper Helper { get; private set; }
 
         private List<AudioSource> _allSceneAudioSources;
 

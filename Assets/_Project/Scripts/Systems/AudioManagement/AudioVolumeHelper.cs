@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -5,11 +6,26 @@ namespace Systems.AudioManagement
 {
     public class AudioVolumeHelper
     {
+        private const string MASTER_GROUP_NAME = "Master";
         private AudioMixer _audioMixer;
 
         public AudioVolumeHelper(AudioMixer audioMixer)
         {
             _audioMixer = audioMixer;
+
+            CheckVolumeExposed();
+        }
+
+        private void CheckVolumeExposed()
+        {
+            foreach (string key in VolumeKeyList)
+            {
+                if (!_audioMixer.GetFloat(key, out _))
+                {
+                    Debug.LogError("Some AudioMixerGroup volume parameter is not exposed.");
+                    break;
+                }
+            }
         }
 
         public void LoadPrefs()
@@ -25,24 +41,14 @@ namespace Systems.AudioManagement
         {
             get
             {
-                string[] keyList = new string[]
-                {
-                PlayerPrefsKeys.VOLUME_MASTER,
-                PlayerPrefsKeys.VOLUME_UI,
-                PlayerPrefsKeys.VOLUME_MUSIC,
-                PlayerPrefsKeys.VOLUME_SFX,
-                PlayerPrefsKeys.VOLUME_CINEMATICS,
-                PlayerPrefsKeys.VOLUME_VOICE_CHAT
-                };
-
-                return keyList;
+                return _audioMixer.FindMatchingGroups(MASTER_GROUP_NAME).Select(group => group.name).ToArray();
             }
         }
 
         //  Mute & Unmute
         public void ToggleVolume(string key)
         {
-            string tempKey = $"Temp{key}";
+            string tempKey = $"Temp{key}Volume";
             float currentVolume = GetVolume(key);
 
             if (currentVolume <= 0)
